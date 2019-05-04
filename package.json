@@ -13,7 +13,7 @@
   "scripts": {
     "test": "jest --notify --watchman=false --detectOpenHandles",
     "lint": "eslint --ext .jsx --ext .js client/",
-
+    "precommit": "lint-staged",
     "clear": "rimraf dist",
     "upload": "node pack/upload.js",
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
@@ -74,7 +74,6 @@
     "offline-plugin": "^5.0.6",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
-    "pre-commit": "^1.2.2",
     "purify-css": "^1.2.5",
     "qiniu": "^7.2.1",
     "react-hot-loader": "^4.7.2",
