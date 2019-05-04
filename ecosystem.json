@@ -1,0 +1,24 @@
+{
+  "apps": [
+    {
+      "name": "admin-v1",
+      "script": "./server/server.js",
+      "env_production": {
+        "NODE_ENV": "production",
+        "HOST": "localhost"
+      }
+    }
+  ],
+  "deploy": {
+    "production": {
+      "user": "root",
+      "host": [
+        "47.95.252.128"
+      ],
+      "repo": "git@gitee.com:soten/admin-v1.git",
+      "ref": "origin/master",
+      "path": "/root/deploy/admin-v1",
+      "post-deploy": "yarn install && yarn run deploy && pm2 startOrRestart ecosystem.json --env production"
+    }
+  }
+}
