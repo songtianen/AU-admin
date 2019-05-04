@@ -119,7 +119,7 @@
     "serve-favicon": "^2.5.0"
   },
   "lint-staged": {
-        "./**/*.{js,jsx}": [
+        "src/**/*.{js,jsx}": [
             "prettier --tab-width 4 --write",
             "eslint --ext .jsx --ext .js",
             "git add"
