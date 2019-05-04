@@ -121,12 +121,12 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
-      "prettier --tab-width 4 --write",
       "eslint --ext .jsx --ext .js",
       "git add"
     ]
   },
   "pre-commit": [
+    "precommit-msg",
     "test"
   ]
 }
