@@ -7,13 +7,13 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run test"
+      "pre-commit": "lint-staged"
     }
   },
   "scripts": {
     "test": "jest --notify --watchman=false --detectOpenHandles",
     "lint": "eslint --ext .jsx --ext .js client/",
-    "precommit": "yarn run lint",
+    "precommit": "lint-staged",
     "clear": "rimraf dist",
     "upload": "node pack/upload.js",
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
@@ -117,5 +117,12 @@
     "redux": "^4.0.1",
     "redux-saga": "^1.0.2",
     "serve-favicon": "^2.5.0"
-  }
+  },
+  "lint-staged": {
+        "src/**/*.{js,jsx}": [
+            "prettier --tab-width 4 --write",
+            "eslint --fix",
+            "git add"
+        ]
+    }
 }
