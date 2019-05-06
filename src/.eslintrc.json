@@ -9,8 +9,10 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "extends": "airbnb",
+  "extends": ["airbnb","prettier", "plugin:prettier/recommended"],
+  "plugins": ["prettier"],
   "rules": {
+    "prettier/prettier": "error",
     "semi": [
       2
     , "always"],
