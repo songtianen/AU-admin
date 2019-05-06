@@ -1,3 +1,3 @@
 module.exports = {
-  semi: true,
+  semi: false,
 };
