@@ -125,8 +125,8 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
-      "eslint --ext .jsx --ext .js",
       "prettier --write",
+      "eslint --ext .jsx --ext .js",
       "git add"
     ]
   }
