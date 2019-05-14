@@ -1,29 +1,29 @@
 /* eslint-disable react/no-unused-state */
-import React from "react";
+import React from 'react';
 // eslint-disable-next-line no-unused-vars
-import { notification, Table, Popconfirm, Divider, Button, Modal } from "antd";
+import { notification, Table, Popconfirm, Divider, Button, Modal } from 'antd';
 import {
   getFunctionPagedList,
   delFunction,
   delFunctions,
   saveFunction
-} from "../../../api";
-import SearchForm from "../../../schema/SeatchForm/SearchForm";
-import CommonForm from "../../../schema/Common/CommonForm";
-import schema from "../../../schema/Function";
-import PermissionContainer from "../../common/permission";
+} from '../../../api';
+import SearchForm from '../../../schema/SeatchForm/SearchForm';
+import CommonForm from '../../../schema/Common/CommonForm';
+import schema from '../../../schema/Function';
+import PermissionContainer from '../../common/permission';
 // 缓存远程表单选项数据，key为对应schema $id+'_'+字段名
-import formRemoteDataUtil from "../../../schema/Form/FormRemoteDataUtil";
-import util from "../../../util/util";
+import formRemoteDataUtil from '../../../schema/Form/FormRemoteDataUtil';
+import util from '../../../util/util';
 
-const style = { display: "none" };
+const style = { display: 'none' };
 
 class Function extends React.PureComponent {
   state = {
     filter: {
-      module: "",
-      name: "",
-      code: ""
+      module: '',
+      name: '',
+      code: ''
     },
     // eslint-disable-next-line react/no-unused-state
     expand: true,
@@ -38,8 +38,8 @@ class Function extends React.PureComponent {
       showTotal: total => `Total ${total} items`
     },
     sorter: {
-      field: "",
-      order: ""
+      field: '',
+      order: ''
     },
     loading: false,
     editModalVisible: false
@@ -47,24 +47,24 @@ class Function extends React.PureComponent {
 
   columns = [
     {
-      title: "模块名称",
-      dataIndex: "module",
+      title: '模块名称',
+      dataIndex: 'module',
       sorter: true
     },
     {
-      title: "功能名称",
-      dataIndex: "name",
+      title: '功能名称',
+      dataIndex: 'name',
       sorter: true
     },
     {
-      title: "功能编码",
-      dataIndex: "code",
+      title: '功能编码',
+      dataIndex: 'code',
       sorter: true
     },
     {
-      title: "操作",
-      dataIndex: "id",
-      fixed: "right",
+      title: '操作',
+      dataIndex: 'id',
+      fixed: 'right',
       width: 120,
       render: (text, record) => {
         /**
@@ -111,7 +111,7 @@ class Function extends React.PureComponent {
       pageIndex: this.state.pagination.current,
       pageSize: this.state.pagination.pageSize,
       sortBy: this.state.sorter.field,
-      descending: this.state.sorter.order === "descend",
+      descending: this.state.sorter.order === 'descend',
       filter: this.state.filter
     };
     this.fetch(query);
@@ -120,15 +120,15 @@ class Function extends React.PureComponent {
   // table 表格 分页、排序、筛选变化时触发
   handleTableChange = (pagination, filters, sorter) => {
     console.log(
-      "Function  table 表格 分页、排序、筛选变化时触发 pagination----",
+      'Function  table 表格 分页、排序、筛选变化时触发 pagination----',
       pagination
     );
     console.log(
-      "Function  table 表格 分页、排序、筛选变化时触发 filters----",
+      'Function  table 表格 分页、排序、筛选变化时触发 filters----',
       filters
     );
     console.log(
-      "Function  table 表格 分页、排序、筛选变化时触发 sorter----",
+      'Function  table 表格 分页、排序、筛选变化时触发 sorter----',
       sorter
     );
     const pager = { ...this.state.pagination };
@@ -145,7 +145,7 @@ class Function extends React.PureComponent {
       pageIndex: pager.current,
       pageSize: pager.pageSize,
       sortBy: sorter.field,
-      descending: sorter.order === "descend",
+      descending: sorter.order === 'descend',
       filter: this.state.filter
     };
     this.fetch(query);
@@ -164,7 +164,7 @@ class Function extends React.PureComponent {
       pageIndex: 1,
       pageSize: this.state.pagination.pageSize,
       sortBy: this.state.sorter.field,
-      descending: this.state.sorter.order === "descend",
+      descending: this.state.sorter.order === 'descend',
       filter
     };
     this.fetch(query);
@@ -187,11 +187,11 @@ class Function extends React.PureComponent {
     try {
       await delFunction({ id });
       notification.success({
-        placement: "bottomLeft bottomRight",
-        message: "删除成功"
+        placement: 'bottomLeft bottomRight',
+        message: '删除成功'
       });
     } catch (e) {
-      console.log("delFunction", e);
+      console.log('delFunction', e);
     }
     this.refresh();
   };
@@ -210,11 +210,11 @@ class Function extends React.PureComponent {
         selectedRowKeys: []
       });
       notification.success({
-        placement: "bottomLeft bottomRight",
-        message: "删除成功"
+        placement: 'bottomLeft bottomRight',
+        message: '删除成功'
       });
     } catch (e) {
-      console.log("delFunctions", e);
+      console.log('delFunctions', e);
     }
     this.refresh();
   };
@@ -232,11 +232,11 @@ class Function extends React.PureComponent {
   editFunction = record => {
     // 使用缓存的 menuList
     let menuList = formRemoteDataUtil.getData(
-      `${schema.editSchema["$id"]}_moduleId`
+      `${schema.editSchema['$id']}_moduleId`
     );
     let openMenuList = util.openTreeData(menuList);
     console.log(
-      "let openMenuList = util.openTreeData(menuList);",
+      'let openMenuList = util.openTreeData(menuList);',
       openMenuList
     );
     let menuWithParent = util.getTreeEleWithParent(
@@ -244,13 +244,13 @@ class Function extends React.PureComponent {
       openMenuList
     );
     console.log(
-      "let menuWithParent = util.getTreeEleWithParent(record.moduleId, openMenuList);",
+      'let menuWithParent = util.getTreeEleWithParent(record.moduleId, openMenuList);',
       record.moduleId,
       menuWithParent
     );
     let moduleId = menuWithParent.map(s => s.id);
     this.editFormData = { ...record, moduleId };
-    console.log("editFormData///-", this.editFormData);
+    console.log('editFormData///-', this.editFormData);
 
     this.setState({
       editModalVisible: true
@@ -259,15 +259,15 @@ class Function extends React.PureComponent {
 
   // Modal 保存 ：此方法传入子组件 commonForm 获取表单数据data
   saveFunction = async data => {
-    console.log("saveFunction-data", data);
+    console.log('saveFunction-data', data);
     let formData = { ...this.editFormData, ...data };
     let menuList = formRemoteDataUtil.getData(
-      `${schema.editSchema["$id"]}_moduleId`
+      `${schema.editSchema['$id']}_moduleId`
     );
     formData.moduleId = formData.moduleId[formData.moduleId.length - 1];
     let menu = util.getTreeEleByPropertyValue(
       formData.moduleId,
-      "id",
+      'id',
       menuList
     );
     formData.module = menu.title;
@@ -278,11 +278,11 @@ class Function extends React.PureComponent {
         editModalVisible: false
       });
       notification.success({
-        placement: "bottomLeft bottomRight",
-        message: "保存成功"
+        placement: 'bottomLeft bottomRight',
+        message: '保存成功'
       });
     } catch (e) {
-      console.log("saveFunction", e);
+      console.log('saveFunction', e);
     }
     this.refresh();
   };
@@ -309,7 +309,7 @@ class Function extends React.PureComponent {
   }
 
   render() {
-    console.log("Function render");
+    console.log('Function render');
     const { selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -317,7 +317,7 @@ class Function extends React.PureComponent {
     };
     const hasSelected = selectedRowKeys.length > 0;
     return (
-      <div style={{ backgroundColor: "#fff", padding: "18px" }}>
+      <div style={{ backgroundColor: '#fff', padding: '18px' }}>
         <SearchForm
           schema={schema.searchSchema}
           uiSchema={schema.searchUiSchema}
@@ -327,7 +327,7 @@ class Function extends React.PureComponent {
         <Divider />
         <div style={{ marginBottom: 16 }}>
           {/* 权限验证 */}
-          <PermissionContainer permission={["function_edit"]}>
+          <PermissionContainer permission={['function_edit']}>
             <Button
               type="primary"
               icon="plus-square-o"
@@ -337,7 +337,7 @@ class Function extends React.PureComponent {
             </Button>
           </PermissionContainer>
           <Divider type="vertical" />
-          <PermissionContainer permission={["function_del"]}>
+          <PermissionContainer permission={['function_del']}>
             <Popconfirm title="确定删除?" onConfirm={this.batchDelFunction}>
               <Button type="danger" disabled={!hasSelected} icon="delete">
                 删除
@@ -361,7 +361,7 @@ class Function extends React.PureComponent {
           visible={this.state.editModalVisible}
           cancelText="关闭"
           okText="提交"
-          title={this.editFormData.id ? "编辑功能" : "新增功能"}
+          title={this.editFormData.id ? '编辑功能' : '新增功能'}
           onCancel={this.editModalOnCancel}
           onOk={this.editModalOnOk}
           destroyOnClose
