@@ -8,13 +8,12 @@ class MySpin extends React.PureComponent {
     super(props);
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   render() {
     const PageRouters = this.props.pageRouters;
     return (
-      <Spin size="large" spinning={this.props.spinLoading}>
+      <Spin size='large' spinning={this.props.spinLoading}>
         <PageRouters />
       </Spin>
     );

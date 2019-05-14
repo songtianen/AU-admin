@@ -8,13 +8,11 @@ class ModuleMenu extends React.PureComponent {
     const { moduleList } = this.props;
     for (let i = 0; i < moduleList.length; i++) {
       list.push(
-        <Menu.Item key={moduleList[i].name}>
-          {moduleList[i].title}
-        </Menu.Item>,
+        <Menu.Item key={moduleList[i].name}>{moduleList[i].title}</Menu.Item>,
       );
     }
     return list;
-  }
+  };
 
   render() {
     const list = this.renderList();
@@ -22,7 +20,7 @@ class ModuleMenu extends React.PureComponent {
       <Menu
         onClick={this.props.updateModule}
         selectedKeys={[this.props.currentModule]}
-        mode="horizontal"
+        mode='horizontal'
         // eslint-disable-next-line react/jsx-boolean-value
         style={this.props.style}
       >

@@ -11,7 +11,7 @@ class TestContainer extends React.Component {
   }
 
   render() {
-    const {num, actions} = this.props;
+    const { num, actions } = this.props;
     return <Test num={num} actions={actions} />;
   }
 }

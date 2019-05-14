@@ -56,7 +56,10 @@ const SchemaUtils = {
         const style = this.props.style;
         if (this.props.noCacheSchema) {
           // 不缓存,每次纯法render,都要进行parse,不推荐
-          const generateJsx = util.parse(this.props.schema, this.props.uiSchema);
+          const generateJsx = util.parse(
+            this.props.schema,
+            this.props.uiSchema,
+          );
           this.generateJsx = generateJsx;
         }
 
@@ -64,7 +67,6 @@ const SchemaUtils = {
         return this.generateJsx(this.props.form.getFieldDecorator, style);
       },
     });
-
 
     // 注意要再用antd的create()方法包装下
     return Form.create()(tmpComponent);
@@ -118,89 +120,119 @@ const SchemaUtils = {
       }
       return (
         <Form style={style}>
-          <Row gutter={24}>
-            {formCols}
-          </Row>
+          <Row gutter={24}>{formCols}</Row>
         </Form>
       );
     };
   },
   transformInput(field, schemaProperty) {
-    return this.colWrapper(getFieldDecorator => getFieldDecorator(field.key, { initialValue: field['ui:defaultValue'] })(
-      <Input {...field['ui:options']} />,
-    ), field);
+    return this.colWrapper(
+      (getFieldDecorator) =>
+        getFieldDecorator(field.key, {
+          initialValue: field['ui:defaultValue'],
+        })(<Input {...field['ui:options']} />),
+      field,
+    );
   },
   transformInputNumber(field, schemaProperty) {
-    return this.colWrapper(getFieldDecorator => getFieldDecorator(field.key, { initialValue: field['ui:defaultValue'] })(
-      <InputNumber {...field['ui:options']} />,
-    ), field);
+    return this.colWrapper(
+      (getFieldDecorator) =>
+        getFieldDecorator(field.key, {
+          initialValue: field['ui:defaultValue'],
+        })(<InputNumber {...field['ui:options']} />),
+      field,
+    );
   },
   transformCheckbox(field, schemaProperty) {
-    return this.colWrapper(getFieldDecorator => getFieldDecorator(field.key, { initialValue: field['ui:defaultValue'] })(
-      <Checkbox.Group {...field['ui:options']} />,
-    ), field);
+    return this.colWrapper(
+      (getFieldDecorator) =>
+        getFieldDecorator(field.key, {
+          initialValue: field['ui:defaultValue'],
+        })(<Checkbox.Group {...field['ui:options']} />),
+      field,
+    );
   },
   transformDatetime(field, schemaProperty) {
-    return this.colWrapper(getFieldDecorator => getFieldDecorator(field.key, { initialValue: field['ui:defaultValue'] })(
-      <DatePicker {...field['ui:options']} />,
-    ), field);
+    return this.colWrapper(
+      (getFieldDecorator) =>
+        getFieldDecorator(field.key, {
+          initialValue: field['ui:defaultValue'],
+        })(<DatePicker {...field['ui:options']} />),
+      field,
+    );
   },
   transformRadio(field, schemaProperty) {
-    return this.colWrapper(getFieldDecorator => getFieldDecorator(field.key, { initialValue: field['ui:defaultValue'] })(
-      <Radio.Group {...field['ui:options']} />,
-    ), field);
+    return this.colWrapper(
+      (getFieldDecorator) =>
+        getFieldDecorator(field.key, {
+          initialValue: field['ui:defaultValue'],
+        })(<Radio.Group {...field['ui:options']} />),
+      field,
+    );
   },
   transformSelect(field, schemaProperty) {
     let dataOptions = field['ui:dataOptions'] || [];
     let options = [];
     for (let o of dataOptions) {
-      options.push(<Select.Option key={o.value} value={o.value} disabled={o.disabled}>{o.title}</Select.Option>);
+      options.push(
+        <Select.Option key={o.value} value={o.value} disabled={o.disabled}>
+          {o.title}
+        </Select.Option>,
+      );
     }
-    return this.colWrapper(getFieldDecorator => getFieldDecorator(field.key, { initialValue: field['ui:defaultValue'] })(
-      <Select {...field['ui:options']}>
-        {options}
-      </Select>,
-    ), field);
+    return this.colWrapper(
+      (getFieldDecorator) =>
+        getFieldDecorator(field.key, {
+          initialValue: field['ui:defaultValue'],
+        })(<Select {...field['ui:options']}>{options}</Select>),
+      field,
+    );
   },
   transformSwitch(field, schemaProperty) {
-    return this.colWrapper(getFieldDecorator => getFieldDecorator(field.key, {
-      initialValue: field['ui:defaultValue'],
-      valuePropName: 'checked',
-    })(
-      <Switch {...field['ui:options']} />,
-    ), field);
+    return this.colWrapper(
+      (getFieldDecorator) =>
+        getFieldDecorator(field.key, {
+          initialValue: field['ui:defaultValue'],
+          valuePropName: 'checked',
+        })(<Switch {...field['ui:options']} />),
+      field,
+    );
   },
   transformCascader(field, schemaProperty) {
-    return this.colWrapper(getFieldDecorator => getFieldDecorator(field.key, { initialValue: field['ui:defaultValue'] })(
-      <Cascader {...field['ui:options']} />,
-    ), field);
+    return this.colWrapper(
+      (getFieldDecorator) =>
+        getFieldDecorator(field.key, {
+          initialValue: field['ui:defaultValue'],
+        })(<Cascader {...field['ui:options']} />),
+      field,
+    );
   },
   transformBetween(field, schemaProperty) {
-    let begin; let
-      end;
+    let begin;
+    let end;
     switch (field['ui:type']) {
       case 'number':
         begin = (getFieldDecorator) => {
-          return (
-            getFieldDecorator(`${field.key}Begin`, { initialValue: field['ui:defaultBeginValue'] })(<InputNumber {...field['ui:options']} />)
-          );
+          return getFieldDecorator(`${field.key}Begin`, {
+            initialValue: field['ui:defaultBeginValue'],
+          })(<InputNumber {...field['ui:options']} />);
         };
         end = (getFieldDecorator) => {
-          return (
-            getFieldDecorator(`${field.key}End`, { initialValue: field['ui:defaultEndValue'] })(<InputNumber {...field['ui:options']} />)
-          );
+          return getFieldDecorator(`${field.key}End`, {
+            initialValue: field['ui:defaultEndValue'],
+          })(<InputNumber {...field['ui:options']} />);
         };
         return this.betweenColWrapper(begin, end, field);
       default:
         begin = (getFieldDecorator) => {
-          return (
-            getFieldDecorator(`${field.key}Begin`, { initialValue: field['ui:defaultBeginValue'] })(<DatePicker {...field['ui:options']} />)
-          );
+          return getFieldDecorator(`${field.key}Begin`, {
+            initialValue: field['ui:defaultBeginValue'],
+          })(<DatePicker {...field['ui:options']} />);
         };
         end = (getFieldDecorator) => {
-          return (
-            getFieldDecorator(`${field.key}End`, { initialValue: field['ui:defaultEndValue'] })(<DatePicker {...field['ui:options']} />)
-          );
+          return getFieldDecorator(`${field.key}End`, {
+            initialValue: field['ui:defaultEndValue'],
+          })(<DatePicker {...field['ui:options']} />);
         };
         return this.betweenColWrapper(begin, end, field);
     }
@@ -209,24 +241,38 @@ const SchemaUtils = {
     // console.log('formItem', formItem);
     let lgCol = 6;
     let xlCol = 6;
-    if (field['ui:widget'] === 'checkbox' || field['ui:widget'] === 'radio' || field['ui:widget'] === 'between') {
+    if (
+      field['ui:widget'] === 'checkbox' ||
+      field['ui:widget'] === 'radio' ||
+      field['ui:widget'] === 'between'
+    ) {
       lgCol = 12;
       xlCol = 12;
     }
-    return getFieldDecorator => (
+    return (getFieldDecorator) => (
       <Col key={field.key} xs={24} sm={24} md={12} lg={lgCol} xl={xlCol}>
-        <FormItem key={field.key} label={field['ui:title']} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+        <FormItem
+          key={field.key}
+          label={field['ui:title']}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+        >
           {formItem(getFieldDecorator)}
         </FormItem>
       </Col>
     );
   },
   betweenColWrapper(beginFormItem, endFormItem, field) {
-    return getFieldDecorator => (
+    return (getFieldDecorator) => (
       <Col key={`${field.key}Begin`} xs={24} sm={24} md={12} lg={12} xl={12}>
         <Row>
           <Col xs={24} sm={24} md={16}>
-            <FormItem key={`${field.key}Begin`} label={field['ui:title']} labelCol={{ span: 15 }} wrapperCol={{ span: 9 }}>
+            <FormItem
+              key={`${field.key}Begin`}
+              label={field['ui:title']}
+              labelCol={{ span: 15 }}
+              wrapperCol={{ span: 9 }}
+            >
               {beginFormItem(getFieldDecorator)}
             </FormItem>
           </Col>

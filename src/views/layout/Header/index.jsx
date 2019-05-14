@@ -22,134 +22,152 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 class MyHeader extends React.PureComponent {
-updateModule = (e) => {
-  let accesseMenu = this.props.accessMenu;
-  let moduleList = accesseMenu.filter((item) => {
-    return item.leftMenu && item.name === e.key;
-  });
-  let moduleMenu = moduleList[0].children;
-  this.props.updateModule({
-    currentModule: e.key,
-    moduleMenu,
-  });
-}
+  updateModule = (e) => {
+    let accesseMenu = this.props.accessMenu;
+    let moduleList = accesseMenu.filter((item) => {
+      return item.leftMenu && item.name === e.key;
+    });
+    let moduleMenu = moduleList[0].children;
+    this.props.updateModule({
+      currentModule: e.key,
+      moduleMenu,
+    });
+  };
 
-menuClick = (e) => {
-  console.log('navTab toggle', e);
-  // eslint-disable-next-line no-unused-expressions
-  e.key === 'logout' && this.logout();
-  // eslint-disable-next-line no-unused-expressions
-  e.key === 'navTab' && this.props.toggleNavTab && this.props.toggleNavTab();
-}
+  menuClick = (e) => {
+    console.log('navTab toggle', e);
+    // eslint-disable-next-line no-unused-expressions
+    e.key === 'logout' && this.logout();
+    // eslint-disable-next-line no-unused-expressions
+    e.key === 'navTab' && this.props.toggleNavTab && this.props.toggleNavTab();
+  };
 
-logout = async () => {
-  // try {
-  await logout();
-  // } catch (e) {}
-  removeToken();
-  this.props.history.push('/login');
-}
+  logout = async () => {
+    // try {
+    await logout();
+    // } catch (e) {}
+    removeToken();
+    this.props.history.push('/login');
+  };
 
-render() {
-  console.log('MyHeader render');// withRouter的缘故，每次点击同一个菜单，都会re-render
-  return (
-    <Header style={{ height: '50px', width: '100%', backgroundColor: '#fff', borderBottom: 'solid 1px #e8e8e8', boxSizing: 'border-box', padding: 0, position: 'fixed', zIndex: 100 }}>
-      <Row type="flex" justify="start">
-        <Col xs={6} sm={4} md={2} lg={2} xl={2}>
-          <Menu
-            style={{border: 'none'}}
-            selectable={false}
-          >
-            <Menu.Item
-              key={uuidv4()}
-            >
-              {/* 修改样式 */}
-              {/* <ul className="top-nav" style={{ lineHeight: '38px', marginLeft: 10 }}>
+  render() {
+    console.log('MyHeader render'); // withRouter的缘故，每次点击同一个菜单，都会re-render
+    return (
+      <Header
+        style={{
+          height: '50px',
+          width: '100%',
+          backgroundColor: '#fff',
+          borderBottom: 'solid 1px #e8e8e8',
+          boxSizing: 'border-box',
+          padding: 0,
+          position: 'fixed',
+          zIndex: 100,
+        }}
+      >
+        <Row type='flex' justify='start'>
+          <Col xs={6} sm={4} md={2} lg={2} xl={2}>
+            <Menu style={{ border: 'none' }} selectable={false}>
+              <Menu.Item key={uuidv4()}>
+                {/* 修改样式 */}
+                {/* <ul className="top-nav" style={{ lineHeight: '38px', marginLeft: 10 }}>
                 <li> */}
-              <div style={{ backgroundColor: 'yellow', textAlign: 'center' }} onClick={this.props.toggle}>
-                <Icon
-                  type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
-                  style={{ fontSize: '20px', color: '#08c' }}
-                />
-              </div>
-              {/* </li>
+                <div
+                  style={{ backgroundColor: 'yellow', textAlign: 'center' }}
+                  onClick={this.props.toggle}
+                >
+                  <Icon
+                    type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
+                    style={{ fontSize: '20px', color: '#08c' }}
+                  />
+                </div>
+                {/* </li>
               </ul> */}
-            </Menu.Item>
-          </Menu>
-        </Col>
-        {/* ModuleMenu */}
-        <Col xs={17} sm={18} md={8} lg={7} xl={7}>
-          <ModuleMenu
-            style={{border: 'none'}}
-            moduleList={this.props.moduleList}
-            updateModule={this.updateModule}
-            currentModule={this.props.currentModule}
-          />
-        </Col>
-        {/* SearchInput */}
-        <Col xs={24} sm={12} md={7} lg={6} xl={6}>
-          <Menu
-            style={{border: 'none'}}
-            selectable={false}
-          >
-            <Menu.Item
-              key={uuidv4()}
+              </Menu.Item>
+            </Menu>
+          </Col>
+          {/* ModuleMenu */}
+          <Col xs={17} sm={18} md={8} lg={7} xl={7}>
+            <ModuleMenu
+              style={{ border: 'none' }}
+              moduleList={this.props.moduleList}
+              updateModule={this.updateModule}
+              currentModule={this.props.currentModule}
+            />
+          </Col>
+          {/* SearchInput */}
+          <Col xs={24} sm={12} md={7} lg={6} xl={6}>
+            <Menu style={{ border: 'none' }} selectable={false}>
+              <Menu.Item key={uuidv4()}>
+                <SearchInput
+                  style={{ width: '100%', height: 50, padding: '0px 20px' }}
+                />
+              </Menu.Item>
+            </Menu>
+          </Col>
+          {/* githubIcon */}
+          <Col xs={12} sm={4} md={1} lg={1} xl={2}>
+            <Menu style={{ border: 'none' }} selectable={false}>
+              <Menu.Item
+                // style={{padding: '4 0 0 0'}}
+                key={uuidv4()}
+              >
+                <a href='https://github.com/wjkang/3YAdmin' target={'_blank'}>
+                  <Icon
+                    style={{ fontSize: '20px', color: '#08c' }}
+                    type='github'
+                  />
+                </a>
+              </Menu.Item>
+            </Menu>
+          </Col>
+          {/* FullScreen */}
+          <Col xs={6} sm={4} md={2} lg={2} xl={2}>
+            <Menu style={{ border: 'none' }} selectable={false}>
+              <Menu.Item key={uuidv4()}>
+                <FullScreen />
+              </Menu.Item>
+            </Menu>
+          </Col>
+          {/* SubMenu */}
+          {/* src={this.props.avatar} */}
+          {/* <Col xs={12} sm={8} md={7} lg={6} xl={7}> */}
+          <Col xs={6} sm={4} md={3} lg={2} xl={2}>
+            <Menu
+              mode='horizontal'
+              style={{ lineHeight: '48px', border: 'none' }}
+              onClick={this.menuClick}
             >
-              <SearchInput style={{ width: '100%', height: 50, padding: '0px 20px' }} />
-            </Menu.Item>
-          </Menu>
-        </Col>
-        {/* githubIcon */}
-        <Col xs={12} sm={4} md={1} lg={1} xl={2}>
-          <Menu
-            style={{border: 'none'}}
-            selectable={false}
-          >
-            <Menu.Item
-              // style={{padding: '4 0 0 0'}}
-              key={uuidv4()}
-            >
-              <a href="https://github.com/wjkang/3YAdmin" target={'_blank'}>
-                <Icon style={{ fontSize: '20px', color: '#08c' }} type="github" />
-              </a>
-            </Menu.Item>
-          </Menu>
-        </Col>
-        {/* FullScreen */}
-        <Col xs={6} sm={4} md={2} lg={2} xl={2}>
-          <Menu
-            style={{ border: 'none' }}
-            selectable={false}
-          >
-            <Menu.Item
-              key={uuidv4()}
-            >
-              <FullScreen />
-            </Menu.Item>
-          </Menu>
-        </Col>
-        {/* SubMenu */}
-        {/* src={this.props.avatar} */}
-        {/* <Col xs={12} sm={8} md={7} lg={6} xl={7}> */}
-        <Col xs={6} sm={4} md={3} lg={2} xl={2}>
-          <Menu
-            mode="horizontal"
-            style={{ lineHeight: '48px', border: 'none' }}
-            onClick={this.menuClick}
-          >
-            <SubMenu title={<span className="avatar"><img src={logo} alt="头像" /><i className="on bottom b-white" /></span>}>
-              <MenuItemGroup title="用户中心">
-                <Menu.Item key="navTab">你好 - 关闭tabs {this.props.name}</Menu.Item>
-                <Menu.Item key="setting:1"><Icon type="user" />个人信息</Menu.Item>
-                <Menu.Item key="logout"><span onClick={this.logout}><Icon type="logout" />退出登录</span></Menu.Item>
-              </MenuItemGroup>
-            </SubMenu>
-          </Menu>
-        </Col>
-      </Row>
-    </Header>
-  );
-}
+              <SubMenu
+                title={
+                  <span className='avatar'>
+                    <img src={logo} alt='头像' />
+                    <i className='on bottom b-white' />
+                  </span>
+                }
+              >
+                <MenuItemGroup title='用户中心'>
+                  <Menu.Item key='navTab'>
+                    你好 - 关闭tabs {this.props.name}
+                  </Menu.Item>
+                  <Menu.Item key='setting:1'>
+                    <Icon type='user' />
+                    个人信息
+                  </Menu.Item>
+                  <Menu.Item key='logout'>
+                    <span onClick={this.logout}>
+                      <Icon type='logout' />
+                      退出登录
+                    </span>
+                  </Menu.Item>
+                </MenuItemGroup>
+              </SubMenu>
+            </Menu>
+          </Col>
+        </Row>
+      </Header>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
@@ -182,4 +200,9 @@ MyHeader.propTypes = {
   accessMenu: PropTypes.array.isRequired,
   toggleNavTab: PropTypes.func.isRequired,
 };
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MyHeader));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(MyHeader),
+);

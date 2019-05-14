@@ -17,7 +17,13 @@ export default function user(state, action) {
     case actions.GET_USERINFO_SUCCESS:
       // 获取用户信息
       console.log('actions.GET_USERINFO_SUCCESS', action);
-      return { ...state, name: action.name, avatar: action.avatar, isAdmin: action.isAdmin, permission: action.permission };
+      return {
+        ...state,
+        name: action.name,
+        avatar: action.avatar,
+        isAdmin: action.isAdmin,
+        permission: action.permission,
+      };
     case actions.LOGOUT_SUCCESS:
       // 登出
       return {

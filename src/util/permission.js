@@ -1,7 +1,6 @@
-
 const permission = {};
 // 权限校验
-permission.check = function (config) {
+permission.check = function(config) {
   if (config.permission && config.permission.length > 0) {
     let needPermissions = config.permission;
     let permissions = JSON.parse(localStorage.getItem('permission'));

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button} from 'antd';
+import { Button } from 'antd';
 
 export default class Test extends React.Component {
   componentDidMount() {
@@ -8,12 +8,10 @@ export default class Test extends React.Component {
   }
 
   render() {
-    const {num, actions} = this.props;
+    const { num, actions } = this.props;
     return (
       <div>
-        <p>
-          {num}
-        </p>
+        <p>{num}</p>
         <Button onClick={() => actions.add()}>+</Button>
       </div>
     );

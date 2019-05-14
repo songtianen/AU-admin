@@ -8,7 +8,6 @@ import Spin from './views/layout/Spin';
 
 const MySpin = Spin.Spin;
 
-
 class App extends React.Component {
   render() {
     return (

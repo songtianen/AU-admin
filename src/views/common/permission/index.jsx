@@ -13,26 +13,17 @@ class PermissionContainer extends React.PureComponent {
     if (!hasPermission && needPermission.length > 0) {
       // 如果用户权限里至少有PermissionContainer传入的权限码
       for (let p of needPermission) {
-        if (userPermission.some(s => s === p)) {
+        if (userPermission.some((s) => s === p)) {
           // 此用户就有权限
           hasPermission = true;
           break;
         }
       }
     }
-    return (
-      display === 'block'
-        ? (
-          <div>
-            {hasPermission ? children : null}
-          </div>
-        )
-        : (
-          <span>
-            {hasPermission ? children : null}
-          </span>
-        )
-
+    return display === 'block' ? (
+      <div>{hasPermission ? children : null}</div>
+    ) : (
+      <span>{hasPermission ? children : null}</span>
     );
   }
 }

@@ -1,6 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Tree, Form, TreeSelect, Input, Button, Switch, InputNumber, message, Tag, Icon } from 'antd';
+import {
+  Row,
+  Col,
+  Tree,
+  Form,
+  TreeSelect,
+  Input,
+  Button,
+  Switch,
+  InputNumber,
+  message,
+  Tag,
+  Icon,
+} from 'antd';
 import { getAllMenu, saveMenu } from '../../../api';
 import Icons from '../../../conf/icon';
 
@@ -18,17 +31,32 @@ class Menu extends React.PureComponent {
     },
     selected: false,
     addChild: false,
-  }
+  };
 
   getIConsTree = () => {
     for (let item of Icons) {
       let children = [];
       for (let child of item.icons) {
-        children.push(<SelectTreeNode value={child.icon} title={<span><Icon type={child.icon} style={{ color: '#08c' }} />&nbsp;&nbsp;{child.title}</span>} key={child.icon} />);
+        children.push(
+          <SelectTreeNode
+            value={child.icon}
+            title={
+              <span>
+                <Icon type={child.icon} style={{ color: '#08c' }} />
+                &nbsp;&nbsp;{child.title}
+              </span>
+            }
+            key={child.icon}
+          />,
+        );
       }
-      iconsTree.push(<SelectTreeNode title={item.title} key={item.title}>{children}</SelectTreeNode>);
+      iconsTree.push(
+        <SelectTreeNode title={item.title} key={item.title}>
+          {children}
+        </SelectTreeNode>,
+      );
     }
-  }
+  };
 
   componentWillMount() {
     this.getIConsTree();
@@ -45,7 +73,7 @@ class Menu extends React.PureComponent {
     this.setState({
       menuList,
     });
-  }
+  };
 
   onSelect = (selectedKeys, info) => {
     let { setFieldsValue, resetFields } = this.props.form;
@@ -79,7 +107,7 @@ class Menu extends React.PureComponent {
       isLock: menu.isLock,
       icon: menu.icon,
     });
-  }
+  };
 
   findMenubyId = (id) => {
     let menu = {};
@@ -98,7 +126,7 @@ class Menu extends React.PureComponent {
     getMenu(this.state.menuList);
     console.log('menu-----', this.state.menuList);
     return menu;
-  }
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -119,7 +147,7 @@ class Menu extends React.PureComponent {
         }
       }
     });
-  }
+  };
 
   addChildMenu = () => {
     this.setState({
@@ -132,7 +160,7 @@ class Menu extends React.PureComponent {
       },
     });
     this.props.form.resetFields();
-  }
+  };
 
   addTopMenu = () => {
     this.setState({
@@ -144,17 +172,18 @@ class Menu extends React.PureComponent {
         parentId: 0,
       },
     });
-  }
+  };
 
   render() {
     console.log('menu render');
-    const renderMenu = menuList => menuList.map(
-      menu => (
+    const renderMenu = (menuList) =>
+      menuList.map((menu) => (
         <TreeNode title={menu.title} key={menu.id}>
-          { menu.children && menu.children.length > 0 ? renderMenu(menu.children) : ''}
+          {menu.children && menu.children.length > 0
+            ? renderMenu(menu.children)
+            : ''}
         </TreeNode>
-      ),
-    );
+      ));
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: {
@@ -177,86 +206,108 @@ class Menu extends React.PureComponent {
         sm: {
           span: 16,
           offset: 8,
-        }},
+        },
+      },
     };
     return (
       <div>
-        <Row type="flex" justify="start">
-          <Col xs={24} sm={24} md={12} lg={6} xl={8} style={{ backgroundColor: '#fafafa' }}>
-            <Tree
-              onSelect={this.onSelect}
-            >
-              { renderMenu(this.state.menuList) }
+        <Row type='flex' justify='start'>
+          <Col
+            xs={24}
+            sm={24}
+            md={12}
+            lg={6}
+            xl={8}
+            style={{ backgroundColor: '#fafafa' }}
+          >
+            <Tree onSelect={this.onSelect}>
+              {renderMenu(this.state.menuList)}
             </Tree>
           </Col>
           <Col xs={24} sm={24} md={12} lg={9} xl={9}>
             <div style={{ padding: 8 }}>
-              <Button icon="plus" size="small" onClick={this.addTopMenu}>顶级菜单</Button>
-              <Button disabled={!this.state.selected} icon="plus" size="small" onClick={this.addChildMenu}>子级菜单</Button>
-            </div>
-            <Form {...formItemLayout} onSubmit={this.handleSubmit} style={{backgroundColor: 'pink'}}>
-              <div style={{ padding: 10, paddingLeft: 50, display: this.state.selected ? 'block' : 'none' }}>
-                正在编辑菜单：<Tag color="#108ee9">{this.state.tempMenu.title}</Tag>
-              </div>
-              <div style={{ padding: 10, paddingLeft: 50, display: this.state.addChild ? 'block' : 'none' }}>
-                添加&nbsp;&nbsp;<Tag color="#108ee9">{this.state.tempMenu.title}</Tag>子菜单
-              </div>
-              <FormItem
-                hasFeedback
-                label="名称"
+              <Button icon='plus' size='small' onClick={this.addTopMenu}>
+                顶级菜单
+              </Button>
+              <Button
+                disabled={!this.state.selected}
+                icon='plus'
+                size='small'
+                onClick={this.addChildMenu}
               >
-                {
-                  getFieldDecorator('name', {
-                    rules: [{
+                子级菜单
+              </Button>
+            </div>
+            <Form
+              {...formItemLayout}
+              onSubmit={this.handleSubmit}
+              style={{ backgroundColor: 'pink' }}
+            >
+              <div
+                style={{
+                  padding: 10,
+                  paddingLeft: 50,
+                  display: this.state.selected ? 'block' : 'none',
+                }}
+              >
+                正在编辑菜单：
+                <Tag color='#108ee9'>{this.state.tempMenu.title}</Tag>
+              </div>
+              <div
+                style={{
+                  padding: 10,
+                  paddingLeft: 50,
+                  display: this.state.addChild ? 'block' : 'none',
+                }}
+              >
+                添加&nbsp;&nbsp;
+                <Tag color='#108ee9'>{this.state.tempMenu.title}</Tag>子菜单
+              </div>
+              <FormItem hasFeedback label='名称'>
+                {getFieldDecorator('name', {
+                  rules: [
+                    {
                       whitespace: true,
                       required: true,
                       message: '名字不能为空',
-                    }],
-                  })(<Input />)
-                }
+                    },
+                  ],
+                })(<Input />)}
               </FormItem>
-              <FormItem
-                hasFeedback
-                label="标题"
-              >
-                {
-                  getFieldDecorator('title', {
-                    rules: [{
-                      required: true, message: '标题不能为空!',
-                    }],
-                  })(<Input />)}
+              <FormItem hasFeedback label='标题'>
+                {getFieldDecorator('title', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '标题不能为空!',
+                    },
+                  ],
+                })(<Input />)}
               </FormItem>
-              <FormItem
-                hasFeedback
-                label="权限码"
-              >
+              <FormItem hasFeedback label='权限码'>
                 {getFieldDecorator('functionCode')(<Input />)}
               </FormItem>
-              <FormItem
-                label="排序"
-              >
-                {getFieldDecorator('sort', { initialValue: 0 })(<InputNumber min={0} />)}
+              <FormItem label='排序'>
+                {getFieldDecorator('sort', { initialValue: 0 })(
+                  <InputNumber min={0} />,
+                )}
               </FormItem>
-              <FormItem
-                label="是否左侧显示"
-              >
-                {getFieldDecorator('leftMenu', { valuePropName: 'checked' })(<Switch />)}
+              <FormItem label='是否左侧显示'>
+                {getFieldDecorator('leftMenu', { valuePropName: 'checked' })(
+                  <Switch />,
+                )}
               </FormItem>
-              <FormItem
-                label="是否锁定"
-              >
-                {getFieldDecorator('isLock', { valuePropName: 'checked' })(<Switch />)}
+              <FormItem label='是否锁定'>
+                {getFieldDecorator('isLock', { valuePropName: 'checked' })(
+                  <Switch />,
+                )}
               </FormItem>
-              <FormItem
-                hasFeedback
-                label="图标"
-              >
+              <FormItem hasFeedback label='图标'>
                 {getFieldDecorator('icon', { initialValue: '' })(
                   <TreeSelect
                     showSearch
-
                     dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
-                    placeholder="Please select"
+                    placeholder='Please select'
                     allowClear
                     treeDefaultExpandAll
                   >
@@ -265,7 +316,9 @@ class Menu extends React.PureComponent {
                 )}
               </FormItem>
               <FormItem {...tailFormItemLayout}>
-                <Button type="primary" htmlType="submit">提交</Button>
+                <Button type='primary' htmlType='submit'>
+                  提交
+                </Button>
               </FormItem>
             </Form>
           </Col>
@@ -274,7 +327,6 @@ class Menu extends React.PureComponent {
     );
   }
 }
-
 
 Menu.propTypes = {
   form: PropTypes.object.isRequired,

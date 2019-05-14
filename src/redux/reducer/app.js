@@ -1,7 +1,4 @@
-import {
-  UPDATE_MODULE,
-  UPDATE_ACCESSMENU,
-} from '../actions/actionTypes';
+import { UPDATE_MODULE, UPDATE_ACCESSMENU } from '../actions/actionTypes';
 
 export default function app(state, action) {
   if (!state) {

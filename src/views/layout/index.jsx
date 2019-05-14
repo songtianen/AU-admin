@@ -26,11 +26,11 @@ class MyLayout extends React.PureComponent {
     responsive: false,
     navTabShow: true,
     navTabTop: 50,
-  }
+  };
 
   componentDidMount() {
-    this.initAppData();// 数据初始化完后再触发一次render
-    this.getClientWidth();// 判断屏幕尺寸再触发一次render(不需要可去掉)
+    this.initAppData(); // 数据初始化完后再触发一次render
+    this.getClientWidth(); // 判断屏幕尺寸再触发一次render(不需要可去掉)
     window.onresize = () => {
       this.getClientWidth();
     };
@@ -72,32 +72,37 @@ class MyLayout extends React.PureComponent {
         navTabTop: 50,
       });
     }
-  }
+  };
 
   toggle = () => {
     this.child.setOpenKeys(this.state.collapsed);
     this.setState({
       collapsed: !this.state.collapsed,
     });
-  }
+  };
 
   // 隐藏 contentTab
   toggleNavTab = () => {
     this.setState({ navTabShow: !this.state.navTabShow });
-  }
+  };
 
-  initAppData = async () => { // 获取用户信息,菜单,权限列表(整个应用就一种layout布局,App就是相当母版页,不必在AuthrizedRoute里每次路由跳转的时候判断是否需要获取,是否登录也在此处判断)
+  initAppData = async () => {
+    // 获取用户信息,菜单,权限列表(整个应用就一种layout布局,App就是相当母版页,不必在AuthrizedRoute里每次路由跳转的时候判断是否需要获取,是否登录也在此处判断)
     // 没有登录，跳转到登录界面，并记下当前路径
     let token = getToken();
     if (!token) {
       this.props.history.push('/login');
       return;
     }
-    let [infoRes, menuRes] = await Promise.all([getUserInfo(), getAccessMemu()]);
+    let [infoRes, menuRes] = await Promise.all([
+      getUserInfo(),
+      getAccessMemu(),
+    ]);
     // console.log('infoRes', infoRes, 'menuRes', menuRes);
     let permission = [...infoRes.data.userRole, ...infoRes.data.userPermission];
     let isAdmin = infoRes.data.isAdmin;
-    let userInfo = { // 用户信息
+    let userInfo = {
+      // 用户信息
       name: infoRes.data.userName,
       avatar: infoRes.data.avatarUrl,
       isAdmin,
@@ -108,12 +113,14 @@ class MyLayout extends React.PureComponent {
     menuRes.data.push(...constantMenu); // 添加不需要后端返回的菜单列表
     let openAccesseMenu = util.openAccesseMenu(menuRes.data); // 添加parentName属性,传入后端返回的菜单数据
     // console.log('openAccesseMenu', openAccesseMenu);
-    let moduleList = menuRes.data.filter((item) => { // 是左侧菜单
+    let moduleList = menuRes.data.filter((item) => {
+      // 是左侧菜单
       return item.leftMenu;
     });
     let currentModule = moduleList[0].name; // 当前显示的菜单
     let moduleMenu = moduleList[0].children;
-    this.props.updateAccessMenu({ // redux 设置菜单
+    this.props.updateAccessMenu({
+      // redux 设置菜单
       currentModule, // 当前打开模块
       accessMenu: menuRes.data, // 所有菜单
       openAccessMenu: openAccesseMenu, // 打开的菜单
@@ -122,17 +129,20 @@ class MyLayout extends React.PureComponent {
     });
     this.props.updateUserInfo(userInfo); // redux 存入userInfo
     this.initChildData(this.props);
-  }
+  };
 
   initChildData(props) {
     console.log('this.refs.wrappedInstance', this.child);
-    console.log('this.refs.wrappedInstance++props.location.pathname', props.location.pathname);
+    console.log(
+      'this.refs.wrappedInstance++props.location.pathname',
+      props.location.pathname,
+    );
     this.child.initMenu(props.location.pathname);
   }
 
   onRef = (ref) => {
     this.child = ref;
-  }
+  };
 
   render() {
     console.log('TabMode render', this.state.responsive);
@@ -151,9 +161,7 @@ class MyLayout extends React.PureComponent {
             toggleNavTab={this.toggleNavTab}
             navTabshow={this.state.navTabShow}
           />
-          <Content
-            style={{ overflow: 'auto', background: '#e0e0e0' }}
-          >
+          <Content style={{ overflow: 'auto', background: '#e0e0e0' }}>
             <MyNavTabs
               style={{
                 marginTop: this.state.navTabTop,
@@ -194,4 +202,7 @@ MyLayout.propTypes = {
   location: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToPorps, mapDispatchToProps)(MyLayout);
+export default connect(
+  mapStateToPorps,
+  mapDispatchToProps,
+)(MyLayout);

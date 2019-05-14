@@ -1,7 +1,6 @@
 import qs from 'qs';
 import request from '../util/request';
 
-
 export function loginByUsername(username, password) {
   console.log('http loginByUsername ------', username, password);
   const data = {

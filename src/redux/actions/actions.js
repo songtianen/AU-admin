@@ -40,7 +40,6 @@ export const updateUserInfo = (userInfo) => {
   return { type: actions.GET_USERINFO_SUCCESS, ...userInfo };
 };
 
-
 export const logout = () => {
   return { type: actions.LOGOUT_SUCCESS };
 };

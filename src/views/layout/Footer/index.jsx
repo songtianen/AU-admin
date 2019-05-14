@@ -1,12 +1,10 @@
 import React from 'react';
-import {Layout} from 'antd';
+import { Layout } from 'antd';
 
-const {Footer} = Layout;
+const { Footer } = Layout;
 // eslint-disable-next-line react/prefer-stateless-function
 export default class Foot extends React.PureComponent {
   render() {
-    return (
-      <Footer>Footffffffffer</Footer>
-    );
+    return <Footer>Footffffffffer</Footer>;
   }
 }

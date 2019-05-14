@@ -1,4 +1,3 @@
-
 const TokenKey = 'AU-admin';
 
 export function getToken() {

@@ -5,6 +5,4 @@ import App from './HotApp';
 import './index.less';
 
 OfflinePluginRuntime.install();
-ReactDOM.render(
-  <App />, document.getElementById('root'),
-);
+ReactDOM.render(<App />, document.getElementById('root'));

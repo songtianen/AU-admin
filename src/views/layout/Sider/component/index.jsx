@@ -12,7 +12,7 @@ class MySider extends React.PureComponent {
   state = {
     openKeys: [],
     selectedKey: '',
-  }
+  };
 
   componentDidMount() {
     this.props.onRef(this);
@@ -20,12 +20,16 @@ class MySider extends React.PureComponent {
 
   initMenu = (pathname) => {
     // console.log('调用initMenu+++++');
-    let name = Object.keys(MenuToRouter).find(key => MenuToRouter[key] === pathname);
+    let name = Object.keys(MenuToRouter).find(
+      (key) => MenuToRouter[key] === pathname,
+    );
     // console.log('Sider+的+initMenu', name);
     if (name) {
-      let parentKeys = util.getParentMenusByName(this.props.openAccessMenu, name).map((item) => {
-        return item.name;
-      });
+      let parentKeys = util
+        .getParentMenusByName(this.props.openAccessMenu, name)
+        .map((item) => {
+          return item.name;
+        });
       // console.log('Sider+的+initMenu的parentKeys当前menu组件的key', parentKeys);
       if (parentKeys.length > 0) {
         let currentModule = parentKeys[0];
@@ -45,7 +49,8 @@ class MySider extends React.PureComponent {
           });
         }
       }
-      if (!this.props.collapsed) { // 菜单收缩状态，回退或前进显示菜单 BUG
+      if (!this.props.collapsed) {
+        // 菜单收缩状态，回退或前进显示菜单 BUG
         this.setState({
           openKeys: parentKeys,
         });
@@ -55,7 +60,7 @@ class MySider extends React.PureComponent {
         selectedKey: name,
       });
     }
-  }
+  };
 
   setOpenKeys = (collapsed) => {
     if (!collapsed) {
@@ -63,7 +68,7 @@ class MySider extends React.PureComponent {
         openKeys: [],
       });
     }
-  }
+  };
 
   // menuClick = (e) => {
   //   this.setState({
@@ -73,9 +78,11 @@ class MySider extends React.PureComponent {
 
   openMenu = (v) => {
     console.log('sider按钮展开的回调函数', v);
-    let parentKeys = util.getParentMenusByName(this.props.openAccessMenu, v[v.length - 1]).map((item) => {
-      return item.name;
-    });
+    let parentKeys = util
+      .getParentMenusByName(this.props.openAccessMenu, v[v.length - 1])
+      .map((item) => {
+        return item.name;
+      });
     this.setState({
       openKeys: parentKeys,
     });
@@ -123,4 +130,7 @@ MySider.propTypes = {
   updateModule: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MySider);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MySider);

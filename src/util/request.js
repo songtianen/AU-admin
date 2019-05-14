@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { message } from 'antd';
-import {createBrowserHistory} from 'history';
+import { createBrowserHistory } from 'history';
 import { getToken, removeToken } from './token';
 import loading from './loading';
 import permission from './permission';
@@ -11,33 +11,37 @@ let history = createBrowserHistory({
 });
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.NODE_ENV === 'development' ? '/api' : 'http://localhost:2223', // api的base_url
+  baseURL:
+    process.env.NODE_ENV === 'development' ? '/api' : 'http://localhost:2223', // api的base_url
   timeout: 20000,
 });
 
 // request interceptor
-service.interceptors.request.use((config) => {
-  // console.log('axios --- service.interceptors.request.use', config);
-  // Do something before request is sent
-  // 权限效验
-  if (!permission.check(config)) {
-    // eslint-disable-next-line no-throw-literal
-    throw '403';
-  }
-  loading.show(config);
-  let token = getToken();
-  // console.log('token??', config)
-  // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-  // eslint-disable-next-line prefer-template
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => {
-  // Do something with request error
-  console.log('请求错误', error); // for debug
-  Promise.reject(error);
-});
+service.interceptors.request.use(
+  (config) => {
+    // console.log('axios --- service.interceptors.request.use', config);
+    // Do something before request is sent
+    // 权限效验
+    if (!permission.check(config)) {
+      // eslint-disable-next-line no-throw-literal
+      throw '403';
+    }
+    loading.show(config);
+    let token = getToken();
+    // console.log('token??', config)
+    // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
+    // eslint-disable-next-line prefer-template
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    // Do something with request error
+    console.log('请求错误', error); // for debug
+    Promise.reject(error);
+  },
+);
 
 // respone interceptor
 service.interceptors.response.use(
