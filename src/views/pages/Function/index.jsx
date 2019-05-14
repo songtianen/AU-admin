@@ -310,9 +310,6 @@ class Function extends React.PureComponent {
 
   render() {
     console.log("Function render");
-    console.log("Function editFormData", this.editFormData);
-    console.log("Function saveFunction", this.saveFunction);
-
     const { selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
