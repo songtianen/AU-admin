@@ -121,15 +121,15 @@ class Function extends React.PureComponent {
   handleTableChange = (pagination, filters, sorter) => {
     console.log(
       'Function  table 表格 分页、排序、筛选变化时触发 pagination----',
-      pagination
+      pagination,
     );
     console.log(
       'Function  table 表格 分页、排序、筛选变化时触发 filters----',
-      filters
+      filters,
     );
     console.log(
       'Function  table 表格 分页、排序、筛选变化时触发 sorter----',
-      sorter
+      sorter,
     );
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
@@ -203,7 +203,7 @@ class Function extends React.PureComponent {
         ids: JSON.stringify(
           this.state.selectedRowKeys.map((s) => {
             return s;
-          })
+          }),
         ),
       });
       this.setState({
@@ -232,21 +232,21 @@ class Function extends React.PureComponent {
   editFunction = (record) => {
     // 使用缓存的 menuList
     let menuList = formRemoteDataUtil.getData(
-      `${schema.editSchema['$id']}_moduleId`
+      `${schema.editSchema['$id']}_moduleId`,
     );
     let openMenuList = util.openTreeData(menuList);
     console.log(
       'let openMenuList = util.openTreeData(menuList);',
-      openMenuList
+      openMenuList,
     );
     let menuWithParent = util.getTreeEleWithParent(
       record.moduleId,
-      openMenuList
+      openMenuList,
     );
     console.log(
       'let menuWithParent = util.getTreeEleWithParent(record.moduleId, openMenuList);',
       record.moduleId,
-      menuWithParent
+      menuWithParent,
     );
     let moduleId = menuWithParent.map((s) => s.id);
     this.editFormData = { ...record, moduleId };
@@ -262,13 +262,13 @@ class Function extends React.PureComponent {
     console.log('saveFunction-data', data);
     let formData = { ...this.editFormData, ...data };
     let menuList = formRemoteDataUtil.getData(
-      `${schema.editSchema['$id']}_moduleId`
+      `${schema.editSchema['$id']}_moduleId`,
     );
     formData.moduleId = formData.moduleId[formData.moduleId.length - 1];
     let menu = util.getTreeEleByPropertyValue(
       formData.moduleId,
       'id',
-      menuList
+      menuList,
     );
     formData.module = menu.title;
     try {

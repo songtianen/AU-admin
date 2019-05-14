@@ -2,7 +2,7 @@ module.exports = {
   eslintIntegration: true,
   jsxSingleQuote: true,
   singleQuote: true,
-  trailingComma: 'es5',
+  trailingComma: 'all',
   bracketSpacing: true,
   arrowParens: 'always',
   semi: true,
