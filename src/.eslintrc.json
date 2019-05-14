@@ -10,7 +10,6 @@
     "sourceType": "module"
   },
   "extends": ["airbnb", "prettier"],
-  "plugins": ["prettier"],
   "rules": {
     "semi": [2, "always"],
     "jsx-a11y/click-events-have-key-events": [0],

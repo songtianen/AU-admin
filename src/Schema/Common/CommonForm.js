@@ -1,13 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
-import commonFormSchemaUtil from "./commonFormSchemaUtilPlus";
+import React from 'react';
+import PropTypes from 'prop-types';
+import commonFormSchemaUtil from './commonFormSchemaUtilPlus';
 
 class CommonForm extends React.PureComponent {
   handleSubmit = () => {
     this.formRef.props.form.validateFields((err, values) => {
       if (!err) {
         // 还是要交给上层组件处理
-        console.log("this.props.handleSubmit(values)", values);
+        console.log('this.props.handleSubmit(values)', values);
         this.props.handleSubmit(values);
       }
     });
@@ -19,7 +19,7 @@ class CommonForm extends React.PureComponent {
   };
 
   render() {
-    console.log("CommonForm render");
+    console.log('CommonForm render');
     const { schema, uiSchema, formData, style } = this.props;
     // 根据当前的schema, 获取对应的表单组件
     const FormComponent = commonFormSchemaUtil.getForm(schema, uiSchema);
@@ -28,7 +28,7 @@ class CommonForm extends React.PureComponent {
       <div style={style}>
         <FormComponent
           formData={formData}
-          wrappedComponentRef={instance => {
+          wrappedComponentRef={(instance) => {
             this.formRef = instance;
           }}
         />
@@ -41,6 +41,6 @@ CommonForm.propTypes = {
   uiSchema: PropTypes.object.isRequired,
   formData: PropTypes.object,
   handleSubmit: PropTypes.func,
-  style: PropTypes.object.isRequired
+  style: PropTypes.object.isRequired,
 };
 export default CommonForm;
