@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import commonFormSchemaUtil from './commonFormSchemaUtilPlus';
 
 class CommonForm extends React.PureComponent {
-  handleSubmit = () => {
+  commonFormhandleSubmit = () => {
     this.formRef.props.form.validateFields((err, values) => {
       if (!err) {
         // 还是要交给上层组件处理
-        console.log('this.props.handleSubmit(values)', values);
-        this.props.handleSubmit(values);
+        console.log('CommonForm -组件this.props.handleSubmit(values)', values);
+        this.props.modalSaveFunctionData(values);
       }
     });
     // const obj = this.formRef.props.form.getFieldsValue();
@@ -40,7 +40,7 @@ CommonForm.propTypes = {
   schema: PropTypes.object.isRequired,
   uiSchema: PropTypes.object.isRequired,
   formData: PropTypes.object,
-  handleSubmit: PropTypes.func,
+  modalSaveFunctionData: PropTypes.func,
   style: PropTypes.object.isRequired,
 };
 export default CommonForm;

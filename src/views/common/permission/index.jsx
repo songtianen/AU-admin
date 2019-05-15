@@ -1,5 +1,6 @@
 import React from 'react';
 
+// 组件级全选效验
 class PermissionContainer extends React.PureComponent {
   render() {
     // eslint-disable-next-line react/prop-types

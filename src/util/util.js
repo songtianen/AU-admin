@@ -1,6 +1,4 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable import/no-mutable-exports */
-
+// eslint-disable-next-line import/no-mutable-exports
 let util = {};
 util.title = function(title) {
   title = title || 'vue.quasar.admin';

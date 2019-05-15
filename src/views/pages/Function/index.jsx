@@ -1,6 +1,4 @@
-/* eslint-disable react/no-unused-state */
 import React from 'react';
-// eslint-disable-next-line no-unused-vars
 import { notification, Table, Popconfirm, Divider, Button, Modal } from 'antd';
 import {
   getFunctionPagedList,
@@ -257,8 +255,8 @@ class Function extends React.PureComponent {
     });
   };
 
-  // Modal 保存 ：此方法传入子组件 commonForm 获取表单数据data
-  saveFunction = async (data) => {
+  // Modal 处理数据 ：此方法传入子组件 commonForm 获取表单数据data
+  modalSaveFunctionData = async (data) => {
     console.log('saveFunction-data', data);
     let formData = { ...this.editFormData, ...data };
     let menuList = formRemoteDataUtil.getData(
@@ -290,7 +288,7 @@ class Function extends React.PureComponent {
   // Modal Onok 确认保存 调用子组件handleSubmit，子组件handleSubmit（）调用父组件的saveFunction（），子组件校验表单 并传回 表单数据
   editModalOnOk = () => {
     // 不直接调用saveFunction，是因为form组件内部会先校验表单，通过才会调用通过props传进去的saveFunction
-    this.editFunctionForm.handleSubmit();
+    this.editFunctionForm.commonFormhandleSubmit();
   };
 
   // Modal Cancel
@@ -311,8 +309,6 @@ class Function extends React.PureComponent {
   render() {
     console.log('Function render');
     console.log('Function editFormData', this.editFormData);
-    console.log('Function saveFunction', this.saveFunction);
-
     const { selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -376,7 +372,7 @@ class Function extends React.PureComponent {
             schema={schema.editSchema}
             uiSchema={schema.editUiSchema}
             formData={this.editFormData}
-            handleSubmit={this.saveFunction}
+            modalSaveFunctionData={this.modalSaveFunctionData}
           />
         </Modal>
         {/* 隐藏组件,做数据初始化,style不先定义每次父组件render都会跟着render */}

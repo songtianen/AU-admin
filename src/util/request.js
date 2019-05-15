@@ -19,9 +19,9 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   (config) => {
-    // console.log('axios --- service.interceptors.request.use', config);
+    console.log('axios --- service.interceptors.request.use', config);
     // Do something before request is sent
-    // 权限效验
+    // 接口级权限效验
     if (!permission.check(config)) {
       // eslint-disable-next-line no-throw-literal
       throw '403';

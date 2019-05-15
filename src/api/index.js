@@ -60,6 +60,7 @@ export function delUser(id) {
     method: 'delete',
     params: id,
     loading: 'message',
+    // permission: ['xxoo'] 接口级权限效验,请求相应接口时,直接拦截请求,
   });
 }
 
