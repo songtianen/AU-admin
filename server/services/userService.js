@@ -6,17 +6,17 @@ const {
   // SystemlimitsModel,
   // AccessMemu,
   // menuChildren
-} = require('../model/model')
+} = require('../model/model');
 
 // const roleService = require('./roleService')
 // const functionService = require('./functionService')
 const getUserInfoById = (id) => {
-  return userModel.findOne({ _id: id }).exec()
-}
+  return userModel.findOne({ _id: id }).exec();
+};
 
 module.exports = {
   getUserInfoById,
-}
+};
 // getUserRole: (userId) => {
 //   let roleUserDb = model.init(roleUserContext)
 //   let roleUserList = roleUserDb.filter({ userId: userId }).value()

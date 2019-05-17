@@ -1,5 +1,6 @@
 const { FunctionModel } = require('../model/model');
 const _ = require('lodash');
+// const { businessError, success } = require('../lib/responseTemplate');
 
 // 查询功能列表
 const findFunctionList = (selector = {}) => {
@@ -71,32 +72,66 @@ module.exports = {
   //     let db = await model.init(context)
   //     await db.remove({ id: id }).write()
   //   },
-  //   saveFunction: async (func) => {
-  //     let db = await model.init(context)
-  //     let exist = db.find({ code: func.code }).value()
-  //     if (exist && exist.id !== func.id) {
-  //       return {
-  //         success: false,
-  //         msg: '功能编码已经存在'
-  //       }
-  //     }
-  //     let exist1 = db.find({ moduleId: func.moduleId, name: func.name }).value()
-  //     if (exist1 && exist1.id !== func.id) {
-  //       return {
-  //         success: false,
-  //         msg: '当前模块功能名称已经存在'
-  //       }
-  //     }
-  //     if (func.id) {
-  //       await db.find({ id: func.id })
-  //         .assign(func)
-  //         .write()
-  //     } else {
-  //       await db.insert(func).write()
-  //     }
-  //     return {
-  //       success: true,
-  //       msg: ''
-  //     }
-  //   }
+  saveFunction: (func) => {
+    // 查询一条
+    FunctionModel.findOne({ code: func.code }, (err, rs) => {
+      if (!err) {
+        console.log('保存功能', rs);
+        if (rs && rs.id !== func.id) {
+          return {
+            success: false,
+            msg: '功能编码已经存在',
+          };
+        }
+      }
+    });
+    FunctionModel.findOne(
+      { moduleId: func.moduleId, name: func.name },
+      (err, rs) => {
+        if (!err) {
+          if (rs && rs.id !== func.id) {
+            return {
+              success: false,
+              msg: '当前模块功能名称已经存在',
+            };
+          }
+          console.log('保存功能saveFunction 查询数据库', rs);
+        }
+      },
+    );
+    if (func.id) {
+      FunctionModel.where({ id: func.id }).updateOne(
+        { $set: { ...func } },
+        (err, d) => {
+          if (!err) {
+            console.log('function 更新数据库');
+          }
+        },
+      );
+    }
+  },
+  // if (exist && exist.id !== func.id) {
+  //   return {
+  //     success: false,
+  //     msg: '功能编码已经存在',
+  //   };
+  // }
+  // let exist1 = db.find({ moduleId: func.moduleId, name: func.name }).value();
+  // if (exist1 && exist1.id !== func.id) {
+  //   return {
+  //     success: false,
+  //     msg: '当前模块功能名称已经存在',
+  //   };
+  // }
+  // if (func.id) {
+  //   db.find({ id: func.id })
+  //     .assign(func)
+  //     .write();
+  // } else {
+  //   db.insert(func).write();
+  // }
+  // return {
+  //   success: true,
+  //   msg: '',
+  // };
 };
