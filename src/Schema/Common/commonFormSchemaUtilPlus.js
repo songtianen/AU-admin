@@ -212,10 +212,9 @@ const SchemaUtils = {
       if (uiSchemaProperty['ui:formItemConfig']['wrapperCol'] === undefined) {
         uiSchemaProperty['ui:formItemConfig']['wrapperCol'] = { span: 16 };
       }
-      // required (表单必选)暂时不设置
+      // required (表单必选)暂时不设置 可用来设置 验证二次输入的秘码是否与某个组件一致
       // required 校验 如果ui:required（可以默认是一个数组）如果存在
-      // 'ui:required' : [{name: 'song', message: '请输入song'}]
-
+      // 'ui:required' : [{name: 'password', message: '输入密码不一致'}]
       if (uiSchemaProperty['ui:required'] !== undefined) {
         uiSchemaProperty['ui:rules'].push({
           // validator 方法为 antd 自定义效验规则

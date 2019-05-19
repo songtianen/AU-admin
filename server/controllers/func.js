@@ -1,7 +1,8 @@
 const {
-  FunctionPagedList,
+  functionPagedList,
   findFunctionList,
   saveFunction,
+  serviceDelFuntion,
 } = require('../services/functionService');
 
 const responseTemplate = require('../lib/responseTemplate');
@@ -16,7 +17,7 @@ const getFunctionPagedList = ({ req, res }) => {
   let filter = JSON.parse(req.query.filter);
   findFunctionList()
     .then((doc) => {
-      const pagedList = FunctionPagedList(
+      const pagedList = functionPagedList(
         doc,
         req,
         res,
@@ -32,11 +33,19 @@ const getFunctionPagedList = ({ req, res }) => {
       console.log('getFunctionPagedList错误', err);
     });
 };
-// const delFuntion = async (ctx) => {
-//   // let id = ctx.query.id
-//   // await functionService.delFuntion(id)
-//   return responseTemplate.success(ctx, null);
-// };
+const delFuntion = ({ req, res }) => {
+  const id = req.query.id;
+  serviceDelFuntion(id)
+    .then((result) => {
+      console.log('serviceDelFuntion', result);
+      if (result && result.ok) {
+        return responseTemplate.success({ res, msg: '删除成功' });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 // export let delFuntions = async (ctx) => {
 //   let ids = JSON.parse(ctx.query.ids)
@@ -73,6 +82,6 @@ const postSaveFunction = ({ req, res }) => {
 
 module.exports = {
   getFunctionPagedList,
-  // delFuntion,
+  delFuntion,
   postSaveFunction,
 };

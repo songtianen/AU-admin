@@ -175,7 +175,7 @@ export function delFunction(id) {
 
   return request({
     url: '/function/del',
-    method: 'delete',
+    method: 'get',
     params: id,
     loading: 'message',
   });
@@ -186,7 +186,7 @@ export function delFunctions(ids) {
 
   return request({
     url: '/function/batchdel',
-    method: 'delete',
+    method: 'get',
     params: ids,
     loading: 'message',
   });

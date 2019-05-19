@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 export default {
   name: {
     'ui:widget': 'input',
@@ -9,6 +10,7 @@ export default {
       { required: true, message: '请输入功能名称' },
       { max: 25, message: '最多输入25字符' },
       { whitespace: true, message: '输入的文字不能有空格' },
+      // eslint-disable-next-line prettier/prettier
     ], // 校验规则
     'ui:title': '功能名称',
     'ui:description': '',

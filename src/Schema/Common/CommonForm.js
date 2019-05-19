@@ -5,10 +5,15 @@ import commonFormSchemaUtil from './commonFormSchemaUtilPlus';
 class CommonForm extends React.PureComponent {
   commonFormhandleSubmit = () => {
     this.formRef.props.form.validateFields((err, values) => {
+      // 可以做一些数据的处理
       if (!err) {
         // 还是要交给上层组件处理
-        console.log('CommonForm -组件this.props.handleSubmit(values)', values);
-        this.props.modalSaveFunctionData(values);
+        let copy = {
+          ...values,
+          name: values.name.trim(),
+          code: values.code.trim(),
+        };
+        this.props.modalSaveFunctionData(copy);
       }
     });
     // const obj = this.formRef.props.form.getFieldsValue();

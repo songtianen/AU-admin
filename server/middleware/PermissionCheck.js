@@ -3,7 +3,7 @@ const { businessError } = require('../lib/responseTemplate');
 
 const PermissionCheck = ({ permission = [], role = [] }) => {
   return (req, res, next) => {
-    console.log('宋天恩-----');
+    console.log('PermissionCheck-----');
     getUserInfoById(req.user.userId).then((result) => {
       const { isAdmin, userRole, userPermission } = result;
       // 哪些用户角色可以编辑哪些权限。
@@ -12,7 +12,7 @@ const PermissionCheck = ({ permission = [], role = [] }) => {
       }
       // 如果是管理员
       if (isAdmin) {
-        console.log('宋天恩-----1');
+        console.log('PermissionCheck-----1');
         return next();
       }
       //  如果不是管理员则进行用户角色 与 用户权限效验

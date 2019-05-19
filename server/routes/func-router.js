@@ -2,6 +2,7 @@ const express = require('express');
 const {
   getFunctionPagedList,
   postSaveFunction,
+  delFuntion,
 } = require('../controllers/func');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
 
@@ -22,6 +23,13 @@ router.post(
   PermissionCheck({ permission: ['function_edit'] }),
   (req, res) => {
     postSaveFunction({ req, res });
+  },
+);
+router.get(
+  '/del',
+  PermissionCheck({ permission: ['function_edit'] }),
+  (req, res) => {
+    delFuntion({ req, res });
   },
 );
 module.exports = router;
