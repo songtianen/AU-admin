@@ -33,11 +33,11 @@ const getFunctionPagedList = ({ req, res }) => {
       console.log('getFunctionPagedList错误', err);
     });
 };
+// 删除一条
 const delFuntion = ({ req, res }) => {
   const id = req.query.id;
   serviceDelFuntion(id)
     .then((result) => {
-      console.log('serviceDelFuntion', result);
       if (result && result.ok) {
         return responseTemplate.success({ res, msg: '删除成功' });
       }
@@ -46,14 +46,14 @@ const delFuntion = ({ req, res }) => {
       console.log(err);
     });
 };
-
-// export let delFuntions = async (ctx) => {
-//   let ids = JSON.parse(ctx.query.ids)
-//   for (let id of ids) {
-//     await functionService.delFuntion(id)
-//   }
-//   return responseTemplate.success(ctx, null)
-// }
+// 删除多条
+const delFuntions = ({ req, res }) => {
+  let ids = JSON.parse(req.query.ids);
+  for (let id of ids) {
+    serviceDelFuntion(id);
+  }
+  return responseTemplate.success({ res, msg: '已删除多条数据' });
+};
 
 const postSaveFunction = ({ req, res }) => {
   let func = req.body;
@@ -83,5 +83,6 @@ const postSaveFunction = ({ req, res }) => {
 module.exports = {
   getFunctionPagedList,
   delFuntion,
+  delFuntions,
   postSaveFunction,
 };

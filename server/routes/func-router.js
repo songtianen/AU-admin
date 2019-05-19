@@ -3,6 +3,7 @@ const {
   getFunctionPagedList,
   postSaveFunction,
   delFuntion,
+  delFuntions,
 } = require('../controllers/func');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
 
@@ -30,6 +31,13 @@ router.get(
   PermissionCheck({ permission: ['function_edit'] }),
   (req, res) => {
     delFuntion({ req, res });
+  },
+);
+router.get(
+  '/batchdel',
+  PermissionCheck({ permission: ['function_edit'] }),
+  (req, res) => {
+    delFuntions({ req, res });
   },
 );
 module.exports = router;

@@ -71,6 +71,7 @@ module.exports = {
   //     return functions
   //   },
   serviceDelFuntion: async (id) => {
+    // 删除一条
     const de = await FunctionModel.deleteOne({ id: id });
     return de;
   },
