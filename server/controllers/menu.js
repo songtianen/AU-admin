@@ -12,7 +12,7 @@ const getAccessMenuList = ({ req, res }) => {
   getUserInfoById(req.user.userId).then((userInfo) => {
     findAccessMenuList().then((doc) => {
       let menuList = AccessMenuList(req, userInfo, doc);
-      return success(res, menuList);
+      return success({ res, data: menuList });
     });
   });
 };
@@ -21,7 +21,7 @@ const getMenuList = ({ req, res }) => {
   findAccessMenuList()
     .then((doc) => {
       let menuList = MenuList(doc);
-      return success(res, menuList);
+      return success({ res, data: menuList });
     })
     .catch(() => {
       businessError(res, '服务器错误');

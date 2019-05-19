@@ -8,6 +8,7 @@ export default {
     'ui:rules': [
       { required: true, message: '请输入功能名称' },
       { max: 25, message: '最多输入25字符' },
+      { whitespace: true, message: '输入的文字不能有空格' },
     ], // 校验规则
     'ui:title': '功能名称',
     'ui:description': '',
@@ -27,6 +28,7 @@ export default {
     'ui:rules': [
       { required: true, message: '请输入功能编码' },
       { max: 25, message: '最多输入25字符' },
+      { whitespace: true, message: '输入的文字不能有空格' },
     ], // 校验规则
     'ui:title': '功能编码',
     'ui:description': '',

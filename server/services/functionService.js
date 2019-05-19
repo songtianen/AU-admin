@@ -1,4 +1,6 @@
 const { FunctionModel } = require('../model/model');
+const uuidv4 = require('uuid/v4');
+
 const _ = require('lodash');
 // const { businessError, success } = require('../lib/responseTemplate');
 
@@ -72,42 +74,54 @@ module.exports = {
   //     let db = await model.init(context)
   //     await db.remove({ id: id }).write()
   //   },
-  saveFunction: (func) => {
+  saveFunction: async (func) => {
     // 查询一条
-    FunctionModel.findOne({ code: func.code }, (err, rs) => {
-      if (!err) {
-        console.log('保存功能', rs);
-        if (rs && rs.id !== func.id) {
-          return {
-            success: false,
-            msg: '功能编码已经存在',
-          };
-        }
-      }
+    const funcCode = await FunctionModel.findOne({ code: func.code });
+
+    if (funcCode && funcCode.id !== func.id) {
+      return {
+        success: false,
+        msg: '功能编码已经存在',
+      };
+    }
+    console.log('async 测试funcCode', funcCode);
+    const funcName = await FunctionModel.findOne({
+      moduleId: func.moduleId,
+      name: func.name,
     });
-    FunctionModel.findOne(
-      { moduleId: func.moduleId, name: func.name },
-      (err, rs) => {
-        if (!err) {
-          if (rs && rs.id !== func.id) {
-            return {
-              success: false,
-              msg: '当前模块功能名称已经存在',
-            };
-          }
-          console.log('保存功能saveFunction 查询数据库', rs);
-        }
-      },
-    );
+    console.log('async 测试funcName', funcName);
+
+    if (funcName && funcName.id !== func.id) {
+      return {
+        success: false,
+        msg: '当前模块功能名称已经存在',
+      };
+    }
     if (func.id) {
-      FunctionModel.where({ id: func.id }).updateOne(
-        { $set: { ...func } },
-        (err, d) => {
-          if (!err) {
-            console.log('function 更新数据库');
-          }
-        },
-      );
+      const d = await FunctionModel.where({ id: func.id }).updateOne({
+        $set: { ...func },
+      });
+      const { ok } = d;
+      console.log('保存的数据', typeof d.ok);
+      if (ok) {
+        return {
+          success: true,
+          msg: '数据更新成功！',
+        };
+      }
+    } else {
+      const insertFunc = {
+        ...func,
+        id: uuidv4(),
+      };
+      const dbFunc = new FunctionModel(insertFunc);
+      await dbFunc.save((er) => {
+        console.log('保存错误', er);
+      });
+      return {
+        success: true,
+        msg: '数据保存成功！',
+      };
     }
   },
   // if (exist && exist.id !== func.id) {

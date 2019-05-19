@@ -12,12 +12,15 @@ let getUserInfo = ({ req, res }) => {
       return businessError(res, '获取用户信息失败!');
     }
     if (doc) {
-      success(res, {
-        userName: doc.userName,
-        userRole: doc.userRole,
-        userPermission: doc.userPermission,
-        isAdmin: doc.isAdmin,
-        avatarUrl: doc.avatar,
+      success({
+        res,
+        data: {
+          userName: doc.userName,
+          userRole: doc.userRole,
+          userPermission: doc.userPermission,
+          isAdmin: doc.isAdmin,
+          avatarUrl: doc.avatar,
+        },
       });
     }
   });

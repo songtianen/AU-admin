@@ -26,17 +26,17 @@ const getFunctionPagedList = ({ req, res }) => {
         descending,
         filter,
       );
-      return success(res, pagedList);
+      return success({ res, data: pagedList });
     })
     .catch((err) => {
       console.log('getFunctionPagedList错误', err);
     });
 };
-const delFuntion = async (ctx) => {
-  // let id = ctx.query.id
-  // await functionService.delFuntion(id)
-  return responseTemplate.success(ctx, null);
-};
+// const delFuntion = async (ctx) => {
+//   // let id = ctx.query.id
+//   // await functionService.delFuntion(id)
+//   return responseTemplate.success(ctx, null);
+// };
 
 // export let delFuntions = async (ctx) => {
 //   let ids = JSON.parse(ctx.query.ids)
@@ -58,15 +58,21 @@ const postSaveFunction = ({ req, res }) => {
   if (!func.moduleId) {
     return responseTemplate.businessError(res, '请选择模块!');
   }
-  let result = saveFunction(func);
-  if (!result.success) {
-    return responseTemplate.businessError(res, result.msg);
-  }
-  return responseTemplate.success(res, '成功了');
+  saveFunction(func)
+    .then((result) => {
+      console.log('saveFunction 异步---', result);
+      if (!result.success) {
+        return responseTemplate.businessError(res, result.msg);
+      }
+      return responseTemplate.success({ res, msg: result.msg });
+    })
+    .catch((err) => {
+      return responseTemplate.businessError(res, err);
+    });
 };
 
 module.exports = {
   getFunctionPagedList,
-  delFuntion,
+  // delFuntion,
   postSaveFunction,
 };

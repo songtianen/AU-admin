@@ -212,9 +212,10 @@ const SchemaUtils = {
       if (uiSchemaProperty['ui:formItemConfig']['wrapperCol'] === undefined) {
         uiSchemaProperty['ui:formItemConfig']['wrapperCol'] = { span: 16 };
       }
-      // required 暂时不设置
+      // required (表单必选)暂时不设置
       // required 校验 如果ui:required（可以默认是一个数组）如果存在
       // 'ui:required' : [{name: 'song', message: '请输入song'}]
+
       if (uiSchemaProperty['ui:required'] !== undefined) {
         uiSchemaProperty['ui:rules'].push({
           // validator 方法为 antd 自定义效验规则
@@ -310,6 +311,9 @@ const SchemaUtils = {
       const schemaProperty = schemaProperties[key];
       // 注意, 每个字段transform之后, 返回的也都是一个回调函数, 所以items其实是一个回调函数的集合
       switch (field['ui:widget']) {
+        case 'input':
+          items.push(util.transformInput(field, schemaProperty));
+          break;
         case 'inputNumber':
           items.push(util.transformInputNumber(field, schemaProperty));
           break;

@@ -137,7 +137,7 @@ let menuService = {
       };
       AccessMemuModel.create({ ...insertData }, (err, doc) => {
         if (!err) {
-          return success(res, '添加成功');
+          return success({ res, data: '', msg: '添加成功' });
         }
       });
     }

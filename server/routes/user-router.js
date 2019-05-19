@@ -38,7 +38,7 @@ router.post('/login', (req, res) => {
         let token = jwt.sign(tokenObj, secretKey, {
           expiresIn: '24h', // 授权时效24小时
         });
-        success(res, { accessToken: token });
+        success({ res, data: { accessToken: token } });
       } else {
         businessError(res, 'fail');
       }
