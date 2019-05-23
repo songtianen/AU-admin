@@ -49,6 +49,7 @@ const delFuntion = ({ req, res }) => {
 // 删除多条
 const delFuntions = ({ req, res }) => {
   let ids = JSON.parse(req.query.ids);
+  // 删除多条数据也是一条一条删
   for (let id of ids) {
     serviceDelFuntion(id);
   }
