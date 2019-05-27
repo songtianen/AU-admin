@@ -9,18 +9,18 @@ const FunctionPage = Loadable({
   loader: () => import('../views/pages/Function'),
   loading: ContentLoader,
 });
-// const Role = Loadable({
-//   loader: () => import('@/pages/role'),
-//   loading: ContentLoader,
-// });
+const Role = Loadable({
+  loader: () => import('../views/pages/Role/component'),
+  loading: ContentLoader,
+});
 const Home = Loadable({
   loader: () => import('../views/common/Home'),
   loading: ContentLoader,
 });
-// const RolePermission = Loadable({
-//   loader: () => import('@/pages/rolePermission'),
-//   loading: ContentLoader,
-// });
+const RolePermission = Loadable({
+  loader: () => import('../views/pages/RolePermisson/component'),
+  loading: ContentLoader,
+});
 // const RoleUser = Loadable({
 //   loader: () => import('@/pages/roleUser'),
 //   loading: ContentLoader,
@@ -67,8 +67,8 @@ export default {
   menu: Menu,
   home: Home,
   function: FunctionPage,
-  // role: Role,
-  // rolepermission: RolePermission,
+  role: Role,
+  rolepermission: RolePermission,
   // roleuser: RoleUser,
   // userrole: UserRole,
   // user_index: User,

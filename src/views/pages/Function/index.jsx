@@ -6,7 +6,7 @@ import {
   delFunctions,
   saveFunction,
 } from '../../../api';
-import SearchForm from '../../../schema/SeatchForm/SearchForm';
+import SearchForm from '../../../schema/SearchForm/SearchForm';
 import CommonForm from '../../../schema/Common/CommonForm';
 import schema from '../../../schema/Function';
 import PermissionContainer from '../../common/permission';

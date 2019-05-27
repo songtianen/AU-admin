@@ -133,6 +133,15 @@ const functionSchema = new mongoose.Schema({
   module: String,
   id: String,
 });
+// 角色列表
+const roleSchema = new mongoose.Schema({
+  name: String,
+  code: String,
+  description: String,
+  id: String,
+});
+
+let roleModel = mongoose.model('rolelist', roleSchema);
 let userModel = mongoose.model('User', userSchema);
 let AccessMemuModel = mongoose.model('AccessMemu', AccessMemu);
 let FunctionModel = mongoose.model('FunctionList', functionSchema);
@@ -144,4 +153,5 @@ module.exports = {
   AccessMemuModel,
   menuChildren,
   FunctionModel,
+  roleModel,
 };

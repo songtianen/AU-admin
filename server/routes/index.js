@@ -2,6 +2,7 @@ const express = require('express');
 const user = require('./user-router');
 const menu = require('./menu-router');
 const func = require('./func-router');
+const role = require('./role-router');
 const jwtAuth = require('./jwt');
 // 注册路由
 const router = express.Router();
@@ -33,5 +34,6 @@ router.use((err, req, res, next) => {
 router.use('/user', user);
 router.use('/menu', menu);
 router.use('/function', func);
+router.use('/role', role);
 
 module.exports = router;

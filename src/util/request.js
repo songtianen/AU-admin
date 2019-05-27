@@ -4,7 +4,6 @@ import { createBrowserHistory } from 'history';
 import { getToken, removeToken } from './token';
 import loading from './loading';
 import permission from './permission';
-// import history from './history';
 
 let history = createBrowserHistory({
   forceRefresh: true,
