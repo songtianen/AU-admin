@@ -64,7 +64,7 @@ class Role extends React.PureComponent {
             <Divider type='vertical' />
             <Popconfirm
               title='确定删除?'
-              onConfirm={() => this.editRole(record)}
+              onConfirm={() => this.delRole(record)}
             >
               <a href='javascript:;'>删除</a>
             </Popconfirm>
@@ -135,6 +135,107 @@ class Role extends React.PureComponent {
     });
   };
 
+  //  button 新增
+  addRole = () => {
+    this.editFormData = {};
+    this.setState({
+      editModalVisible: true,
+    });
+  };
+
+  // button Popconfirm 删除
+  batchDelRole = async () => {
+    const ids = JSON.stringify(
+      this.state.tableSelectedRowKeys.map((s) => {
+        return s;
+      }),
+    );
+    console.log('ids????????', ids);
+    try {
+      await delRoles({
+        ids: JSON.stringify(
+          this.state.tableSelectedRowKeys.map((s) => {
+            return s;
+          }),
+        ),
+      });
+      this.setState({
+        tableSelectedRowKeys: [],
+      });
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: '删除成功',
+      });
+    } catch (e) {
+      console.log('e', e);
+    }
+    this.refresh();
+  };
+
+  // table 选择器
+  onSelectChange = (selectedRowKeys) => {
+    console.log('table表格选择器', selectedRowKeys);
+    this.setState({ tableSelectedRowKeys: selectedRowKeys });
+  };
+
+  // modal
+  editModalOnCancel = () => {
+    this.setState({
+      editModalVisible: false,
+    });
+  };
+
+  // modal
+  saveRole = async (data) => {
+    let formData = { ...this.editFormData, ...data };
+    try {
+      await saveRole(formData);
+      this.setState({
+        editModalVisible: false,
+      });
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: '保存成功',
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    this.refresh();
+  };
+
+  // table delete Popconfirm
+  delRole = async (record) => {
+    const { id } = record;
+    try {
+      await delRole({ id });
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: '删除成功',
+      });
+    } catch (e) {
+      console.log('Role -delRole Err', e);
+    }
+    this.refresh();
+  };
+
+  // table edit Popconfirm
+  editRole = (record) => {
+    let obj = Object.assign(
+      {},
+      {
+        id: record.id,
+        name: record.name,
+        code: record.code,
+        description: record.description,
+      },
+    );
+    console.log('fuck-0000', record);
+    this.editFormData = { ...obj };
+    this.setState({
+      editModalVisible: true,
+    });
+  };
+
   render() {
     console.log('Role, render');
     const { tableSelectedRowKeys } = this.state;
@@ -145,7 +246,6 @@ class Role extends React.PureComponent {
     const hasSelected = tableSelectedRowKeys.length > 0;
     return (
       <div>
-        this is role
         <SearchForm
           schema={schema.searchSchema}
           uiSchema={schema.searchUiSchema}
@@ -182,7 +282,7 @@ class Role extends React.PureComponent {
           destroyOnClose
           schema={schema.editSchema}
           uiSchema={schema.editUiSchema}
-          formFata={this.editFormData}
+          formData={this.editFormData}
           handFormSubmit={this.saveRole}
         />
       </div>

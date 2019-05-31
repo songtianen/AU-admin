@@ -223,6 +223,7 @@ const SchemaUtils = {
            *  如input组件 你的输入
            */
           validator: (rule, value, callback) => {
+            // console.log('效验表单--===--ooooo', value);
             const form = instance.props.form;
             let msg = [];
             /**
@@ -231,6 +232,9 @@ const SchemaUtils = {
             for (let required of uiSchemaProperty['ui:required']) {
               // getFieldValue 获取一个输入控件的值 如form表单中的input组件
               if (value && !form.getFieldValue(required.name)) {
+                const a = form.getFieldValue(required.name);
+                console.log('效验表单--===--ooooo', a);
+
                 msg.push(required.message);
               }
             }

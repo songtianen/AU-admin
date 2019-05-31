@@ -9,7 +9,7 @@ class EditRoleModal extends React.PureComponent {
   };
 
   onOk = () => {
-    this.editForm.handleSubmit();
+    this.editForm.commonFormhandleSubmit();
   };
 
   render() {
@@ -30,7 +30,7 @@ class EditRoleModal extends React.PureComponent {
           schema={this.props.schema}
           uiSchema={this.props.uiSchema}
           formData={this.props.formData}
-          handleSubmit={this.props.handFormSubmit}
+          modalSaveFunctionData={this.props.handFormSubmit}
         />
       </Modal>
     );

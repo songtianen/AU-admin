@@ -19,36 +19,47 @@ module.exports = {
     );
     responseTemplate.success({ res, data: pagedList });
   },
+  saveRole: ({ req, res }) => {
+    let func = req.body;
+    console.log('角色保存', func);
+    if (func.name === '') {
+      return responseTemplate.businessError(res, '名称不能为空!');
+    }
+    if (func.code === '') {
+      return responseTemplate.businessError(res, '编码不能为空!');
+    }
+    roleService
+      .saveRole(func)
+      .then((result) => {
+        if (!result.success) {
+          return responseTemplate.businessError(res, result.msg);
+        } else {
+          return responseTemplate.success({
+            res,
+            data: '',
+            msg: '数据库保存成功!!!',
+          });
+        }
+      })
+      .catch((err) => {
+        return responseTemplate.businessError(res, err);
+      });
+  },
+
+  delRole: async ({ req, res }) => {
+    let id = req.body.id;
+    await roleService.delRole(id);
+    return responseTemplate.success({ res, msg: '删除成功' });
+  },
+
+  delRoles: async ({ req, res }) => {
+    let ids = JSON.parse(req.body.ids);
+    for (let id of ids) {
+      await roleService.delRole(id);
+    }
+    return responseTemplate.success({ res, msg: '多条删除成功' });
+  },
 };
-
-// export let delRole = async (ctx) => {
-//   let id = ctx.query.id;
-//   await roleService.delRole(id);
-//   return responseTemplate.success(ctx, null);
-// };
-
-// export let delRoles = async (ctx) => {
-//   let ids = JSON.parse(ctx.query.ids);
-//   for (let id of ids) {
-//     await roleService.delRole(id);
-//   }
-//   return responseTemplate.success(ctx, null);
-// };
-
-// export let saveRole = async (ctx) => {
-//   let func = ctx.request.body;
-//   if (func.name == '') {
-//     return responseTemplate.businessError(ctx, '名称不能为空!');
-//   }
-//   if (func.code == '') {
-//     return responseTemplate.businessError(ctx, '编码不能为空!');
-//   }
-//   let result = await roleService.saveRole(func);
-//   if (!result.success) {
-//     return responseTemplate.businessError(ctx, result.msg);
-//   }
-//   return responseTemplate.success(ctx, null);
-// };
 
 // export let savePermission = async (ctx) => {
 //   let data = ctx.request.body;

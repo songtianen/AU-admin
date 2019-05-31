@@ -219,8 +219,8 @@ export function delRole(id) {
 
   return request({
     url: '/role/del',
-    method: 'delete',
-    params: id,
+    method: 'post',
+    data: id,
     loading: 'message',
   });
 }
@@ -229,8 +229,8 @@ export function delRoles(ids) {
   console.log('http delRoles ids ------', ids);
   return request({
     url: '/role/batchdel',
-    method: 'delete',
-    params: ids,
+    method: 'post',
+    data: ids,
     loading: 'message',
   });
 }

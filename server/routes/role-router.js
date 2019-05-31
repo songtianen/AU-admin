@@ -1,6 +1,11 @@
 const express = require('express');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
-const { getRolePagedList } = require('../controllers/role');
+const {
+  getRolePagedList,
+  saveRole,
+  delRoles,
+  delRole,
+} = require('../controllers/role');
 
 const router = express.Router();
 
@@ -14,15 +19,30 @@ router.get(
     getRolePagedList({ req, res });
   },
 );
-// router.get(
-//   '/pagedlist',
-//   PermissionCheck({
-//     permission: ['role_view', 'role_permission_view', 'role_user_view'],
-//   }),
-//   (req, res) => {
-//     // controller
-//   },
-// );
+router.post(
+  '/save',
+  PermissionCheck({ permission: ['role_edit'] }),
+  (req, res) => {
+    saveRole({ req, res });
+  },
+);
+
+router.post(
+  '/batchdel',
+  PermissionCheck({ permission: ['role_del'] }),
+  (req, res) => {
+    delRoles({ req, res });
+  },
+);
+
+router.post(
+  '/del',
+  PermissionCheck({ permission: ['role_del'] }),
+  (req, res) => {
+    delRole({ req, res });
+  },
+);
+
 // router.get(
 //   '/pagedlist',
 //   PermissionCheck({

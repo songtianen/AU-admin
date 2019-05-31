@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const { roleModel } = require('../model/model');
-// const uuidv4 = require('uuid/v4');
+const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
 const context = 'role';
 const permissionContext = 'permission';
@@ -24,19 +24,23 @@ module.exports = {
     // insertRole.save();
     // // 1 查询数据库
     let db = await roleModel.find();
-    console.log('用户角色filter', filter);
+    console.log('用户角色filter----', filter);
     // let roleList = db.value();
     // eslint-disable-next-line no-unused-vars
     let resultList = db;
+    // 前端模糊查询
     if (filter.code) {
       resultList = _.filter(resultList, (o) => {
         return o.code.indexOf(filter.code) > -1;
       });
+      console.log('用户角色filter', resultList);
     }
+    // 前端模糊查询
     if (filter.name) {
       resultList = _.filter(resultList, (o) => {
         return o.name.indexOf(filter.name) > -1;
       });
+      console.log('用户角色filter', resultList);
     }
     if (filter.userId) {
       let roleUserDb = await model.init(roleUserContext);
@@ -71,32 +75,36 @@ module.exports = {
     };
   },
   delRole: async (id) => {
-    let db = await model.init(context);
-    await db.remove({ id: id }).write();
+    const a = await roleModel.findOneAndRemove({ id: id });
+    console.log('删除角色Role', a);
   },
   saveRole: async (role) => {
-    let db = await model.init(context);
-    let exist = db.find({ code: role.code }).value();
+    let exist = await roleModel.findOne({ code: role.code });
+    console.log('查询数据库save', exist);
     if (exist && exist.id !== role.id) {
       return {
         success: false,
         msg: '角色编码已经存在',
       };
     }
-    let exist1 = db.find({ name: role.name }).value();
+    let exist1 = await roleModel.findOne({ name: role.name });
+    // console.log('查询数据库save', exist);
     if (exist1 && exist1.id !== role.id) {
       return {
         success: false,
         msg: '角色名称已经存在',
       };
     }
+    // eslint-disable-next-line new-cap
+    const insertRole = new roleModel({
+      ...role,
+      id: uuidv4(),
+    });
     if (role.id) {
-      await db
-        .find({ id: role.id })
-        .assign(role)
-        .write();
+      console.log('查询数据库save===--id', role.id);
+      await roleModel.where({ id: role.id }).update({ $set: { ...role } });
     } else {
-      await db.insert(role).write();
+      await insertRole.save({ ...role });
     }
     return {
       success: true,
