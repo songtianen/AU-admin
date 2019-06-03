@@ -245,7 +245,7 @@ class Role extends React.PureComponent {
     };
     const hasSelected = tableSelectedRowKeys.length > 0;
     return (
-      <div>
+      <div style={{ backgroundColor: '#fff', padding: '18px' }}>
         <SearchForm
           schema={schema.searchSchema}
           uiSchema={schema.searchUiSchema}
@@ -273,6 +273,7 @@ class Role extends React.PureComponent {
           loading={this.state.tableLoading}
           onChange={this.handleTableChange}
           scroll={{ x: 768 }}
+          size='small'
           bordered
         />
         <EditRoleModal

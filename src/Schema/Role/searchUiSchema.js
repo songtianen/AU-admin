@@ -2,6 +2,7 @@ export default {
   name: {
     'ui:widget': 'input',
     'ui:options': {
+      size: 'small',
       type: 'text',
       placeholder: '名称模糊查询',
     },
@@ -11,6 +12,7 @@ export default {
   code: {
     'ui:widget': 'input',
     'ui:options': {
+      size: 'small',
       type: 'text',
       placeholder: '编码模糊查询',
     },
