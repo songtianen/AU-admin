@@ -1,9 +1,11 @@
+// 角色权限管理
+
 /* eslint-disable react/no-unused-state */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-script-url */
 import React from 'react';
 import { Table, Divider, notification, Tag } from 'antd';
-import { getPostPagedList, savePermission } from '../../../../api';
+import { getRolePagedList, savePermission } from '../../../../api';
 import schema from '../../../../schema/Role';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
 import EditRolePermissionModal from './editRolePermissionModal';
@@ -57,9 +59,8 @@ class RolePermission extends React.PureComponent {
                 this.editRole(record);
               }}
             >
-              编辑
+              编辑角色权限
             </a>
-            <Divider type='vertical' />
           </div>
         );
       },
@@ -70,10 +71,10 @@ class RolePermission extends React.PureComponent {
 
   fetch = async (query = {}) => {
     this.setState({ tableLoading: true });
-    let dataRes = await getPostPagedList(query);
+    let dataRes = await getRolePagedList(query);
     let data = dataRes.data;
     const pagination = { ...this.state.tablePagination };
-    pagination.total = data.total.count;
+    pagination.total = data.totalCount;
     this.setState({
       tableLoading: false,
       tablePageList: data.rows,
@@ -127,8 +128,26 @@ class RolePermission extends React.PureComponent {
 
   render() {
     console.log('RolePermission render');
+    // const data = [
+    //   {
+    //     _id: '5cec003f57278379c4d8c9e2',
+    //     code: 'role_website_admin',
+    //     name: '管理员账号',
+    //     description: '',
+    //     id: '5e86c043-7811-49a1-88e6-946c465c797a',
+    //     __v: 0,
+    //   },
+    //   {
+    //     _id: '5cec136e3d04787ddb561f09',
+    //     code: 'role_test',
+    //     name: '测试账号',
+    //     description: '',
+    //     id: '41f5af5f-8326-4bc7-be43-45ea9311f3c4',
+    //     __v: 0,
+    //   },
+    // ];
     return (
-      <div>
+      <div style={{ backgroundColor: '#fff', padding: '18px' }}>
         this is role songtianen
         <SearchForm
           schema={schema.searchSchema}
@@ -137,6 +156,17 @@ class RolePermission extends React.PureComponent {
           handleReset={this.handleReset}
         />
         <Divider />
+        <Table
+          columns={this.columns}
+          rowKey={(record) => record.id}
+          dataSource={this.state.tablePageList}
+          pagination={this.state.tablePagination}
+          loading={this.state.tableLoading}
+          onChange={this.handleTableChange}
+          scroll={{ x: 768 }}
+          size='small'
+          bordered
+        />
       </div>
     );
   }
