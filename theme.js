@@ -11,5 +11,5 @@ module.exports = {
   'disabled-color': 'rgba(0, 0, 0, .25)', // 失效色
   'border-radius-base': '2px', // 组件/浮层圆角
   'border-color-base': '#d9d9d9', // 边框色
-  'box-shadow-base': '0 2px 8px rgba(0, 0, 0, .15)' // 浮层阴影
-}
+  'box-shadow-base': '0 2px 8px rgba(0, 0, 0, .15)', // 浮层阴影
+};

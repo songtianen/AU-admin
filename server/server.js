@@ -14,14 +14,14 @@ let app = express();
 const userRouter = require('./routes/user-router.js');
 // const manageRouter = require('./manage.js')
 
-// app.all('*', function (req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*')
-//   res.header('Access-Control-Allow-Headers', 'X-Requested-With')
-//   res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS')
-//   res.header('X-Powered-By', ' 3.2.1')
-//   res.header('Content-Type', 'application/json;charset=utf-8')
-//   next()
-// })
+app.all('*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+  res.header('X-Powered-By', ' 3.2.1');
+  res.header('Content-Type', 'application/json;charset=utf-8');
+  next();
+});
 
 // app.use(cookieParser())
 app.use(bodyParser.json()); // 请求体 json格式的数据转换成 req.body 格式的数据

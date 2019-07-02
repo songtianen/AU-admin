@@ -2,13 +2,14 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 // eslint-disable-next-line no-unused-vars
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 // const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const baseWebpackConfig = require('./webpack.base.config');
-const antdTheme = require('../theme')
+const antdTheme = require('../theme');
 
-const ROOT_PATH = path.resolve(__dirname)
+const ROOT_PATH = path.resolve(__dirname);
 
 const webpackDevConfig = merge(baseWebpackConfig, {
   mode: 'development',
@@ -27,8 +28,7 @@ const webpackDevConfig = merge(baseWebpackConfig, {
       errors: true,
     },
     proxy: {
-      '/api':
-      {
+      '/api': {
         target: 'http://localhost:2223',
         changeOrigin: true,
         pathRewrite: { '^/api': '' },
@@ -59,9 +59,7 @@ const webpackDevConfig = merge(baseWebpackConfig, {
       {
         test: /.js$/,
         loader: 'babel-loader',
-        exclude: [
-          path.join(ROOT_PATH, '../node_modules'),
-        ],
+        exclude: [path.join(ROOT_PATH, '../node_modules')],
       },
       {
         test: /\.(less|css)$/,
@@ -111,7 +109,8 @@ const webpackDevConfig = merge(baseWebpackConfig, {
         use: [
           {
             loader: 'url-loader',
-            options: { // 通过options 配置路径
+            options: {
+              // 通过options 配置路径
               name: '[name].[ext]',
               limit: 8192,
               outputPath: 'assets/imgs/',
@@ -127,7 +126,6 @@ const webpackDevConfig = merge(baseWebpackConfig, {
           },
         ],
       },
-
     ],
   },
   plugins: [
@@ -155,6 +153,6 @@ const webpackDevConfig = merge(baseWebpackConfig, {
     // }),
     // --
   ],
-})
+});
 
 module.exports = webpackDevConfig;

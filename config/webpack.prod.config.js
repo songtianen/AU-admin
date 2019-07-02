@@ -1,14 +1,14 @@
 const path = require('path');
-const webpack = require('webpack')
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 // const PurifyCSS = require("purifycss-webpack");
 // const glob = require("glob-all");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const baseWebpackConfig = require('./webpack.base.config');
-const antdTheme = require('../theme')
+const antdTheme = require('../theme');
 
-const ROOT_PATH = path.resolve(__dirname)
+const ROOT_PATH = path.resolve(__dirname);
 
 const webpackProdConfig = merge(baseWebpackConfig, {
   mode: 'production',
@@ -16,7 +16,6 @@ const webpackProdConfig = merge(baseWebpackConfig, {
     filename: '[name].[hash].bundle.js',
     chunkFilename: '[name].[hash].bundle.js',
     publicPath: '',
-
   },
   module: {
     rules: [
@@ -38,9 +37,7 @@ const webpackProdConfig = merge(baseWebpackConfig, {
       {
         test: /.js$/,
         loader: 'babel-loader',
-        exclude: [
-          path.join(ROOT_PATH, '../node_modules'),
-        ],
+        exclude: [path.join(ROOT_PATH, '../node_modules')],
       },
       {
         test: /\.(less|css)$/,
@@ -95,7 +92,8 @@ const webpackProdConfig = merge(baseWebpackConfig, {
         use: [
           {
             loader: 'url-loader',
-            options: { // 通过options 配置路径
+            options: {
+              // 通过options 配置路径
               name: '[name].[ext]',
               limit: 8192,
               outputPath: 'assets/imgs/',
@@ -133,9 +131,7 @@ const webpackProdConfig = merge(baseWebpackConfig, {
     //     // path.join(ROOTPATH, "../src/*.js")
     //   ])
     // }),
-
   ],
 });
-
 
 module.exports = webpackProdConfig;
