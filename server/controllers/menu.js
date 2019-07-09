@@ -4,7 +4,9 @@ const {
   AccessMenuList,
   findAccessMenuList,
   postSaveMenu,
+  GetMenuFunctions,
 } = require('../services/menuService');
+const { getRoleFunctions } = require('../services/roleService');
 const { businessError, success } = require('../lib/responseTemplate');
 
 // 无需权限
@@ -48,8 +50,26 @@ const saveMenu = ({ req, res }) => {
     });
 };
 
+// 角色权限管理
+const getMenufunctions = async ({ req, res }) => {
+  console.log('moduleID', req.query.menuId);
+  let menuId = req.query.menuId;
+  let roleId = req.query.roleId;
+  let [menuFunctions, roleFunctions] = await Promise.all([
+    GetMenuFunctions(menuId),
+    getRoleFunctions(roleId),
+  ]);
+  return success({
+    res,
+    data: {
+      menuFunctions: menuFunctions,
+      roleFunctions: roleFunctions,
+    },
+  });
+};
 module.exports = {
   getAccessMenuList,
   getMenuList,
   saveMenu,
+  getMenufunctions,
 };

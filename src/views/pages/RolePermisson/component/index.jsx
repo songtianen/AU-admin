@@ -56,7 +56,7 @@ class RolePermission extends React.PureComponent {
             <a
               href='javascript:;'
               onClick={() => {
-                this.editRole(record);
+                this.editRolePermission(record);
               }}
             >
               编辑角色权限
@@ -108,12 +108,13 @@ class RolePermission extends React.PureComponent {
       tablePagination: pager,
     });
     let query = {
-      pagIndex: 1,
+      pageIndex: 1,
       pageSize: this.state.tablePagination.pageSize,
       sortBy: this.state.tableSorter.field,
       descending: this.state.tableSorter.order === 'descend',
       filter,
     };
+    console.log('query---1', query);
     this.fetch(query);
   };
 
@@ -126,26 +127,28 @@ class RolePermission extends React.PureComponent {
     });
   };
 
+  /**
+   * @description 编辑角色权限
+   */
+  editRolePermission = (record) => {
+    this.editFormData = { ...record };
+    console.log('$%%%%%%', this.editFormData);
+    this.setState({
+      editModalVisible: true,
+    });
+  };
+
+  /**
+   * @description ModalCancel
+   */
+  editModalOnCancel = () => {
+    this.setState({
+      editModalVisible: false,
+    });
+  };
+
   render() {
     console.log('RolePermission render');
-    // const data = [
-    //   {
-    //     _id: '5cec003f57278379c4d8c9e2',
-    //     code: 'role_website_admin',
-    //     name: '管理员账号',
-    //     description: '',
-    //     id: '5e86c043-7811-49a1-88e6-946c465c797a',
-    //     __v: 0,
-    //   },
-    //   {
-    //     _id: '5cec136e3d04787ddb561f09',
-    //     code: 'role_test',
-    //     name: '测试账号',
-    //     description: '',
-    //     id: '41f5af5f-8326-4bc7-be43-45ea9311f3c4',
-    //     __v: 0,
-    //   },
-    // ];
     return (
       <div style={{ backgroundColor: '#fff', padding: '18px' }}>
         this is role songtianen
@@ -166,6 +169,18 @@ class RolePermission extends React.PureComponent {
           scroll={{ x: 768 }}
           size='small'
           bordered
+        />
+        <EditRolePermissionModal
+          visible={this.state.editModalVisible}
+          title={
+            <span>
+              编辑角色&nbsp;&nbsp;
+              <Tag color='#2db7f5'>{this.editFormData.name}</Tag>&nbsp;权限
+            </span>
+          }
+          onCancel={this.editModalOnCancel}
+          formData={this.editFormData}
+          handFormSubmit={this.saveRolePermission}
         />
       </div>
     );

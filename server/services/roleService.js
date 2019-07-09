@@ -2,9 +2,9 @@
 const { roleModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
-const context = 'role';
-const permissionContext = 'permission';
-// const roleUserContext = 'roleUser';
+// const context = 'role';
+// const permissionContext = 'permission';
+const { dbConfig } = require('../db/db');
 module.exports = {
   getRolePagedList: async (pageIndex, pageSize, sortBy, descending, filter) => {
     // 创建数据库
@@ -24,7 +24,7 @@ module.exports = {
     // insertRole.save();
     // // 1 查询数据库
     let db = await roleModel.find();
-    console.log('用户角色filter----', filter);
+    // console.log('用户角色filter----', filter);
     // let roleList = db.value();
     // eslint-disable-next-line no-unused-vars
     let resultList = db;
@@ -33,14 +33,14 @@ module.exports = {
       resultList = _.filter(resultList, (o) => {
         return o.code.indexOf(filter.code) > -1;
       });
-      console.log('用户角色filter', resultList);
+      // console.log('用户角色filter', resultList);
     }
     // 前端模糊查询
     if (filter.name) {
       resultList = _.filter(resultList, (o) => {
         return o.name.indexOf(filter.name) > -1;
       });
-      console.log('用户角色filter', resultList);
+      // console.log('用户角色filter', resultList);
     }
     if (filter.userId) {
       let roleUserDb = await model.init(roleUserContext);
@@ -112,43 +112,43 @@ module.exports = {
     };
   },
   getRoleFunctions: async (roleId) => {
-    let db = await model.init(permissionContext);
-    let list = db.value();
+    console.log('roleId', roleId);
+    let list = dbConfig.permission;
     let roleFunctions = list.filter((s) => {
       // eslint-disable-next-line eqeqeq
       return s.roleId == roleId;
     });
     return roleFunctions;
   },
-  getRoleFuntionsByRoleIds: async (roleIds) => {
-    let db = await model.init(permissionContext);
-    let list = db.value();
-    let roleFunctions = list.filter((s) => {
-      return roleIds.indexOf(s.roleId) > -1;
-    });
-    return roleFunctions;
-  },
-  savePermission: async (menuIds, roleId, permissions) => {
-    let db = await model.init(permissionContext);
-    for (let menuId of menuIds) {
-      await db.remove({ moduleId: menuId, roleId: roleId }).write();
-    }
-    for (let permission of permissions) {
-      await db
-        .insert({
-          roleId: roleId,
-          functionId: permission.id,
-          moduleId: permission.moduleId,
-        })
-        .write();
-    }
-  },
-  getRoleListByIdList: async (idList) => {
-    let db = await model.init(context);
-    let roleList = db.value();
-    let result = roleList.filter((s) => {
-      return idList.indexOf(s.id) > -1;
-    });
-    return result;
-  },
+  // getRoleFuntionsByRoleIds: async (roleIds) => {
+  //   let db = await model.init(permissionContext);
+  //   let list = db.value();
+  //   let roleFunctions = list.filter((s) => {
+  //     return roleIds.indexOf(s.roleId) > -1;
+  //   });
+  //   return roleFunctions;
+  // },
+  // savePermission: async (menuIds, roleId, permissions) => {
+  //   let db = await model.init(permissionContext);
+  //   for (let menuId of menuIds) {
+  //     await db.remove({ moduleId: menuId, roleId: roleId }).write();
+  //   }
+  //   for (let permission of permissions) {
+  //     await db
+  //       .insert({
+  //         roleId: roleId,
+  //         functionId: permission.id,
+  //         moduleId: permission.moduleId,
+  //       })
+  //       .write();
+  //   }
+  // },
+  // getRoleListByIdList: async (idList) => {
+  //   let db = await model.init(context);
+  //   let roleList = db.value();
+  //   let result = roleList.filter((s) => {
+  //     return idList.indexOf(s.id) > -1;
+  //   });
+  //   return result;
+  // },
 };

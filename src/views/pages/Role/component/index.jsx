@@ -123,6 +123,7 @@ class Role extends React.PureComponent {
       descending: this.state.tableSorter.order === 'descend',
       filter,
     };
+    console.log('query---1', query);
     this.fetch(query);
   };
 

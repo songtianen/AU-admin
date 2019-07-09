@@ -3,8 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-// const OfflinePlugin = require('offline-plugin');
-// const WebpackPwaManifest = require('webpack-pwa-manifest');
 
 const ROOTPATH = path.resolve(__dirname);
 const isProd = process.env.NODE_ENV === 'production';
@@ -81,24 +79,6 @@ const baseWebpackConfig = {
       filename: 'index.html',
       template: path.join(ROOTPATH, '../src/index.html'),
     }),
-    // PWA
-    // new OfflinePlugin(),
-    // new WebpackPwaManifest({
-    //   name: 'My Progressive Web App',
-    //   short_name: 'MyPWA',
-    //   description: 'My awesome Progressive Web App!',
-    //   background_color: '#ffffff',
-    //   icons: [
-    //     {
-    //       src: path.resolve('src/resource/assets/logo.jpg'),
-    //       sizes: [96, 128, 192, 256, 384, 512], // multiple sizes
-    //     },
-    //     {
-    //       src: path.resolve('src/resource/assets/logo.jpg'),
-    //       size: '1024x1024', // manifest default
-    //     },
-    //   ],
-    // }),
   ],
 };
 

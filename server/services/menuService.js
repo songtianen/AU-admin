@@ -2,6 +2,7 @@ const { dbConfig } = require('../db/db');
 const uuidv4 = require('uuid/v4');
 const { AccessMemuModel } = require('../model/model'); // 引入模型
 const { businessError, success } = require('../lib/responseTemplate');
+const { findFunctionList } = require('./functionService');
 const _ = require('lodash');
 
 const buildMenu = (parentMenu, menuList) => {
@@ -161,6 +162,46 @@ let menuService = {
       }
       // 如果id存在（说明用户是在更新这条数据）
     }
+  },
+  getMenuWithChildren: async (menuId) => {
+    console.log(typeof menuId);
+    let menuList = await findAccessMenuList();
+    let menuWithChildren = [];
+    let menu = menuList.filter((s) => {
+      return (s.parentId === '0' && menuId === '0') || s.id === menuId;
+    });
+    let forFn = (parentId) => {
+      let children = menuList.filter((s) => {
+        return s.parentId === parentId;
+      });
+      if (children.length > 0) {
+        menuWithChildren.push(...children);
+        for (let child of children) {
+          forFn(child.id);
+        }
+      }
+    };
+    if (menu.length > 0) {
+      menuWithChildren.push(...menu);
+      for (let m of menu) {
+        forFn(m.id);
+      }
+    }
+    return menuWithChildren;
+  },
+  GetMenuFunctions: async (menuId) => {
+    let menuList = await menuService.getMenuWithChildren(menuId);
+    let copy = JSON.parse(JSON.stringify(menuList));
+    let functionList = await findFunctionList();
+    functionList = _.sortBy(functionList, ['name']);
+    for (let menu of copy) {
+      menu.functions = functionList.filter((s) => {
+        console.log('s.moduleId.toString()', s.moduleId.toString());
+        console.log('menu.id', menu.id);
+        return s.moduleId.toString() === menu.id;
+      });
+    }
+    return copy;
   },
 };
 module.exports = menuService;

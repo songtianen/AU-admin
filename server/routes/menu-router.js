@@ -4,6 +4,7 @@ const {
   getAccessMenuList,
   getMenuList,
   saveMenu,
+  getMenufunctions,
 } = require('../controllers/menu');
 
 const router = express.Router();
@@ -21,4 +22,8 @@ router.post(
     saveMenu({ req, res });
   },
 );
+// 角色权限接口
+router.get('/menufunctions', (req, res) => {
+  getMenufunctions({ req, res });
+});
 module.exports = router;

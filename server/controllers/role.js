@@ -5,8 +5,6 @@ const responseTemplate = require('../lib/responseTemplate');
 
 module.exports = {
   getRolePagedList: async ({ req, res }) => {
-    console.log('请求角色', req);
-
     let pageIndex = req.query.pageIndex;
     let pageSize = req.query.pageSize;
     let sortBy = req.query.sortBy;
@@ -19,6 +17,7 @@ module.exports = {
       descending,
       filter,
     );
+    console.log('请求角色', pagedList);
     responseTemplate.success({ res, data: pagedList });
   },
   saveRole: ({ req, res }) => {
