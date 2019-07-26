@@ -1,12 +1,12 @@
 /* eslint-disable handle-callback-err */
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { userModel } = require('../model/model'); // 引入模型
+const { UserModel } = require('../model/model'); // 引入模型
 const { md5PWD, secretKey } = require('../util/md5');
 const { businessError, success } = require('../lib/responseTemplate');
 const { getUserInfo } = require('../controllers/user');
 
-const User = userModel;
+const User = UserModel;
 const router = express.Router();
 
 // 获取用户列表

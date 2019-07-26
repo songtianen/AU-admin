@@ -1,4 +1,4 @@
-const { dbConfig } = require('../db/db');
+// const { dbConfig } = require('../db/db');
 const uuidv4 = require('uuid/v4');
 const { AccessMemuModel } = require('../model/model'); // 引入模型
 const { businessError, success } = require('../lib/responseTemplate');
@@ -87,7 +87,8 @@ let menuService = {
     //   console.log('更新数据库测试', doc)
     // })
     let user = req.user;
-    let menuList = doc && doc.length > 0 ? doc : dbConfig.menu;
+    // let menuList = doc && doc.length > 0 ? doc : dbConfig.menu;
+    let menuList = doc;
     // 总的菜单列表
     menuList = _.sortBy(menuList, ['sort']); // 所有菜单
     // console.log('排序后的', menuList)
@@ -196,8 +197,8 @@ let menuService = {
     functionList = _.sortBy(functionList, ['name']);
     for (let menu of copy) {
       menu.functions = functionList.filter((s) => {
-        console.log('s.moduleId.toString()', s.moduleId.toString());
-        console.log('menu.id', menu.id);
+        // console.log('s.moduleId.toString()', s.moduleId.toString());
+        // console.log('menu.id', menu.id);
         return s.moduleId.toString() === menu.id;
       });
     }

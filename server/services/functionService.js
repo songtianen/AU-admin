@@ -58,18 +58,6 @@ module.exports = {
       rows: resultList,
     };
   },
-  //   getFunctionList: async () => {
-  //     let db = await model.init(context)
-  //     return db.value()
-  //   },
-  //   getFunctionListByIds: async (ids) => {
-  //     let db = await model.init(context)
-  //     let list = db.value()
-  //     let functions = list.filter(s => {
-  //       return ids.indexOf(s.id) > -1
-  //     })
-  //     return functions
-  //   },
   serviceDelFuntion: async (id) => {
     // 删除一条
     const de = await FunctionModel.deleteOne({ id: id });

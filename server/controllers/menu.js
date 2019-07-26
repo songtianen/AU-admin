@@ -59,6 +59,7 @@ const getMenufunctions = async ({ req, res }) => {
     GetMenuFunctions(menuId),
     getRoleFunctions(roleId),
   ]);
+  // console.log('getRolefunctions', roleFunctions);
   return success({
     res,
     data: {

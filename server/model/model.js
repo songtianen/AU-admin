@@ -25,59 +25,10 @@ const productsSchema = new mongoose.Schema({
 
 let ProductsModel = mongoose.model('Products', productsSchema);
 
-const productManagementSchema = new mongoose.Schema({
-  products: {
-    name: { type: String },
-    key: { type: String },
-    lists: [
-      { name: { type: String }, key: { type: String } },
-      { name: { type: String }, key: { type: String } },
-    ],
-  },
-  order: {
-    name: { type: String },
-    key: { type: String },
-    lists: [{ name: { type: String }, key: { type: String } }],
-  },
-  users: {
-    name: { type: String },
-    key: { type: String },
-    lists: [{ name: { type: String }, key: { type: String } }],
-  },
-});
-let ProductManagementModel = mongoose.model(
-  'ProductManagementSchema',
-  productManagementSchema,
-);
-
-const systemManagementSchema = new mongoose.Schema({
-  system_user: {
-    name: { type: String },
-    key: { type: String },
-    lists: [
-      { name: { type: String }, key: { type: String } },
-      { name: { type: String }, key: { type: String } },
-    ],
-  },
-  order: {
-    name: { type: String },
-    key: { type: String },
-    lists: [{ name: { type: String }, key: { type: String } }],
-  },
-  users: {
-    name: { type: String },
-    key: { type: String },
-    lists: [{ name: { type: String }, key: { type: String } }],
-  },
-});
-let SystemlimitsModel = mongoose.model(
-  'usersManagementSchema',
-  systemManagementSchema,
-);
-
 const userSchema = new mongoose.Schema({
   isAdmin: { type: Number },
   userPermission: [String],
+  moduleId: Number,
   userRole: [String],
   userName: { type: String },
   nickName: { type: String },
@@ -99,19 +50,6 @@ const userSchema = new mongoose.Schema({
   title: { type: String },
 });
 
-const menuChildren = new mongoose.Schema({
-  functionCode: String,
-  icon: String,
-  id: Number,
-  leftMenu: Boolean,
-  isLock: Boolean,
-  name: String,
-  parentId: Number,
-  parentName: String,
-  path: String,
-  sort: Number,
-  title: String,
-});
 const AccessMemu = new mongoose.Schema({
   functionCode: String,
   icon: String,
@@ -137,21 +75,37 @@ const functionSchema = new mongoose.Schema({
 const roleSchema = new mongoose.Schema({
   name: String,
   code: String,
+  moduleId: Number,
   description: String,
   id: String,
+  permission: [String],
+});
+// 角色权限
+const rolePermission = new mongoose.Schema({
+  name: String,
+  code: String,
+  moduleId: Number,
+  roleId: String,
+  id: String,
+  permission: [String],
+});
+// 用户权限列表
+const userPermission = new mongoose.Schema({
+  permission: [String],
 });
 
-let roleModel = mongoose.model('rolelist', roleSchema);
-let userModel = mongoose.model('User', userSchema);
-let AccessMemuModel = mongoose.model('AccessMemu', AccessMemu);
-let FunctionModel = mongoose.model('FunctionList', functionSchema);
+let RoleModel = mongoose.model('rolelist', roleSchema); // 角色列表
+let RolePermission = mongoose.model('role_permission', rolePermission); // 角色权限列表
+let UserPermission = mongoose.model('user_permission', userPermission); // 用户权限列表
+let UserModel = mongoose.model('User', userSchema); // 用户列表
+let AccessMemuModel = mongoose.model('AccessMemu', AccessMemu); // 菜单列表
+let FunctionModel = mongoose.model('FunctionList', functionSchema); // 功能列表
 module.exports = {
-  userModel,
-  ProductManagementModel,
+  UserModel,
   ProductsModel,
-  SystemlimitsModel,
   AccessMemuModel,
-  menuChildren,
   FunctionModel,
-  roleModel,
+  RoleModel,
+  RolePermission,
+  UserPermission,
 };

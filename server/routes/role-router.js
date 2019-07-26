@@ -5,6 +5,7 @@ const {
   saveRole,
   delRoles,
   delRole,
+  savePermission,
 } = require('../controllers/role');
 
 const router = express.Router();
@@ -42,7 +43,13 @@ router.post(
     delRole({ req, res });
   },
 );
-
+router.post(
+  '/savepermission',
+  PermissionCheck({ permission: ['role_permission_edit'] }),
+  (req, res) => {
+    savePermission({ req, res });
+  },
+);
 // router.get(
 //   '/pagedlist',
 //   PermissionCheck({

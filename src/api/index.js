@@ -36,7 +36,6 @@ export function getUserInfo() {
 // user
 export function getUserList() {
   console.log('http getUserList ------');
-
   return request({
     url: '/user/userlist',
     method: 'get',
@@ -204,6 +203,7 @@ export function saveFunction(data) {
 }
 
 // role
+// 角色权限接口
 export function getRolePagedList(query) {
   console.log('http getRolePagedList ------', query);
 
@@ -246,9 +246,9 @@ export function saveRole(data) {
   });
 }
 
+// 保存角色权限
 export function savePermission(data) {
   console.log('http savePermission ------', data);
-
   return request({
     url: '/role/savepermission',
     method: 'post',

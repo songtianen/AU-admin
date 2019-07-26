@@ -147,11 +147,30 @@ class RolePermission extends React.PureComponent {
     });
   };
 
+  /**
+   * @description modal提交 角色权限
+   */
+  saveRolePermission = async (data) => {
+    let formData = { ...data };
+    console.log('角色权限管理，组件提交角色权限', formData);
+    try {
+      await savePermission(formData);
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: '保存成功',
+      });
+      this.setState({
+        editModalVisible: false,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   render() {
     console.log('RolePermission render');
     return (
       <div style={{ backgroundColor: '#fff', padding: '18px' }}>
-        this is role songtianen
         <SearchForm
           schema={schema.searchSchema}
           uiSchema={schema.searchUiSchema}
@@ -180,7 +199,7 @@ class RolePermission extends React.PureComponent {
           }
           onCancel={this.editModalOnCancel}
           formData={this.editFormData}
-          handFormSubmit={this.saveRolePermission}
+          handFromSubmit={this.saveRolePermission}
         />
       </div>
     );

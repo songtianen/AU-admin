@@ -31,6 +31,7 @@ class EditModal extends React.PureComponent {
       permissions: this.checkedKeys,
       moduleId: 0,
     };
+    console.log('角色权限管理，组件提交角色权限', this.props.handFromSubmit);
     await this.props.handFromSubmit(data);
     this.setState({
       menuFunctionList: [],
@@ -85,12 +86,11 @@ class EditModal extends React.PureComponent {
       menuId: 0,
       roleId,
     }).then((moduleFunctionsRes) => {
+      console.log('宋', moduleFunctionsRes);
       let menuFunctionList = this.buildMenuListAndFunctions(
         moduleFunctionsRes.data.menuFunctions,
       );
-      let rolePermissions = moduleFunctionsRes.data.roleFunctions.map(
-        (s) => s.functionId,
-      );
+      let rolePermissions = moduleFunctionsRes.data.roleFunctions;
       this.defaultCheckKeys = rolePermissions;
       this.checkedKeys = rolePermissions;
       this.setState({

@@ -1,3 +1,4 @@
+// 角色
 const roleService = require('../services/roleService');
 // import menuService from '../services/memuService';
 // import functionService from '../services/functionService';
@@ -17,7 +18,7 @@ module.exports = {
       descending,
       filter,
     );
-    console.log('请求角色', pagedList);
+    // console.log('请求角色', pagedList);
     responseTemplate.success({ res, data: pagedList });
   },
   saveRole: ({ req, res }) => {
@@ -59,6 +60,14 @@ module.exports = {
       await roleService.delRole(id);
     }
     return responseTemplate.success({ res, msg: '多条删除成功' });
+  },
+  savePermission: async ({ req, res }) => {
+    let { moduleId, roleId, permissions } = req.body;
+    let db = await roleService.savePermission(moduleId, roleId, permissions);
+    if (db) {
+      return responseTemplate.success({ res, msg: '角色权限保存成功' });
+    }
+    responseTemplate.businessError(res, '数据库保存失败!');
   },
 };
 

@@ -1,5 +1,5 @@
 const { businessError, success } = require('../lib/responseTemplate');
-const { userModel } = require('../model/model');
+const { UserModel } = require('../model/model');
 
 let getUserInfo = ({ req, res }) => {
   // console.log('user-controller', req.user)
@@ -7,7 +7,7 @@ let getUserInfo = ({ req, res }) => {
   if (!user || !user.userId) {
     return businessError(res, '获取用户信息失败!');
   }
-  userModel.findOne({ _id: user.userId }, function(err, doc) {
+  UserModel.findOne({ _id: user.userId }, function(err, doc) {
     if (err) {
       return businessError(res, '获取用户信息失败!');
     }
