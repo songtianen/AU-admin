@@ -41,9 +41,9 @@ export function getUserList() {
     method: 'get',
   });
 }
+// 获取用户列表
 export function getUserPagedList(query) {
   console.log('http getUserPagedList ------');
-
   return request({
     url: '/user/pagedlist',
     method: 'get',
@@ -203,10 +203,9 @@ export function saveFunction(data) {
 }
 
 // role
-// 角色权限接口
+// 角色接口
 export function getRolePagedList(query) {
   console.log('http getRolePagedList ------', query);
-
   return request({
     url: '/role/pagedlist',
     method: 'get',
@@ -216,7 +215,6 @@ export function getRolePagedList(query) {
 
 export function delRole(id) {
   console.log('http delRole ------', id);
-
   return request({
     url: '/role/del',
     method: 'post',

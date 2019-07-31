@@ -114,7 +114,7 @@ class RolePermission extends React.PureComponent {
       descending: this.state.tableSorter.order === 'descend',
       filter,
     };
-    console.log('query---1', query);
+    // console.log('query---1', query);
     this.fetch(query);
   };
 
@@ -132,7 +132,7 @@ class RolePermission extends React.PureComponent {
    */
   editRolePermission = (record) => {
     this.editFormData = { ...record };
-    console.log('$%%%%%%', this.editFormData);
+    // console.log('$%%%%%%', this.editFormData);
     this.setState({
       editModalVisible: true,
     });
@@ -152,7 +152,7 @@ class RolePermission extends React.PureComponent {
    */
   saveRolePermission = async (data) => {
     let formData = { ...data };
-    console.log('角色权限管理，组件提交角色权限', formData);
+    // console.log('角色权限管理，组件提交角色权限', formData);
     try {
       await savePermission(formData);
       notification.success({

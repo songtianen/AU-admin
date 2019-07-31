@@ -132,11 +132,11 @@ class MyLayout extends React.PureComponent {
   };
 
   initChildData(props) {
-    console.log('this.refs.wrappedInstance', this.child);
-    console.log(
-      'this.refs.wrappedInstance++props.location.pathname',
-      props.location.pathname,
-    );
+    // console.log('this.refs.wrappedInstance', this.child);
+    // console.log(
+    //   'this.refs.wrappedInstance++props.location.pathname',
+    //   props.location.pathname,
+    // );
     this.child.initMenu(props.location.pathname);
   }
 
@@ -145,8 +145,8 @@ class MyLayout extends React.PureComponent {
   };
 
   render() {
-    console.log('TabMode render', this.state.responsive);
-    console.log('TabMode renderthis.state', this.state.navTabTop);
+    // console.log('TabMode render', this.state.responsive);
+    // console.log('TabMode renderthis.state', this.state.navTabTop);
     return (
       <Layout>
         <MySider

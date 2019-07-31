@@ -77,7 +77,7 @@ class MySider extends React.PureComponent {
   // }; // 不需要点击事件,切换路由的时候会触发initMenu,选中相应菜单
 
   openMenu = (v) => {
-    console.log('sider按钮展开的回调函数', v);
+    // console.log('sider按钮展开的回调函数', v);
     let parentKeys = util
       .getParentMenusByName(this.props.openAccessMenu, v[v.length - 1])
       .map((item) => {

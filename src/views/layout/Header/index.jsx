@@ -35,7 +35,7 @@ class MyHeader extends React.PureComponent {
   };
 
   menuClick = (e) => {
-    console.log('navTab toggle', e);
+    // console.log('navTab toggle', e);
     // eslint-disable-next-line no-unused-expressions
     e.key === 'logout' && this.logout();
     // eslint-disable-next-line no-unused-expressions
@@ -112,7 +112,7 @@ class MyHeader extends React.PureComponent {
                 // style={{padding: '4 0 0 0'}}
                 key={uuidv4()}
               >
-                <a href='https://github.com/wjkang/3YAdmin' target={'_blank'}>
+                <a href='#' target={'_blank'}>
                   <Icon
                     style={{ fontSize: '20px', color: '#08c' }}
                     type='github'

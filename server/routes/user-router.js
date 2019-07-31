@@ -4,7 +4,13 @@ const jwt = require('jsonwebtoken');
 const { UserModel } = require('../model/model'); // 引入模型
 const { md5PWD, secretKey } = require('../util/md5');
 const { businessError, success } = require('../lib/responseTemplate');
-const { getUserInfo } = require('../controllers/user');
+const { PermissionCheck } = require('../middleware/PermissionCheck');
+
+const {
+  getUserInfo,
+  getUserPagelist,
+  postEditRoleuser,
+} = require('../controllers/user');
 
 const User = UserModel;
 const router = express.Router();
@@ -52,5 +58,17 @@ router.get('/info', (req, res) => {
   // console.log('getuserinfo user=====', req.user);
   getUserInfo({ req, res });
 });
+router.get('/pagedlist', (req, res) => {
+  getUserPagelist({ req, res });
+});
+router.post(
+  '/editroleuser',
+  PermissionCheck({
+    permission: ['role_user_edit', 'user_role_edit'],
+  }),
+  (req, res) => {
+    postEditRoleuser({ req, res });
+  },
+);
 
 module.exports = router;

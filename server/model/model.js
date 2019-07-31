@@ -27,6 +27,8 @@ let ProductsModel = mongoose.model('Products', productsSchema);
 
 const userSchema = new mongoose.Schema({
   isAdmin: { type: Number },
+  id: String,
+  email: String,
   userPermission: [String],
   moduleId: Number,
   userRole: [String],
@@ -79,6 +81,7 @@ const roleSchema = new mongoose.Schema({
   description: String,
   id: String,
   permission: [String],
+  userId: [String],
 });
 // 角色权限
 const rolePermission = new mongoose.Schema({

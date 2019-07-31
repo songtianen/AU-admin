@@ -117,18 +117,18 @@ class Function extends React.PureComponent {
 
   // table 表格 分页、排序、筛选变化时触发
   handleTableChange = (pagination, filters, sorter) => {
-    console.log(
-      'Function  table 表格 分页、排序、筛选变化时触发 pagination----',
-      pagination,
-    );
-    console.log(
-      'Function  table 表格 分页、排序、筛选变化时触发 filters----',
-      filters,
-    );
-    console.log(
-      'Function  table 表格 分页、排序、筛选变化时触发 sorter----',
-      sorter,
-    );
+    // console.log(
+    //   'Function  table 表格 分页、排序、筛选变化时触发 pagination----',
+    //   pagination,
+    // );
+    // console.log(
+    //   'Function  table 表格 分页、排序、筛选变化时触发 filters----',
+    //   filters,
+    // );
+    // console.log(
+    //   'Function  table 表格 分页、排序、筛选变化时触发 sorter----',
+    //   sorter,
+    // );
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     pager.pageSize = pagination.pageSize;
@@ -233,19 +233,19 @@ class Function extends React.PureComponent {
       `${schema.editSchema['$id']}_moduleId`,
     );
     let openMenuList = util.openTreeData(menuList);
-    console.log(
-      'let openMenuList = util.openTreeData(menuList);',
-      openMenuList,
-    );
+    // console.log(
+    //   'let openMenuList = util.openTreeData(menuList);',
+    //   openMenuList,
+    // );
     let menuWithParent = util.getTreeEleWithParent(
       record.moduleId,
       openMenuList,
     );
-    console.log(
-      'let menuWithParent = util.getTreeEleWithParent(record.moduleId, openMenuList);',
-      record.moduleId,
-      menuWithParent,
-    );
+    // console.log(
+    //   'let menuWithParent = util.getTreeEleWithParent(record.moduleId, openMenuList);',
+    //   record.moduleId,
+    //   menuWithParent,
+    // );
     let moduleId = menuWithParent.map((s) => s.id);
     this.editFormData = { ...record, moduleId };
     console.log('editFormData///-', this.editFormData);
@@ -257,7 +257,7 @@ class Function extends React.PureComponent {
 
   // Modal 处理数据 ：此方法传入子组件 commonForm 获取表单数据data
   modalSaveFunctionData = async (data) => {
-    console.log('saveFunction-data', data);
+    // console.log('saveFunction-data', data);
     let formData = { ...this.editFormData, ...data };
     let menuList = formRemoteDataUtil.getData(
       `${schema.editSchema['$id']}_moduleId`,
@@ -308,7 +308,7 @@ class Function extends React.PureComponent {
 
   render() {
     console.log('Function render');
-    console.log('Function editFormData', this.editFormData);
+    // console.log('Function editFormData', this.editFormData);
     const { selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,

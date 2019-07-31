@@ -21,7 +21,7 @@ module.exports = {
     descending,
     filter,
   ) => {
-    console.log('前端数据filter', filter);
+    // console.log('前端数据filter', filter);
     let resultList = doc;
     if (filter.module) {
       resultList = _.filter(resultList, (o) => {
@@ -73,12 +73,12 @@ module.exports = {
         msg: '功能编码已经存在',
       };
     }
-    console.log('async 测试funcCode', funcCode);
+    // console.log('async 测试funcCode', funcCode);
     const funcName = await FunctionModel.findOne({
       moduleId: func.moduleId,
       name: func.name,
     });
-    console.log('async 测试funcName', funcName);
+    // console.log('async 测试funcName', funcName);
 
     if (funcName && funcName.id !== func.id) {
       return {
@@ -91,7 +91,7 @@ module.exports = {
         $set: { ...func },
       });
       const { ok } = d;
-      console.log('保存的数据', typeof d.ok);
+      // console.log('保存的数据', typeof d.ok);
       if (ok) {
         return {
           success: true,
@@ -105,7 +105,7 @@ module.exports = {
       };
       const dbFunc = new FunctionModel(insertFunc);
       await dbFunc.save((er) => {
-        console.log('保存错误', er);
+        // console.log('保存错误', er);
       });
       return {
         success: true,

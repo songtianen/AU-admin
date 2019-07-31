@@ -123,7 +123,7 @@ class Role extends React.PureComponent {
       descending: this.state.tableSorter.order === 'descend',
       filter,
     };
-    console.log('query---1', query);
+    // console.log('query---1', query);
     this.fetch(query);
   };
 
@@ -151,7 +151,7 @@ class Role extends React.PureComponent {
         return s;
       }),
     );
-    console.log('ids????????', ids);
+    // console.log('ids????????', ids);
     try {
       await delRoles({
         ids: JSON.stringify(
@@ -175,7 +175,7 @@ class Role extends React.PureComponent {
 
   // table 选择器
   onSelectChange = (selectedRowKeys) => {
-    console.log('table表格选择器', selectedRowKeys);
+    // console.log('table表格选择器', selectedRowKeys);
     this.setState({ tableSelectedRowKeys: selectedRowKeys });
   };
 
@@ -230,7 +230,7 @@ class Role extends React.PureComponent {
         description: record.description,
       },
     );
-    console.log('fuck-0000', record);
+    // console.log('fuck-0000', record);
     this.editFormData = { ...obj };
     this.setState({
       editModalVisible: true,

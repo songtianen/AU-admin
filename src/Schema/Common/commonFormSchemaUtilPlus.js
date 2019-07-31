@@ -57,6 +57,7 @@ const SchemaUtils = {
     // 只能用传统的ES5的写法, 函数式(无状态)组件应该也可以, 但是需要生命周期相关方法
     const tmpComponent = createClass({
       getInitialState() {
+        console.log('宋天恩', FormInstanceIndexMap.get(id));
         let index = FormInstanceIndexMap.get(id);
         // es6: this.state = ....
         if (!index) {
@@ -122,7 +123,7 @@ const SchemaUtils = {
       },
       // 渲染
       render() {
-        console.log('tmpCommonForm render');
+        console.log('tmpCommonForm render宋天恩', this.generateJsx);
         let formData = this.props.formData;
         console.log('tmpCommonForm render>>>>>>>>>>///', formData);
         formData = formData || {};

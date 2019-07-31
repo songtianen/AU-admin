@@ -34,11 +34,11 @@ const SchemaUtils = {
   },
 
   createForm(id, schema, uiSchema, noCache) {
-    console.log('createForm');
+    // console.log('createForm');
     const util = this;
     const tmpComponent = createClass({
       componentWillMount() {
-        console.log('tmpComponent componentWillMount');
+        // console.log('tmpComponent componentWillMount');
         // 组件初始化时读取schema
         if (JsxGeneratorMap.has(id)) {
           this.generateJsx = JsxGeneratorMap.get(id);
@@ -52,7 +52,7 @@ const SchemaUtils = {
         this.generateJsx = generateJsx;
       },
       render() {
-        console.log('tmpComponent render');
+        // console.log('tmpComponent render');
         const style = this.props.style;
         if (this.props.noCacheSchema) {
           // 不缓存,每次纯法render,都要进行parse,不推荐
@@ -72,7 +72,7 @@ const SchemaUtils = {
     return Form.create()(tmpComponent);
   },
   parse(schema, uiSchema) {
-    console.log('parse schema->');
+    // console.log('parse schema->');
     let cols = [];
     let schemaProperties = schema['properties'];
     const util = this;

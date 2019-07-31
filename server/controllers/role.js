@@ -6,6 +6,7 @@ const responseTemplate = require('../lib/responseTemplate');
 
 module.exports = {
   getRolePagedList: async ({ req, res }) => {
+    console.log('获取用户列表', req.query);
     let pageIndex = req.query.pageIndex;
     let pageSize = req.query.pageSize;
     let sortBy = req.query.sortBy;
@@ -23,7 +24,6 @@ module.exports = {
   },
   saveRole: ({ req, res }) => {
     let func = req.body;
-    console.log('角色保存', func);
     if (func.name === '') {
       return responseTemplate.businessError(res, '名称不能为空!');
     }
@@ -33,6 +33,8 @@ module.exports = {
     roleService
       .saveRole(func)
       .then((result) => {
+        console.log('角色保存', result);
+
         if (!result.success) {
           return responseTemplate.businessError(res, result.msg);
         } else {
@@ -43,8 +45,8 @@ module.exports = {
           });
         }
       })
-      .catch((err) => {
-        return responseTemplate.businessError(res, err);
+      .catch(() => {
+        return responseTemplate.businessError(res, '数据库保存失败');
       });
   },
 

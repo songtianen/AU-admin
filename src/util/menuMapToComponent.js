@@ -1,3 +1,4 @@
+// layout/content组件用
 import Loadable from 'react-loadable';
 import ContentLoader from '../views/common/ContentLoader';
 
@@ -21,10 +22,10 @@ const RolePermission = Loadable({
   loader: () => import('../views/pages/RolePermisson/component'),
   loading: ContentLoader,
 });
-// const RoleUser = Loadable({
-//   loader: () => import('@/pages/roleUser'),
-//   loading: ContentLoader,
-// });
+const RoleUser = Loadable({
+  loader: () => import('../views/pages/RoleUser/component'),
+  loading: ContentLoader,
+});
 // const UserRole = Loadable({
 //   loader: () => import('@/pages/userRole'),
 //   loading: ContentLoader,
@@ -69,7 +70,7 @@ export default {
   function: FunctionPage,
   role: Role,
   rolepermission: RolePermission,
-  // roleuser: RoleUser,
+  roleuser: RoleUser,
   // userrole: UserRole,
   // user_index: User,
   page404: Page404,

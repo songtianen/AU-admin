@@ -56,7 +56,7 @@ const uploads = CDNFiles.map((file) => {
   return Promise.resolve(`${file} no need to uploader`);
 });
 
-console.log('这是数组吗', uploads);
+// console.log('这是数组吗', uploads);
 // 执行所有的uploads
 Promise.all(uploads)
   .then((resp) => console.log('upload success', resp))

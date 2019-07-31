@@ -165,7 +165,7 @@ let menuService = {
     }
   },
   getMenuWithChildren: async (menuId) => {
-    console.log(typeof menuId);
+    // console.log(typeof menuId);
     let menuList = await findAccessMenuList();
     let menuWithChildren = [];
     let menu = menuList.filter((s) => {

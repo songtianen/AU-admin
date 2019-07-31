@@ -39,7 +39,7 @@ class Login extends React.PureComponent {
         const password = values.password;
         try {
           let res = await loginByUsername(userName, password);
-          console.log('loginByUsername', res);
+          // console.log('loginByUsername', res);
           const data = res.data;
           setToken(data.accessToken);
           // eslint-disable-next-line no-shadow

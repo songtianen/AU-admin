@@ -16,7 +16,7 @@ export default function user(state, action) {
       return { ...state, token: action.token };
     case actions.GET_USERINFO_SUCCESS:
       // 获取用户信息
-      console.log('actions.GET_USERINFO_SUCCESS', action);
+      // console.log('actions.GET_USERINFO_SUCCESS', action);
       return {
         ...state,
         name: action.name,

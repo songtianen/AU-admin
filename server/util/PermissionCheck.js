@@ -1,6 +1,6 @@
 const PermissionCheck = ({ result, req, res, permission = [], role = [] }) => {
   let promise = new Promise((resolve, reject) => {
-    console.log('PermissionCheck-->');
+    // console.log('PermissionCheck-->');
     // const userInfo = JSON.parse(JSON.stringify(result))
     // 哪些用户角色可以编辑哪些权限。
     if (!req.user || !req.user.userId) {

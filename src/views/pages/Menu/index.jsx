@@ -71,15 +71,16 @@ class Menu extends React.PureComponent {
   initData = async () => {
     let menuListRes = await getAllMenu();
     let menuList = menuListRes.data;
-    console.log('http请求getAllMenu', menuList);
+    // console.log('http请求getAllMenu', menuList);
     this.setState({
       menuList,
     });
   };
 
+  // eslint-disable-next-line no-unused-vars
   onSelect = (selectedKeys, info) => {
     let { setFieldsValue, resetFields } = this.props.form;
-    console.log('selectedKeys----', selectedKeys, info);
+    // console.log('selectedKeys----', selectedKeys, info);
     if (selectedKeys.length === 0) {
       resetFields();
       this.setState({
@@ -93,7 +94,7 @@ class Menu extends React.PureComponent {
       return;
     }
     let id = selectedKeys[0];
-    console.log('id---', id);
+    // console.log('id---', id);
     let menu = this.findMenubyId(id);
     this.setState({
       selected: true,
@@ -117,7 +118,7 @@ class Menu extends React.PureComponent {
       for (let item of menuList) {
         if (item.id === id) {
           menu = { ...item };
-          console.log('menu-----', menu);
+          // console.log('menu-----', menu);
           menu.children = null;
           break;
         } else if (item.children && item.children.length > 0) {
@@ -126,14 +127,14 @@ class Menu extends React.PureComponent {
       }
     };
     getMenu(this.state.menuList);
-    console.log('menu-----', this.state.menuList);
+    // console.log('menu-----', this.state.menuList);
     return menu;
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll(async (err, values) => {
-      console.log('菜单提交的数据', values);
+      // console.log('菜单提交的数据', values);
       if (!err) {
         let data = {
           id: this.state.tempMenu.id,

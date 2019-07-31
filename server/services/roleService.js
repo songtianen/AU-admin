@@ -93,12 +93,12 @@ module.exports = {
     };
   },
   delRole: async (id) => {
-    const a = await RoleModel.findOneAndRemove({ id: id });
-    console.log('删除角色Role', a);
+    // const a = await RoleModel.findOneAndRemove({ id: id });
+    // console.log('删除角色Role', a);
   },
   saveRole: async (role) => {
     let exist = await RoleModel.findOne({ code: role.code });
-    console.log('查询数据库save', exist);
+    // console.log('查询数据库save', exist);
     if (exist && exist.id !== role.id) {
       return {
         success: false,
@@ -114,15 +114,14 @@ module.exports = {
       };
     }
     // eslint-disable-next-line new-cap
-    const insertRole = new roleModel({
-      ...role,
-      id: uuidv4(),
-    });
     if (role.id) {
-      console.log('查询数据库save===--id', role.id);
+      // console.log('查询数据库save===--id', role.id);
       await roleModel.where({ id: role.id }).update({ $set: { ...role } });
     } else {
-      await insertRole.save({ ...role });
+      await RoleModel.create({
+        ...role,
+        id: uuidv4(),
+      });
     }
     return {
       success: true,
@@ -133,14 +132,6 @@ module.exports = {
     let roleFunctions = await RoleModel.findOne({ id: roleId });
     return roleFunctions.permission;
   },
-  // getRoleFuntionsByRoleIds: async (roleIds) => {
-  //   let db = await model.init(permissionContext);
-  //   let list = db.value();
-  //   let roleFunctions = list.filter((s) => {
-  //     return roleIds.indexOf(s.roleId) > -1;
-  //   });
-  //   return roleFunctions;
-  // },
   savePermission: async (moduleId, roleId, permissions) => {
     // 查询并更新数据
     let db = await RoleModel.findOneAndUpdate(
@@ -149,12 +140,4 @@ module.exports = {
     );
     return db;
   },
-  // getRoleListByIdList: async (idList) => {
-  //   let db = await model.init(context);
-  //   let roleList = db.value();
-  //   let result = roleList.filter((s) => {
-  //     return idList.indexOf(s.id) > -1;
-  //   });
-  //   return result;
-  // },
 };

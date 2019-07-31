@@ -31,7 +31,7 @@ class EditModal extends React.PureComponent {
       permissions: this.checkedKeys,
       moduleId: 0,
     };
-    console.log('角色权限管理，组件提交角色权限', this.props.handFromSubmit);
+    // console.log('角色权限管理，组件提交角色权限', this.props.handFromSubmit);
     await this.props.handFromSubmit(data);
     this.setState({
       menuFunctionList: [],
@@ -63,7 +63,7 @@ class EditModal extends React.PureComponent {
         s.isPermissionChild = true;
         return s;
       });
-      console.log('permissionChildren', permissionChildren);
+      // console.log('permissionChildren', permissionChildren);
       if (children && children.length > 0) {
         fn(children);
       }
@@ -86,7 +86,7 @@ class EditModal extends React.PureComponent {
       menuId: 0,
       roleId,
     }).then((moduleFunctionsRes) => {
-      console.log('宋', moduleFunctionsRes);
+      // console.log('宋', moduleFunctionsRes);
       let menuFunctionList = this.buildMenuListAndFunctions(
         moduleFunctionsRes.data.menuFunctions,
       );

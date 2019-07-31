@@ -4,10 +4,10 @@ export default {
     'ui:options': {
       type: 'text',
       placeholder: '',
-      onBlur: (e) => {
-        const value = e.target.value;
-        console.log(value);
-      },
+      // onBlur: (e) => {
+      //   const value = e.target.value;
+      //   // console.log(value);
+      // },
     },
     'ui:rules': [
       { required: true, message: '请输入角色名称' },
@@ -21,10 +21,10 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
     }, // Form.Item 配置
-    'ui:onBlur': (e) => {
-      const value = e.target.value;
-      console.log(value);
-    },
+    // 'ui:onBlur': (e) => {
+    //   const value = e.target.value;
+    //   // console.log(value);
+    // },
   },
   code: {
     'ui:widget': 'input',
