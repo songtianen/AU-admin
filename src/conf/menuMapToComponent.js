@@ -26,10 +26,10 @@ const RoleUser = Loadable({
   loader: () => import('../views/pages/RoleUser/component'),
   loading: ContentLoader,
 });
-// const UserRole = Loadable({
-//   loader: () => import('@/pages/userRole'),
-//   loading: ContentLoader,
-// });
+const UserRole = Loadable({
+  loader: () => import('../views/pages/UserRole/component'),
+  loading: ContentLoader,
+});
 // const User = Loadable({
 //   loader: () => import('@/pages/user'),
 //   loading: ContentLoader,
@@ -71,7 +71,7 @@ export default {
   role: Role,
   rolepermission: RolePermission,
   roleuser: RoleUser,
-  // userrole: UserRole,
+  userrole: UserRole,
   // user_index: User,
   page404: Page404,
   page403: Page403,

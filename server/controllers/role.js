@@ -24,6 +24,7 @@ module.exports = {
   },
   saveRole: ({ req, res }) => {
     let func = req.body;
+    console.log('编辑角色', func);
     if (func.name === '') {
       return responseTemplate.businessError(res, '名称不能为空!');
     }
@@ -33,7 +34,7 @@ module.exports = {
     roleService
       .saveRole(func)
       .then((result) => {
-        console.log('角色保存', result);
+        // console.log('角色保存', result);
 
         if (!result.success) {
           return responseTemplate.businessError(res, result.msg);
@@ -45,7 +46,8 @@ module.exports = {
           });
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         return responseTemplate.businessError(res, '数据库保存失败');
       });
   },

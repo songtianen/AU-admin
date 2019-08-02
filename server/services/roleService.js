@@ -1,8 +1,20 @@
 /* eslint-disable no-undef */
 // 角色
-const { RoleModel } = require('../model/model');
+const { RoleModel, UserModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
 const _ = require('lodash');
+
+const findRoleInfo = async (ids) => {
+  let c = [];
+  for (let i = 0, len = ids.length; i < len; i++) {
+    const s = await RoleModel.findOne({ id: ids[i] });
+    if (!s) {
+      return null;
+    }
+    c.push(s);
+  }
+  return c;
+};
 module.exports = {
   getRolePagedList: async (pageIndex, pageSize, sortBy, descending, filter) => {
     // 创建数据库
@@ -40,56 +52,87 @@ module.exports = {
     //     console.log('更新数据库测试', err, doc);
     //   },
     // );
-    // // 1 查询数据库
-    let db = await RoleModel.find();
-    // console.log('用户角色filter----', filter);
-    // let roleList = db.value();
-    // eslint-disable-next-line no-unused-vars
-    let resultList = db;
-    // 前端模糊查询
+
+    if (filter.userId) {
+      const userId = filter.userId;
+      const user = await UserModel.findOne({ id: userId });
+      if (!user) {
+        return null;
+      }
+      let roleIds = user.userRole;
+      roleIds = JSON.parse(JSON.stringify(roleIds));
+
+      let roleInfo = await findRoleInfo(roleIds);
+      let roleInfoList = JSON.parse(JSON.stringify(roleInfo));
+
+      if (filter.code) {
+        roleInfoList = _.filter(roleInfoList, (o) => {
+          return o.code.indexOf(filter.code) > -1;
+        });
+      }
+      if (filter.name) {
+        roleInfoList = _.filter(roleInfoList, (o) => {
+          return o.name.indexOf(filter.name) > -1;
+        });
+      }
+
+      // 总页数
+      let totalCount = roleInfoList.length;
+      // 是否已经已经添加
+      roleInfoList.forEach((item) => {
+        item.isAdd = 1;
+      });
+      // 排序
+      if (sortBy) {
+        sortBy = 'isAdd';
+        roleInfoList = _.sortBy(roleInfoList, [sortBy]);
+        if (descending === 'true') {
+          roleInfoList = roleInfoList.reverse();
+        }
+      }
+      // 返回给前端第几页，的 数量。（）
+      let start = (pageIndex - 1) * pageSize;
+      let end = pageIndex * pageSize;
+      roleInfoList = _.slice(roleInfoList, start, end);
+      return {
+        totalCount: totalCount,
+        rows: roleInfoList,
+      };
+    }
+    let roleLists = await RoleModel.find();
+    roleLists = JSON.parse(JSON.stringify(roleLists));
     if (filter.code) {
-      resultList = _.filter(resultList, (o) => {
+      roleLists = _.filter(roleLists, (o) => {
         return o.code.indexOf(filter.code) > -1;
       });
-      // console.log('用户角色filter', resultList);
     }
-    // 前端模糊查询
     if (filter.name) {
-      resultList = _.filter(resultList, (o) => {
+      roleLists = _.filter(roleLists, (o) => {
         return o.name.indexOf(filter.name) > -1;
       });
-      // console.log('用户角色filter', resultList);
     }
-    if (filter.userId) {
-      let roleUserDb = await model.init(roleUserContext);
-      let roleUserList = roleUserDb.filter({ userId: filter.userId }).value();
-      roleUserList = roleUserList.map((s) => {
-        return s.roleId;
-      });
-      resultList = _.map(resultList, (item) => {
-        if (roleUserList.indexOf(item.id) > -1) {
-          item.isAdd = 1;
-        } else {
-          item.isAdd = 2;
-        }
-        return item;
-      });
-      sortBy = 'isAdd';
-    }
-    let totalCount = resultList.length;
+
+    // 总页数
+    let totalCount = roleLists.length;
+    // 是否已经已经添加
+    roleLists.forEach((item) => {
+      item.isAdd = 1;
+    });
+    // 排序
     if (sortBy) {
-      resultList = _.sortBy(resultList, [sortBy]);
+      sortBy = 'isAdd';
+      roleLists = _.sortBy(roleLists, [sortBy]);
       if (descending === 'true') {
-        resultList = resultList.reverse();
+        roleLists = roleLists.reverse();
       }
     }
+    // 返回给前端第几页，的 数量。（）
     let start = (pageIndex - 1) * pageSize;
     let end = pageIndex * pageSize;
-    resultList = _.slice(resultList, start, end);
-
+    roleLists = _.slice(roleLists, start, end);
     return {
       totalCount: totalCount,
-      rows: resultList,
+      rows: roleLists,
     };
   },
   delRole: async (id) => {
@@ -115,8 +158,8 @@ module.exports = {
     }
     // eslint-disable-next-line new-cap
     if (role.id) {
-      // console.log('查询数据库save===--id', role.id);
-      await roleModel.where({ id: role.id }).update({ $set: { ...role } });
+      console.log('查询数据库save===--id', role.id);
+      await RoleModel.where({ id: role.id }).update({ $set: { ...role } });
     } else {
       await RoleModel.create({
         ...role,

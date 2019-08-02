@@ -51,6 +51,15 @@ export function getUserPagedList(query) {
   });
 }
 
+export function getAllUser(query) {
+  console.log('http getAllUser ------');
+  return request({
+    url: '/user/getalluser',
+    method: 'post',
+    params: query,
+  });
+}
+
 export function delUser(id) {
   console.log('http delUser id ------', id);
 

@@ -10,6 +10,7 @@ const {
   getUserInfo,
   getUserPagelist,
   postEditRoleuser,
+  getAllUser,
 } = require('../controllers/user');
 
 const User = UserModel;
@@ -68,6 +69,15 @@ router.post(
   }),
   (req, res) => {
     postEditRoleuser({ req, res });
+  },
+);
+router.post(
+  '/getalluser',
+  PermissionCheck({
+    permission: ['role_user_edit', 'user_role_edit'],
+  }),
+  (req, res) => {
+    getAllUser({ req, res });
   },
 );
 
