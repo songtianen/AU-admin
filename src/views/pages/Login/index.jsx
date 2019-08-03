@@ -73,7 +73,7 @@ class Login extends React.PureComponent {
       <Form onSubmit={this.handleSubmit} className='login-form'>
         <FormItem hasFeedback>
           {getFieldDecorator('userName', {
-            initialValue: '',
+            initialValue: 'song',
             rules: [{ required: true, message: '请输入登录账号!' }],
           })(
             <Input
@@ -84,7 +84,7 @@ class Login extends React.PureComponent {
         </FormItem>
         <FormItem hasFeedback>
           {getFieldDecorator('password', {
-            initialValue: '',
+            initialValue: '123456',
             rules: [{ required: true, message: '请输入密码!' }],
           })(
             <Input
@@ -115,9 +115,19 @@ class Login extends React.PureComponent {
             <Card
               hoverable
               bordered={false}
+              style={{ border: '1px solid #efefef' }}
               cover={
                 <div style={{ padding: 10 }}>
-                  <img alt='logo' src={logo} />
+                  <img
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      height: '150px',
+                      marginBottom: 10,
+                    }}
+                    alt='logo'
+                    src={logo}
+                  />
                   {form}
                 </div>
               }
