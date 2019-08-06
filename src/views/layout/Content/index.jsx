@@ -11,6 +11,7 @@ const TabPane = Tabs.TabPane;
 class MyNavTabs extends React.PureComponent {
   state = {
     currentPage: '',
+    // 当前打开页面的数组
     openPages: [
       {
         name: 'home',
@@ -25,21 +26,32 @@ class MyNavTabs extends React.PureComponent {
   hasPermission = true;
 
   componentWillReceiveProps(nextProps, nextState) {
+    console.log('content 组件 中 接收的 laocation', nextState);
+
+    // 如果layout容器组件，请求的数据没有，或者没有设置显示，就不显示tabs,也不进行
+    // 下面的逻辑
     if (!nextProps.show || nextProps.openAccessMenu.length === 0) {
       return;
     }
+    // 1 得到location 的name属性，
     const pathname = nextProps.location.pathname;
+    // 2 找到与路由配置文件内与location.pathanme路径匹配的name， key
     let name = Object.keys(MenuToRouter).find(
       (key) => MenuToRouter[key] === pathname,
     );
+
     if (name) {
+      // 验证state状态openPages 中是否存在 name
       if (this.state.openPages.some((s) => s.name === name)) {
+        // 如果openPages中存在这个name，
+        // 再判断当前state.currentPage，如果不等于这个name
         if (this.state.currentPage !== name) {
           this.setState({
             currentPage: name,
           });
         }
       } else {
+        // 如果state状态openPages中name不等于 配置文件中的name
         const { openAccessMenu } = nextProps;
         const menus = openAccessMenu.filter((s) => s.name === name);
         if (menus.length > 0) {
@@ -79,6 +91,7 @@ class MyNavTabs extends React.PureComponent {
           }
         }
       }
+      // 如果路由配置文件中没找到name，就返回home页面（state默认的）
     } else if (
       nextProps.location.pathname === '/app/home' &&
       nextState.currentPage !== 'home'
@@ -111,6 +124,7 @@ class MyNavTabs extends React.PureComponent {
     }
   }
 
+  // tab切换
   onTabClick = (activeKey) => {
     // if (activeKey !== this.state.currentPage) {
     //   this.setState({
@@ -127,10 +141,12 @@ class MyNavTabs extends React.PureComponent {
     }
   };
 
+  // tab 新增/删除回调
   onEdit = (targetKey, action) => {
     this[action](targetKey);
   };
 
+  // onEdit 返回的删除回调
   remove = (targetKey) => {
     let activeKey = this.state.currentPage;
     let lastIndex;
@@ -175,6 +191,7 @@ class MyNavTabs extends React.PureComponent {
           onTabClick={this.onTabClick}
           // size="small"
         >
+          {/* 根据state.openPages渲染页面 */}
           {this.state.openPages.map((page) => {
             let Page = MenuMapToComponent[page.name]
               ? MenuMapToComponent[page.name]
@@ -183,7 +200,7 @@ class MyNavTabs extends React.PureComponent {
               <TabPane
                 forceRender
                 tab={page.title}
-                closable={page.closable}
+                closable={page.closable} // 是否是可关闭
                 key={page.name}
               >
                 <Page />
@@ -205,6 +222,6 @@ MyNavTabs.propTypes = {
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   openAccessMenu: PropTypes.array.isRequired,
-  show: PropTypes.bool.isRequired,
+  show: PropTypes.bool.isRequired, // layout 组件的show属性
 };
 export default withRouter(connect(mapStateToProps)(MyNavTabs));

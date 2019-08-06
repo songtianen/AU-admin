@@ -15,6 +15,7 @@ class MySider extends React.PureComponent {
   };
 
   componentDidMount() {
+    // 组件的this传给父组件的属性，以便父组件拿到子组件的方法
     this.props.onRef(this);
   }
 
