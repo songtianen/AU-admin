@@ -31,7 +31,7 @@ const webpackDevConfig = merge(baseWebpackConfig, {
       '/api': {
         target: 'http://localhost:2223',
         changeOrigin: true,
-        pathRewrite: { '^/api': '' },
+        // pathRewrite: { '^/api': '' },
       },
     },
     publicPath: '/public/', // !

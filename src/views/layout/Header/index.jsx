@@ -112,7 +112,10 @@ class MyHeader extends React.PureComponent {
                 // style={{padding: '4 0 0 0'}}
                 key={uuidv4()}
               >
-                <a href='#' target={'_blank'}>
+                <a
+                  target={'_blank'}
+                  href='https://github.com/songtianen/AU-admin'
+                >
                   <Icon
                     style={{ fontSize: '20px', color: '#08c' }}
                     type='github'
