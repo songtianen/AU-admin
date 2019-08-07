@@ -1,6 +1,4 @@
 let mongoose = require('mongoose');
-const isEnv = process.env.NODE_ENV;
-console.log('这是数据mongodb数据库', isEnv);
 let DB_URL = 'mongodb://localhost:27017/myapp';
 // 1 . 连接数据库
 mongoose.connect(DB_URL, { useNewUrlParser: true });

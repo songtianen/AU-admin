@@ -11,7 +11,9 @@ let history = createBrowserHistory({
 // create an axios instance
 const service = axios.create({
   baseURL:
-    process.env.NODE_ENV === 'development' ? '/api' : 'http://localhost:2223', // api的base_url
+    process.env.NODE_ENV === 'development'
+      ? '/api'
+      : 'http://localhost:2223/api', // api的base_url */,
   timeout: 20000,
   withCredentials: true,
 });

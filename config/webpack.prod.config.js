@@ -15,7 +15,7 @@ const webpackProdConfig = merge(baseWebpackConfig, {
   output: {
     filename: '[name].[hash].bundle.js',
     chunkFilename: '[name].[hash].bundle.js',
-    publicPath: '',
+    publicPath: '/public/',
   },
   module: {
     rules: [
