@@ -213,7 +213,7 @@ class Menu extends React.PureComponent {
       },
     };
     return (
-      <div>
+      <div style={{ backgroundColor: '#fff', padding: '20px' }}>
         <Row type='flex' justify='start'>
           <Col
             xs={24}
@@ -221,7 +221,7 @@ class Menu extends React.PureComponent {
             md={12}
             lg={6}
             xl={8}
-            style={{ backgroundColor: '#fafafa' }}
+            style={{ backgroundColor: '#fafafa', marginRight: '20px' }}
           >
             <Tree onSelect={this.onSelect}>
               {renderMenu(this.state.menuList)}
@@ -244,7 +244,7 @@ class Menu extends React.PureComponent {
             <Form
               {...formItemLayout}
               onSubmit={this.handleSubmit}
-              style={{ backgroundColor: 'pink' }}
+              // style={{ backgroundColor: 'pink' }}
             >
               <div
                 style={{

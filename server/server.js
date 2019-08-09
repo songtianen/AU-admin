@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const favicon = require('serve-favicon'); // 引用标签页图标
 const bodyParser = require('body-parser'); // 转化 请求body 为 json格式的数据
 const router = require('./routes/index.js');
