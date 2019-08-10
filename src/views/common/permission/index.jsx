@@ -1,19 +1,19 @@
 import React from 'react';
 
-// 组件级全选效验
+// 组件级权限效验
 class PermissionContainer extends React.PureComponent {
   render() {
     // eslint-disable-next-line react/prop-types
     const { display, permission, children } = this.props;
+
     const needPermission = permission || [];
     const isAdmin = parseInt(localStorage.getItem('isAdmin'), 10);
     const userPermission = JSON.parse(localStorage.getItem('permission'));
     let hasPermission = isAdmin === 1;
-    // hasPermission = true 不判断直接返回 children
-    // hasPermission = false  判断userPermission 是否存在 permission
+    // 不是管理员（没有权限），并且neddPermission明确需要某种权限
     if (!hasPermission && needPermission.length > 0) {
-      // 如果用户权限里至少有PermissionContainer传入的权限码
       for (let p of needPermission) {
+        // 查看此用户localstorage,中是否有此权限
         if (userPermission.some((s) => s === p)) {
           // 此用户就有权限
           hasPermission = true;

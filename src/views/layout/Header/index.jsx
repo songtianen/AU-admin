@@ -73,7 +73,7 @@ class MyHeader extends React.PureComponent {
                 {/* <ul className="top-nav" style={{ lineHeight: '38px', marginLeft: 10 }}>
                 <li> */}
                 <div
-                  style={{ backgroundColor: 'yellow', textAlign: 'center' }}
+                  style={{ textAlign: 'center' }}
                   onClick={this.props.toggle}
                 >
                   <Icon

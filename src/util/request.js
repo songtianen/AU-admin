@@ -21,7 +21,7 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   (config) => {
-    // console.log('axios --- service.interceptors.request.use', config);
+    console.log('axios --- 请求 service.interceptors.request.use', config);
     // Do something before request is sent
     // 接口级权限效验
     if (!permission.check(config)) {
