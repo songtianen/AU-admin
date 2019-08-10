@@ -161,7 +161,13 @@ class MyLayout extends React.PureComponent {
             toggleNavTab={this.toggleNavTab}
             navTabshow={this.state.navTabShow}
           />
-          <Content style={{ overflow: 'auto', background: '#e0e0e0' }}>
+          <Content
+            style={{
+              overflow: 'auto',
+              background: '#efefef',
+              borderLeft: '1px solid #e8e8e8',
+            }}
+          >
             <MyNavTabs
               style={{
                 marginTop: this.state.navTabTop,

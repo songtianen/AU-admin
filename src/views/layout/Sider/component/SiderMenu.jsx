@@ -85,6 +85,7 @@ class SubMenuList extends React.PureComponent {
           onOpenChange={openMenu}
           selectedKeys={[selectedKeys]}
           openKeys={openKeys}
+          style={{ border: 'none' }}
         >
           {menus &&
             menus.map((item) =>
