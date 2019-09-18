@@ -12,6 +12,9 @@ class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
+        {/* <MySpin>
+          <PageRouter />
+        </MySpin> */}
         <MySpin pageRouters={PageRouter} />
       </Provider>
     );

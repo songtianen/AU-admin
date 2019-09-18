@@ -111,7 +111,7 @@ export function getAccessMemu() {
   return request({
     url: '/menu/getaccessmenu',
     method: 'get',
-    loading: 'spin',
+    // loading: 'spin',
   });
 }
 
@@ -120,7 +120,7 @@ export function getAllMenu() {
   return request({
     url: '/menu',
     method: 'get',
-    loading: 'spin',
+    // loading: 'spin',
   });
 }
 
