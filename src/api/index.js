@@ -2,7 +2,6 @@ import qs from 'qs';
 import request from '../util/request';
 
 export function loginByUsername(username, password) {
-  console.log('http loginByUsername ------', username, password);
   const data = {
     username,
     password,
@@ -11,21 +10,19 @@ export function loginByUsername(username, password) {
     url: '/user/login',
     method: 'post',
     data: qs.stringify(data),
-    loading: 'spin',
+    // loading: 'spin',
   });
 }
 
 export function logout() {
-  console.log('http logout ------');
   return request({
-    url: '/auth/logout',
+    url: '/user/logout',
     method: 'post',
     loading: 'spin',
   });
 }
 
 export function getUserInfo() {
-  console.log('http getUserInfo ------');
   return request({
     url: '/user/info',
     method: 'get',
@@ -35,7 +32,6 @@ export function getUserInfo() {
 
 // user
 export function getUserList() {
-  console.log('http getUserList ------');
   return request({
     url: '/user/userlist',
     method: 'get',
@@ -43,7 +39,6 @@ export function getUserList() {
 }
 // 获取用户列表
 export function getUserPagedList(query) {
-  console.log('http getUserPagedList ------');
   return request({
     url: '/user/pagedlist',
     method: 'get',
@@ -52,7 +47,6 @@ export function getUserPagedList(query) {
 }
 
 export function getAllUser(query) {
-  console.log('http getAllUser ------');
   return request({
     url: '/user/getalluser',
     method: 'post',
@@ -61,8 +55,6 @@ export function getAllUser(query) {
 }
 
 export function delUser(id) {
-  console.log('http delUser id ------', id);
-
   return request({
     url: '/user/del',
     method: 'delete',
@@ -73,8 +65,6 @@ export function delUser(id) {
 }
 
 export function delUsers(ids) {
-  console.log('http delUsers ids ------', ids);
-
   return request({
     url: '/user/batchdel',
     method: 'delete',
@@ -84,8 +74,6 @@ export function delUsers(ids) {
 }
 
 export function saveUser(data) {
-  console.log('http saveUser ------', data);
-
   return request({
     url: '/user/save',
     method: 'post',
@@ -95,8 +83,6 @@ export function saveUser(data) {
 }
 
 export function editRoleUser(data) {
-  console.log('http editRoleUser ------', data);
-
   return request({
     url: '/user/editroleuser',
     method: 'post',
@@ -107,7 +93,6 @@ export function editRoleUser(data) {
 
 // menu
 export function getAccessMemu() {
-  console.log('http getAccessMemu ------');
   return request({
     url: '/menu/getaccessmenu',
     method: 'get',
@@ -116,7 +101,6 @@ export function getAccessMemu() {
 }
 
 export function getAllMenu() {
-  console.log('http getAllMenu ------');
   return request({
     url: '/menu',
     method: 'get',
@@ -125,8 +109,6 @@ export function getAllMenu() {
 }
 
 export function saveMenu(menu) {
-  console.log('http saveMenu ------', menu);
-
   return request({
     url: '/menu/savemenu',
     method: 'post',
@@ -137,8 +119,6 @@ export function saveMenu(menu) {
 }
 
 export function getMenuFunctions(menuId) {
-  console.log('http getMenuFunctions ------', menuId);
-
   return request({
     url: '/menu/menufunctions',
     method: 'get',
@@ -148,8 +128,6 @@ export function getMenuFunctions(menuId) {
 }
 
 export function getIcons() {
-  console.log('http getIcons ------');
-
   return request({
     url: '/icons',
     method: 'get',
@@ -159,8 +137,6 @@ export function getIcons() {
 
 // function
 export function getMenuListFunctionCode() {
-  console.log('http getMenuListFunctionCode ------');
-
   return request({
     url: '/function/menulistfunctioncode',
     method: 'get',
@@ -169,8 +145,6 @@ export function getMenuListFunctionCode() {
 }
 
 export function getFunctionPagedList(query) {
-  console.log('http getFunctionPagedList ------', query);
-
   return request({
     url: '/function/pagedlist',
     method: 'get',
@@ -179,8 +153,6 @@ export function getFunctionPagedList(query) {
 }
 
 export function delFunction(id) {
-  console.log('http delFunction id ------', id);
-
   return request({
     url: '/function/del',
     method: 'get',
@@ -190,8 +162,6 @@ export function delFunction(id) {
 }
 
 export function delFunctions(ids) {
-  console.log('http delFunctions ids ------', ids);
-
   return request({
     url: '/function/batchdel',
     method: 'get',
@@ -201,8 +171,6 @@ export function delFunctions(ids) {
 }
 
 export function saveFunction(data) {
-  console.log('http saveFunction ------', data);
-
   return request({
     url: '/function/save',
     method: 'post',
@@ -214,7 +182,6 @@ export function saveFunction(data) {
 // role
 // 角色接口
 export function getRolePagedList(query) {
-  console.log('http getRolePagedList ------', query);
   return request({
     url: '/role/pagedlist',
     method: 'get',
@@ -223,7 +190,6 @@ export function getRolePagedList(query) {
 }
 
 export function delRole(id) {
-  console.log('http delRole ------', id);
   return request({
     url: '/role/del',
     method: 'post',
@@ -233,7 +199,6 @@ export function delRole(id) {
 }
 
 export function delRoles(ids) {
-  console.log('http delRoles ids ------', ids);
   return request({
     url: '/role/batchdel',
     method: 'post',
@@ -243,8 +208,6 @@ export function delRoles(ids) {
 }
 
 export function saveRole(data) {
-  console.log('http saveRole ------', data);
-
   return request({
     url: '/role/save',
     method: 'post',
@@ -255,7 +218,6 @@ export function saveRole(data) {
 
 // 保存角色权限
 export function savePermission(data) {
-  console.log('http savePermission ------', data);
   return request({
     url: '/role/savepermission',
     method: 'post',
@@ -266,8 +228,6 @@ export function savePermission(data) {
 
 // resetDb
 export function resetDb() {
-  console.log('http resetDb ------');
-
   return request({
     url: '/resetdb',
     method: 'post',
@@ -277,8 +237,6 @@ export function resetDb() {
 
 // requestlog
 export function getRequestLogPagedList(query) {
-  console.log('http getRequestLogPagedList ------', query);
-
   return request({
     url: '/requestlog/pagedlist',
     method: 'get',
@@ -288,8 +246,6 @@ export function getRequestLogPagedList(query) {
 
 // post
 export function getPostPagedList(query) {
-  console.log('http getPostPagedList ------', query);
-
   return request({
     url: '/post/pagedlist',
     method: 'get',
@@ -298,7 +254,6 @@ export function getPostPagedList(query) {
 }
 
 export function getPost(id) {
-  console.log('http getPost ------', id);
   return request({
     url: `/post/${id}`,
     method: 'get',
@@ -307,8 +262,6 @@ export function getPost(id) {
 }
 
 export function savePost(post) {
-  console.log('http savePost ------', post);
-
   return request({
     url: '/post/save',
     method: 'post',
@@ -318,7 +271,6 @@ export function savePost(post) {
 }
 
 export function getTopPostByQuery(query) {
-  console.log('http getTopPostByQuery ------', query);
   return request({
     url: '/post/top',
     method: 'get',

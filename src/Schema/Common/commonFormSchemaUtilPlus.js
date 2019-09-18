@@ -57,7 +57,7 @@ const SchemaUtils = {
     // 只能用传统的ES5的写法, 函数式(无状态)组件应该也可以, 但是需要生命周期相关方法
     const tmpComponent = createClass({
       getInitialState() {
-        console.log('宋天恩', FormInstanceIndexMap.get(id));
+        // console.log('宋天恩', FormInstanceIndexMap.get(id));
         let index = FormInstanceIndexMap.get(id);
         // es6: this.state = ....
         if (!index) {
@@ -75,7 +75,7 @@ const SchemaUtils = {
       },
       // 组件将要渲染
       componentWillMount() {
-        console.log('tmp-CommonForm componentWillMount');
+        // console.log('tmp-CommonForm componentWillMount');
 
         // 组件初始化时读取generator
         if (JsxGeneratorMap.has(id)) {
@@ -84,7 +84,7 @@ const SchemaUtils = {
       },
       // 组件渲染完毕
       async componentDidMount() {
-        console.log('tmp-CommonForm 异步componentDidMount');
+        // console.log('tmp-CommonForm 异步componentDidMount');
 
         if (UiSchemaMap.has(id)) {
           // 检查JsxGeneratorMap是否缓存/ 说明 jsx结构已经构建并缓存，不需要mergeSchema
@@ -123,9 +123,9 @@ const SchemaUtils = {
       },
       // 渲染
       render() {
-        console.log('tmpCommonForm render宋天恩', this.generateJsx);
+        // console.log('tmpCommonForm render宋天恩', this.generateJsx);
         let formData = this.props.formData;
-        console.log('tmpCommonForm render>>>>>>>>>>///', formData);
+        // console.log('tmpCommonForm render>>>>>>>>>>///', formData);
         formData = formData || {};
         // 组件实例key一层层往下传递
         return this.generateJsx

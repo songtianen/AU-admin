@@ -26,7 +26,7 @@ class MyNavTabs extends React.PureComponent {
   hasPermission = true;
 
   componentWillReceiveProps(nextProps, nextState) {
-    console.log('content 组件 中 接收的 laocation', nextState);
+    // console.log('content 组件 中 接收的 laocation', nextState);
 
     // 如果layout容器组件，请求的数据没有，或者没有设置显示，就不显示tabs,也不进行
     // 下面的逻辑

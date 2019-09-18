@@ -12,6 +12,7 @@ import { getUserInfo, getAccessMemu } from '../../api';
 import reduxUser from '../../redux/redux_user';
 import reduxApp from '../../redux/redux_app';
 import util from '../../util/util';
+// 不需要后端返回的菜单
 import constantMenu from '../../conf/menuConf';
 import './layout.less';
 
@@ -86,6 +87,7 @@ class MyLayout extends React.PureComponent {
     this.setState({ navTabShow: !this.state.navTabShow });
   };
 
+  // 初始化Layout组件，初始化Sider组件
   initAppData = async () => {
     // 获取用户信息,菜单,权限列表(整个应用就一种layout布局,App就是相当母版页,不必在AuthrizedRoute里每次路由跳转的时候判断是否需要获取,是否登录也在此处判断)
     // 没有登录，跳转到登录界面，并记下当前路径
@@ -111,10 +113,10 @@ class MyLayout extends React.PureComponent {
     localStorage.setItem('permission', JSON.stringify(permission));
     localStorage.setItem('isAdmin', isAdmin);
     menuRes.data.push(...constantMenu); // 添加不需要后端返回的菜单列表
-    let openAccesseMenu = util.openAccesseMenu(menuRes.data); // 添加parentName属性,传入后端返回的菜单数据
+    let openAccessMenu = util.openAccesseMenu(menuRes.data); // 添加parentName属性,传入后端返回的菜单数据
     // console.log('openAccesseMenu', openAccesseMenu);
     let moduleList = menuRes.data.filter((item) => {
-      // 是左侧菜单
+      // 是左侧菜单(leftMenu字段控制是否显示此菜单)
       return item.leftMenu;
     });
     let currentModule = moduleList[0].name; // 当前显示的菜单
@@ -123,20 +125,17 @@ class MyLayout extends React.PureComponent {
       // redux 设置菜单
       currentModule, // 当前打开模块
       accessMenu: menuRes.data, // 所有菜单
-      openAccessMenu: openAccesseMenu, // 打开的菜单
+      openAccessMenu, // 打开的菜单
       moduleMenu, // 当前打开有左侧菜单第一个children
       moduleList, // 是左侧菜单的菜单 header tab 所有菜单
     });
     this.props.updateUserInfo(userInfo); // redux 存入userInfo
+    // 初始化子组件
     this.initChildData(this.props);
   };
 
   initChildData(props) {
-    // console.log('this.refs.wrappedInstance', this.child);
-    // console.log(
-    //   'this.refs.wrappedInstance++props.location.pathname',
-    //   props.location.pathname,
-    // );
+    // 传给sider组件当前路由 pathname
     this.child.initMenu(props.location.pathname);
   }
 
@@ -145,8 +144,7 @@ class MyLayout extends React.PureComponent {
   };
 
   render() {
-    // console.log('TabMode render', this.state.responsive);
-    // console.log('TabMode renderthis.state', this.state.navTabTop);
+    console.log('Layout render');
     return (
       <Layout>
         <MySider

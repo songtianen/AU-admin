@@ -13,12 +13,6 @@ export default function app(state, action) {
     };
   }
   switch (action.type) {
-    // case SPIN_LOADING:
-    //   // 全局loading
-    //   return { ...state, spinLoading: action.spinLoading }
-    // case UPDATE_TOPATH:
-    //   // 登陆后跳转地址
-    //   return { ...state, toPath: action.toPath }
     case UPDATE_ACCESSMENU:
       return {
         ...state,

@@ -52,6 +52,10 @@ router.post('/login', (req, res) => {
     },
   );
 });
+router.post('/logout', (req, res) => {
+  console.log('推出登陆');
+  return success({ res, data: { logout: true } });
+});
 
 // 用户注册接口
 

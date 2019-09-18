@@ -11,6 +11,7 @@ const { updateModule } = appActions.actions;
 class MySider extends React.PureComponent {
   state = {
     openKeys: [],
+    // 选中的菜单
     selectedKey: '',
   };
 
@@ -20,30 +21,28 @@ class MySider extends React.PureComponent {
   }
 
   initMenu = (pathname) => {
-    // console.log('调用initMenu+++++');
     let name = Object.keys(MenuToRouter).find(
       (key) => MenuToRouter[key] === pathname,
     );
-    // console.log('Sider+的+initMenu', name);
+
     if (name) {
       let parentKeys = util
         .getParentMenusByName(this.props.openAccessMenu, name)
         .map((item) => {
           return item.name;
         });
-      // console.log('Sider+的+initMenu的parentKeys当前menu组件的key', parentKeys);
+
       if (parentKeys.length > 0) {
         let currentModule = parentKeys[0];
-        // console.log('Sider+的+initMenu的当前模块currentModule', currentModule);
 
         let accessMenu = this.props.accessMenu;
         let moduleList = accessMenu.filter((item) => {
           return item.leftMenu && item.name === currentModule;
         });
-        // console.log('Sider+的+initMenu的当前模块moduleList', moduleList);
+
         if (moduleList.length > 0) {
           let moduleMenu = moduleList[0].children;
-          // console.log('Sider+的+initMenu的模块菜单moduleMenu', moduleMenu);
+
           this.props.updateModule({
             currentModule,
             moduleMenu,
@@ -90,7 +89,7 @@ class MySider extends React.PureComponent {
   };
 
   render() {
-    console.log('MySiderContainer render');
+    console.log('Sider-Container render');
     return (
       <MySiderPre
         responsive={this.props.responsive}

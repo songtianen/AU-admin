@@ -11,12 +11,8 @@ const { Item } = Menu;
 const { Sider } = Layout;
 
 class SubMenuList extends React.PureComponent {
-  componentDidMount() {
-    // console.log('SiderMenu 的 props', this.props);
-  }
-
   renderMenuItem = ({ name, title, icon }) => {
-    // console.log('siderMenu的name', name)
+    // 路由跳转到 配置文件中的 value
     let link = MenuToRouter[name];
     return (
       <Item key={name}>
@@ -60,8 +56,7 @@ class SubMenuList extends React.PureComponent {
   };
 
   render() {
-    console.log('SubMenuList render, selectedKeys', this.props.selectedKeys);
-    const { menus, openMenu, openKeys, selectedKeys } = this.props;
+    const { menus, openMenu, openKeys, selectedKey } = this.props;
     return (
       <Sider
         breakpoint='lg'
@@ -83,7 +78,7 @@ class SubMenuList extends React.PureComponent {
         <Menu
           mode='inline'
           onOpenChange={openMenu}
-          selectedKeys={[selectedKeys]}
+          selectedKeys={[selectedKey]}
           openKeys={openKeys}
           style={{ border: 'none' }}
         >
@@ -104,7 +99,7 @@ SubMenuList.propTypes = {
   collapsed: PropTypes.bool.isRequired,
   menus: PropTypes.array.isRequired,
   openMenu: PropTypes.func.isRequired,
-  selectedKeys: PropTypes.string,
+  selectedKey: PropTypes.string.isRequired,
   openKeys: PropTypes.array.isRequired,
 };
 export default SubMenuList;
