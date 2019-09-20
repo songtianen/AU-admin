@@ -43,7 +43,7 @@ app.use((error, req, res, next) => {
   res.status(500).send(error);
 });
 let host = process.env.HOST || '0.0.0.0'; // eslint-disable-line
-let port = process.env.PORT || 2223; // eslint-disable-line
+let port = process.env.PORT || 8888; // eslint-disable-line
 // pm2 start process.yml --env production // eslint-disable-line
 app.listen(port, host, () => {
   console.log('server is listening ', port);

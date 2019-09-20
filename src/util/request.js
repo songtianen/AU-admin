@@ -13,7 +13,7 @@ const service = axios.create({
   baseURL:
     process.env.NODE_ENV === 'development'
       ? '/api'
-      : 'http://localhost:2223/api', // api的base_url */,
+      : 'http://47.108.85.34:8888/api', // api的base_url */,
   timeout: 20000,
   withCredentials: true,
 });
