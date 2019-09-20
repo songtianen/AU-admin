@@ -19,7 +19,6 @@
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
     "dev:server": "cross-env NODE_ENV=development nodemon server/server.js",
     "build:client": "cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
-    "deploy": "yarn run build:client",
     "start": "cross-env NODE_ENV=production node server/server.js"
   },
   "devDependencies": {
