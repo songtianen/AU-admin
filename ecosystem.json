@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "admin-v1",
+      "name": "AU-admin",
       "script": "./server/server.js",
       "env_production": {
         "NODE_ENV": "production",
@@ -12,13 +12,11 @@
   "deploy": {
     "production": {
       "user": "root",
-      "host": [
-        "47.95.252.128"
-      ],
-      "repo": "git@gitee.com:soten/admin-v1.git",
+      "host": ["47.108.85.34"],
+      "repo": "git@github.com:songtianen/AU-admin.git",
       "ref": "origin/master",
-      "path": "/root/deploy/admin-v1",
-      "post-deploy": "yarn install && yarn run deploy && pm2 startOrRestart ecosystem.json --env production"
+      "path": "/root/app/AU-admin",
+      "post-deploy": "yarn install && pm2 startOrRestart ecosystem.json --env production"
     }
   }
 }
