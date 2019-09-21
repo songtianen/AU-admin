@@ -17,9 +17,10 @@
     "precommit": "pretty-quick --staged",
     "clear": "rimraf dist",
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
-    "dev:server": "cross-env NODE_ENV=development nodemon server/server.js",
     "build:client": "cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
-    "start": "cross-env NODE_ENV=production node server/server.js"
+    "dev:server": "cross-env SERVER_ENV=development nodemon server/server.js",
+    "client:server": "cross-env SERVER_ENV=production nodemon server/server.js",
+    "start": "npm run dev:server & npm run dev:client"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
@@ -42,7 +43,7 @@
     "circular-dependency-plugin": "^5.0.2",
     "clean-webpack-plugin": "^2.0.0",
     "compression-webpack-plugin": "^2.0.0",
-    "cross-env": "^5.2.0",
+    "cross-env": "^6.0.0",
     "css-loader": "^2.1.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.12.1",

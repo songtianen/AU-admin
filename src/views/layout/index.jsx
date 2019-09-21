@@ -13,7 +13,7 @@ import reduxUser from '../../redux/redux_user';
 import reduxApp from '../../redux/redux_app';
 import util from '../../util/util';
 // 不需要后端返回的菜单
-import constantMenu from '../../conf/menuConf';
+import constantMenu from '../../conf/MenuConf';
 import './layout.less';
 
 const { Content } = Layout;

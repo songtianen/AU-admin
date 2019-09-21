@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 let DB_URL = 'mongodb://localhost:27017/myapp';
 // 1 . 连接数据库
-mongoose.connect(DB_URL, { useNewUrlParser: true });
+mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 var dbm = mongoose.connection;
 // 监听数据库
 dbm.on('error', console.error.bind(console, 'connection error:'));

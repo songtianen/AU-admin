@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const merge = require('webpack-merge');
 // const PurifyCSS = require("purifycss-webpack");
 // const glob = require("glob-all");
@@ -16,7 +15,8 @@ const webpackProdConfig = merge(baseWebpackConfig, {
   output: {
     filename: '[name].[hash].bundle.js',
     chunkFilename: '[name].[hash].bundle.js',
-    publicPath: '/public/',
+    // publicPath: '/public/',
+    publicPath: 'http://localhost:8888/public/',
   },
   module: {
     rules: [
@@ -59,7 +59,7 @@ const webpackProdConfig = merge(baseWebpackConfig, {
               ident: 'postcss',
               plugins: [
                 require('autoprefixer')({
-                  browsers: ['last 15 versions'],
+                  overrideBrowserslist: ['last 15 versions'],
                 }),
                 // require('postcss-import')(),
                 // require('stylelint')(),
@@ -121,9 +121,6 @@ const webpackProdConfig = merge(baseWebpackConfig, {
       root: path.join(ROOT_PATH, '../'),
       // exclude: ['shared.js'],
       verbose: true,
-    }),
-    new webpack.DefinePlugin({
-      'process.env': require('./prod.env'),
     }),
     // new PurifyCSS({
     //   paths: glob.sync([

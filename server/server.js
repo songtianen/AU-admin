@@ -6,8 +6,8 @@ const router = require('./routes/index.js');
 const expressStaticGzip = require('express-static-gzip');
 
 // -------
-const isEnv = process.env.NODE_ENV;
-console.log('环境变量', isEnv);
+const isEnv = process.env.SERVER_ENV;
+console.log('服务端环境打印process.env.NODE_ENV:', isEnv);
 let app = express();
 
 // app.all('*', function(req, res, next) {
@@ -23,7 +23,9 @@ app.use(bodyParser.json()); // 请求体 json格式的数据转换成 req.body �
 app.use(bodyParser.urlencoded({ extended: false })); // form data 格式转换 req.body 格式
 app.use(favicon(path.join(__dirname, '../favicon.ico'))); // 浏览器标签页的图标
 if (isEnv === 'production') {
-  // app.use('/public/', express.static(path.join(__dirname, '../dist'))); // 静态文件指定对应的请求返回
+  // app.use('/public/', express.static(path.join(__dirname, '../dist')));
+  console.log('大王吧');
+  // 静态文件指定对应的请求返回
   app.use('/public/', expressStaticGzip(path.join(__dirname, '../dist')));
   app.use('/api', router);
   app.get('*', (req, res, next) => {
@@ -33,6 +35,8 @@ if (isEnv === 'production') {
 }
 
 if (isEnv === 'development') {
+  console.log('小王吧');
+
   const devStatic = require('./util/dev-static');
   devStatic(app);
 }

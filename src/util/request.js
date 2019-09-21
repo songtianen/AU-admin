@@ -8,12 +8,19 @@ import permission from './permission';
 let history = createBrowserHistory({
   forceRefresh: true,
 });
+/*
+  开发文件中的定义的变量可由webpack.DefinePlugin()中定义他会在webpack执行编译中添加变量
+*/
+// eslint-disable-next-line no-undef
+console.log('WEBPACK_ENV', WEBPACK_ENV);
 // create an axios instance
+/*
+  WEBPACK_ENV由webpack.DefinePlugin()中定义
+*/
 const service = axios.create({
   baseURL:
-    process.env.NODE_ENV === 'development'
-      ? '/api'
-      : 'http://47.108.85.34:8888/api', // api的base_url */,
+    // eslint-disable-next-line no-undef
+    WEBPACK_ENV === 'development' ? '/api' : 'http://47.108.85.34:8888/api', // api的base_url */,
   timeout: 20000,
   withCredentials: true,
 });

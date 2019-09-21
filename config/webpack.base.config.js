@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -6,6 +8,11 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const ROOTPATH = path.resolve(__dirname);
 const isProd = process.env.NODE_ENV === 'production';
+/*
+  webpack配置文件里获取process.envNODE_ENV的值 由 cross-env 传入定义的
+  开发文件中获取全局变量由webpack.DefinePlugin() 定义
+ */
+console.log('webpack环境打印process.env.NODE_ENV:', process.env.NODE_ENV);
 
 const baseWebpackConfig = {
   mode: isProd ? 'production' : 'development',
@@ -78,6 +85,11 @@ const baseWebpackConfig = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.join(ROOTPATH, '../src/index.html'),
+    }),
+    new webpack.DefinePlugin({
+      WEBPACK_ENV: isProd
+        ? JSON.stringify('production')
+        : JSON.stringify('development'),
     }),
   ],
 };

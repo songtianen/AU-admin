@@ -8,7 +8,6 @@ const CircularDependencyPlugin = require('circular-dependency-plugin');
 // const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const baseWebpackConfig = require('./webpack.base.config');
 const antdTheme = require('../theme');
-
 const ROOT_PATH = path.resolve(__dirname);
 
 const webpackDevConfig = merge(baseWebpackConfig, {
@@ -31,10 +30,17 @@ const webpackDevConfig = merge(baseWebpackConfig, {
       '/api': {
         target: 'http://localhost:8888',
         changeOrigin: true,
+        // 根据后端是否提供 ‘/api’ 来确定
         // pathRewrite: { '^/api': '' },
       },
     },
-    publicPath: '/public/', // !
+    /*
+     当你不配置devServer下的publicPath时，其会默认将包打到output.publicPath的路径下。
+     当你配置了devServer下的publicPath时，才其会将包打开你指定的路径下
+    此项publicPath不设置，默认找 output的 publicPath 路径
+    如果output也不设置publicPath：（与之相同路径）仍旧找不到文件）
+    */
+    publicPath: '/public/',
     historyApiFallback: {
       index: '/public/index.html',
     },
@@ -75,7 +81,7 @@ const webpackDevConfig = merge(baseWebpackConfig, {
               ident: 'postcss',
               plugins: [
                 require('autoprefixer')({
-                  browsers: ['last 15 versions'],
+                  overrideBrowserslist: ['last 15 versions'],
                 }),
                 // require('postcss-import')(),
                 // require('stylelint')(),
@@ -132,9 +138,6 @@ const webpackDevConfig = merge(baseWebpackConfig, {
     // new MiniCssExtractPlugin({
     //   filename: '[name].css'
     // }),
-    new webpack.DefinePlugin({
-      'process.env': require('./dev.env'),
-    }),
     // 循环依赖预警
     new CircularDependencyPlugin({
       exclude: /node_modules/,
