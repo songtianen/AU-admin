@@ -19,7 +19,7 @@
     "build-client": "cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
     "dev-server": "cross-env NODE_ENV=development node server/server.js",
     "build-server": "cross-env NODE_ENV=production node server/server.js",
-    "start": "npm run dev:server & npm run dev:client"
+    "start": "npm run dev-server & npm run dev-client"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
