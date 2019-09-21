@@ -6,8 +6,8 @@ const router = require('./routes/index.js');
 const expressStaticGzip = require('express-static-gzip');
 
 // -------
-const isEnv = process.env.SERVER_ENV;
-console.log('服务端环境打印process.env.NODE_ENV:', isEnv);
+const isEnv = process.env.NODE_ENV;
+const PORT = isEnv === 'production' ? 8888 : 6666;
 let app = express();
 
 // app.all('*', function(req, res, next) {
@@ -23,8 +23,7 @@ app.use(bodyParser.json()); // 请求体 json格式的数据转换成 req.body �
 app.use(bodyParser.urlencoded({ extended: false })); // form data 格式转换 req.body 格式
 app.use(favicon(path.join(__dirname, '../favicon.ico'))); // 浏览器标签页的图标
 if (isEnv === 'production') {
-  // app.use('/public/', express.static(path.join(__dirname, '../dist')));
-  console.log('大王吧');
+  console.log('isEnv === production');
   // 静态文件指定对应的请求返回
   app.use('/public/', expressStaticGzip(path.join(__dirname, '../dist')));
   app.use('/api', router);
@@ -35,19 +34,17 @@ if (isEnv === 'production') {
 }
 
 if (isEnv === 'development') {
-  console.log('小王吧');
-
+  console.log('isEnv === development');
   const devStatic = require('./util/dev-static');
   devStatic(app);
 }
 // 处理express 抛出错误 的中间件
 app.use((error, req, res, next) => {
   // eslint-disable-line
-  console.log(error);
   res.status(500).send(error);
 });
 let host = process.env.HOST || '0.0.0.0'; // eslint-disable-line
-let port = process.env.PORT || 8888; // eslint-disable-line
+let port = process.env.PORT || PORT; // eslint-disable-line
 // pm2 start process.yml --env production // eslint-disable-line
 app.listen(port, host, () => {
   console.log('server is listening ', port);

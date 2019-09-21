@@ -28,7 +28,7 @@ const webpackDevConfig = merge(baseWebpackConfig, {
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:8888',
+        target: 'http://localhost:6666',
         changeOrigin: true,
         // 根据后端是否提供 ‘/api’ 来确定
         // pathRewrite: { '^/api': '' },

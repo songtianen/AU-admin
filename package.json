@@ -18,8 +18,8 @@
     "clear": "rimraf dist",
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
     "build:client": "cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
-    "dev:server": "cross-env SERVER_ENV=development nodemon server/server.js",
-    "client:server": "cross-env SERVER_ENV=production nodemon server/server.js",
+    "dev:server": "cross-env NODE_ENV=development node server/server.js",
+    "build:server": "cross-env NODE_ENV=production node server/server.js",
     "start": "npm run dev:server & npm run dev:client"
   },
   "devDependencies": {
@@ -73,7 +73,6 @@
     "lint-staged": "^8.1.6",
     "lodash-webpack-plugin": "^0.11.5",
     "mini-css-extract-plugin": "^0.5.0",
-    "nodemon": "^1.18.10",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
     "prettier": "^1.17.0",
