@@ -4,7 +4,7 @@ const merge = require('webpack-merge');
 // const glob = require("glob-all");
 const CompressionPlugin = require('compression-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+// const CleanWebpackPlugin = require('clean-webpack-plugin');
 const baseWebpackConfig = require('./webpack.base.config');
 const antdTheme = require('../theme');
 
@@ -118,11 +118,11 @@ const webpackProdConfig = merge(baseWebpackConfig, {
       filename: '[name].[chunkhash].css',
       chunkFilename: '[id].css',
     }),
-    new CleanWebpackPlugin({
-      root: path.join(ROOT_PATH, '../'),
-      // exclude: ['shared.js'],
-      verbose: true,
-    }),
+    // new CleanWebpackPlugin({
+    //   root: path.join(ROOT_PATH, '../'),
+    //   // exclude: ['shared.js'],
+    //   verbose: true,
+    // }),
     // new PurifyCSS({
     //   paths: glob.sync([
     //     // 要做CSS Tree Shaking的路径文件
