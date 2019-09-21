@@ -1,6 +1,5 @@
 {
-  "name": "admin",
-  "version": "1.0.0",
+  "name": "AU-admin",
   "main": "index.js",
   "repository": "git@github.com:songtianen/AU-admin.git",
   "author": "song <songten@icloud.com>",
