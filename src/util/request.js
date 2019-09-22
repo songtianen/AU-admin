@@ -20,7 +20,7 @@ console.log('WEBPACK_ENV', WEBPACK_ENV);
 const service = axios.create({
   baseURL:
     // eslint-disable-next-line no-undef
-    WEBPACK_ENV === 'development' ? '/api' : 'http://47.108.85.34:8888/api', // api的base_url */,
+    WEBPACK_ENV === 'development' ? '/api' : 'http://47.108.85.34/api', // api的base_url */,
   timeout: 20000,
   withCredentials: true,
 });

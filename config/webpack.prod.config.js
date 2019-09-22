@@ -16,7 +16,7 @@ const webpackProdConfig = merge(baseWebpackConfig, {
     filename: '[name]_[hash].bundle.js',
     chunkFilename: '[name]_[hash].bundle.js',
     // publicPath: '/public/',
-    publicPath: 'http://47.108.85.34:8888/public/',
+    publicPath: 'http://47.108.85.34/public/',
     // publicPath: 'http://localhost:8888/public/',
   },
   module: {
