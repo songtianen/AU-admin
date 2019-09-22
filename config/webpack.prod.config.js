@@ -13,8 +13,8 @@ const ROOT_PATH = path.resolve(__dirname);
 const webpackProdConfig = merge(baseWebpackConfig, {
   mode: 'production',
   output: {
-    filename: '[name].[hash].bundle.js',
-    chunkFilename: '[name].[hash].bundle.js',
+    filename: '[name]_[hash].bundle.js',
+    chunkFilename: '[name]_[hash].bundle.js',
     // publicPath: '/public/',
     publicPath: 'http://47.108.85.34:8888/public/',
     // publicPath: 'http://localhost:8888/public/',
