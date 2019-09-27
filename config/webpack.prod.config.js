@@ -2,7 +2,7 @@ const path = require('path');
 const merge = require('webpack-merge');
 // const PurifyCSS = require("purifycss-webpack");
 // const glob = require("glob-all");
-const CompressionPlugin = require('compression-webpack-plugin');
+// const CompressionPlugin = require('compression-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 // const CleanWebpackPlugin = require('clean-webpack-plugin');
 const baseWebpackConfig = require('./webpack.base.config');
@@ -13,11 +13,11 @@ const ROOT_PATH = path.resolve(__dirname);
 const webpackProdConfig = merge(baseWebpackConfig, {
   mode: 'production',
   output: {
-    filename: '[name]_[hash].bundle.js',
-    chunkFilename: '[name]_[hash].bundle.js',
+    filename: '[name].[hash].bundle.js',
+    chunkFilename: '[name].[hash].bundle.js',
     // publicPath: '/public/',
     publicPath: 'http://47.108.85.34/public/',
-    // publicPath: 'http://localhost:8888/public/',
+    // publicPath: 'http://localhost:8888/public/', // 本地调试用
   },
   module: {
     rules: [
@@ -130,6 +130,8 @@ const webpackProdConfig = merge(baseWebpackConfig, {
     //     // path.join(ROOTPATH, "../src/*.js")
     //   ])
     // }),
+    /*
+    //  前端压缩还是后端压缩商量好
     new CompressionPlugin({
       filename: '[path].gz[query]', // 目标资源名称。[file] 会被替换成原资源。[path] 会被替换成原资源路径，[query] 替换成原查询字符串
       algorithm: 'gzip', // 算法
@@ -138,6 +140,7 @@ const webpackProdConfig = merge(baseWebpackConfig, {
       minRatio: 0.8, // 只有压缩率比这个值小的资源才会被处理
       deleteOriginalAssets: true,
     }),
+    */
   ],
 });
 

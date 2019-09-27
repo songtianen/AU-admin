@@ -41,6 +41,7 @@
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
     "circular-dependency-plugin": "^5.0.2",
     "clean-webpack-plugin": "^2.0.0",
+    "compression": "^1.7.4",
     "compression-webpack-plugin": "^2.0.0",
     "cross-env": "^6.0.0",
     "css-loader": "^2.1.0",
@@ -84,11 +85,11 @@
     "uglifyjs-webpack-plugin": "^2.1.2",
     "url-loader": "^1.1.2",
     "uuid": "^3.3.2",
-    "webpack-merge": "^4.2.1",
     "webpack": "4.17.1",
     "webpack-bundle-analyzer": "2.13.1",
     "webpack-cli": "3.1.0",
-    "webpack-dev-server": "3.1.7"
+    "webpack-dev-server": "3.1.7",
+    "webpack-merge": "^4.2.1"
   },
   "dependencies": {
     "antd": "3.15.2",
