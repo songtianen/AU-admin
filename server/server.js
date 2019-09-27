@@ -23,7 +23,7 @@ if (isEnv === 'production') {
   app.use(
     '/public/',
     express.static(path.join(__dirname, '../dist'), {
-      maxAge: 1000 * 10 * 60,
+      maxAge: 1000 * 60 * 60,
     }),
   );
   // ----------------------
