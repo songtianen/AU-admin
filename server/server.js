@@ -11,16 +11,6 @@ const isEnv = process.env.NODE_ENV;
 const PORT = isEnv === 'production' ? 8888 : 6666;
 let app = express();
 
-app.all('*', function(req, res, next) {
-  // res.header('Content-Encodin', 'gzip');
-  // res.header('Access-Control-Allow-Origin', '*');
-  // res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-  // res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-  // res.header('X-Powered-By', ' 3.2.1');
-  // res.header('Content-Type', 'application/json;charset=utf-8');
-  next();
-});
-
 app.use(bodyParser.json()); // 请求体 json格式的数据转换成 req.body 格式的数据
 app.use(bodyParser.urlencoded({ extended: false })); // form data 格式转换 req.body 格式
 app.use(favicon(path.join(__dirname, '../favicon.ico'))); // 浏览器标签页的图标
@@ -58,6 +48,6 @@ app.use((error, req, res, next) => {
 let host = process.env.HOST || '0.0.0.0'; // eslint-disable-line
 let port = process.env.PORT || PORT; // eslint-disable-line
 // pm2 start process.yml --env production // eslint-disable-line
-app.listen(port, host, () => {
-  console.log('server is listening ', port);
-});
+// app.listen(port, host, () => {
+//   console.log('server is listening ', port);
+// });
