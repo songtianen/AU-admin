@@ -84,7 +84,7 @@ class Login extends React.PureComponent {
         </FormItem>
         <FormItem hasFeedback>
           {getFieldDecorator('password', {
-            initialValue: '123456',
+            initialValue: '',
             rules: [{ required: true, message: '请输入密码!' }],
           })(
             <Input
