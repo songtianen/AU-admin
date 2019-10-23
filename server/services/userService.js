@@ -123,13 +123,12 @@ const getAllUser = async ({
 
   if (filter.name) {
     userInfoList = _.filter(userInfoList, (o) => {
-      console.log('ooooooo', filter);
-      return o.userName.indexOf(filter.name) > -1;
+      return o.userName ? o.userName.indexOf(filter.name) > -1 : '';
     });
   }
   if (filter.email) {
     userInfoList = _.filter(userInfoList, (o) => {
-      return o.email.indexOf(filter.email) > -1;
+      return o.email ? o.email.indexOf(filter.email) > -1 : '';
     });
   }
   // 总页数
