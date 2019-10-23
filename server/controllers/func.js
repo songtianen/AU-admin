@@ -60,24 +60,24 @@ const postSaveFunction = ({ req, res }) => {
   let func = req.body;
   console.log('postSaveFuntion--====-', func);
   if (func.name === '') {
-    return responseTemplate.businessError(res, '名称不能为空!');
+    return responseTemplate.businessError({ res, msg: '名称不能为空!' });
   }
   if (func.code === '') {
-    return responseTemplate.businessError(res, '编码不能为空!');
+    return responseTemplate.businessError({ res, msg: '编码不能为空!' });
   }
   if (!func.moduleId) {
-    return responseTemplate.businessError(res, '请选择模块!');
+    return responseTemplate.businessError({ res, msg: '请选择模块!' });
   }
   saveFunction(func)
     .then((result) => {
       console.log('saveFunction 异步---', result);
       if (!result.success) {
-        return responseTemplate.businessError(res, result.msg);
+        return responseTemplate.businessError({ res, msg: result.msg });
       }
       return responseTemplate.success({ res, msg: result.msg });
     })
     .catch((err) => {
-      return responseTemplate.businessError(res, err);
+      return responseTemplate.businessError({ res, meg: err });
     });
 };
 

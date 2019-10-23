@@ -1,6 +1,10 @@
 // const _ = require('lodash')
 const { UserModel, RoleModel } = require('../model/model');
-// const uuidv4 = require('uuid/v4');
+const uuidv4 = require('uuid/v4');
+const { md5PWD, secretKey } = require('../util/md5');
+const { businessError, success } = require('../lib/responseTemplate');
+
+const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
 // const roleService = require('./roleService')
@@ -113,16 +117,14 @@ const getAllUser = async ({
   descending,
   filter,
 }) => {
-  let userList = await UserModel.find();
+  let userList = await UserModel.find({});
+
   let userInfoList = JSON.parse(JSON.stringify(userList));
 
   if (filter.name) {
     userInfoList = _.filter(userInfoList, (o) => {
-      // console.log('ooooooo', o);
-      return (
-        o.userName.indexOf(filter.name) > -1 ||
-        o.nickName.indexOf(filter.name) > -1
-      );
+      console.log('ooooooo', filter);
+      return o.userName.indexOf(filter.name) > -1;
     });
   }
   if (filter.email) {
@@ -153,10 +155,48 @@ const getAllUser = async ({
     rows: userInfoList,
   };
 };
+// 用户注册
+const postRegister = async ({ req, res }) => {
+  const { mail, password, mobile, username } = req.body;
+  // 查询username是否存在，如果存在，返回错误
+  const user = await UserModel.findOne({
+    // 判断密码是否正确
+    userName: username,
+  });
+  if (user) {
+    return businessError({ res, msg: '用户名以存在!', data: 'username' });
+  } else {
+    const info = await new UserModel({
+      id: uuidv4(),
+      email: mail,
+      isAdmin: 0,
+      userName: username,
+      pwd: md5PWD(password),
+      phone: mobile,
+    });
+    // console.log('userinfo', info);
+    info.save(function(err) {
+      if (err) {
+        return businessError({ res, msg: '数据库保存失败!', data: '' });
+      }
+      const tokenObj = {
+        username: info.userName,
+        isAdmin: 0,
+        userId: info.id,
+      };
+      // 用户登录成功过后生成token返给前端
+      let token = jwt.sign(tokenObj, secretKey, {
+        expiresIn: '24h', // 授权时效24小时
+      });
+      return success({ res, data: { accessToken: token } });
+    });
+  }
+};
 
 module.exports = {
   getUserInfoById,
   getUserPagelist,
   postEditRoleuser,
   getAllUser,
+  postRegister,
 };

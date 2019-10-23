@@ -146,17 +146,17 @@ let menuService = {
     for (let i = 0; i < menu.length; i++) {
       if (menu[i].id === requstData.id) {
         if (requstData.name === menu[i].name) {
-          return businessError(res, '名称已存在');
+          return businessError({ res, msg: '名称已存在' });
         }
         if (requstData.title === menu[i].title) {
-          return businessError(res, '标题已存在');
+          return businessError({ res, msg: '标题已存在' });
         }
         // 如果有 id 相等 就是更新这条数据
         AccessMemuModel.where({ id: requstData.id }).updateOne(
           { $set: { ...requstData } },
           (err, d) => {
             if (err) {
-              return businessError(res, '数据库保存错误');
+              return businessError({ res, msg: '数据库保存错误' });
             }
           },
         );

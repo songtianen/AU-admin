@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Form, Icon, Input, Button, Card } from 'antd';
+import { Row, Col, Form, Icon, Input, Button, Card, Checkbox } from 'antd';
 // import '@/style/login.less';
 import { loginByUsername } from '../../../api';
 import logo from '../../../resource/assets/logo.jpg';
@@ -27,6 +27,11 @@ class Login extends React.PureComponent {
       let loading = document.getElementById('StartLoading');
       loading && document.body.removeChild(loading); // eslint-disable-line
     }, 200);
+  };
+
+  handleRegister = () => {
+    const { history } = this.props;
+    history.push('/register');
   };
 
   handleSubmit = (e) => {
@@ -95,13 +100,29 @@ class Login extends React.PureComponent {
           )}
         </FormItem>
         <FormItem>
+          <a className='login-form-forgot' href=''>
+            忘记密码？
+          </a>
           <Button
             type='primary'
             loading={this.state.loading}
             htmlType='submit'
-            className='login-form-button'
+            style={{ width: '100%' }}
           >
             登录
+          </Button>
+        </FormItem>
+        <FormItem>
+          {getFieldDecorator('remember', {
+            valuePropName: 'checked',
+            initialValue: true,
+          })(<Checkbox>记住我</Checkbox>)}
+          <Button
+            type='primary'
+            onClick={this.handleRegister}
+            style={{ float: 'right' }}
+          >
+            注册
           </Button>
         </FormItem>
       </Form>

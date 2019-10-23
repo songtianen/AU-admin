@@ -26,27 +26,27 @@ const getMenuList = ({ req, res }) => {
       return success({ res, data: menuList });
     })
     .catch(() => {
-      businessError(res, '服务器错误');
+      businessError({ res, msg: '服务器错误' });
     });
 };
 
 const saveMenu = ({ req, res }) => {
   const menu = req.body;
   if (menu.name === '') {
-    return businessError(res, '名称不能为空!');
+    return businessError({ res, msg: '名称不能为空!' });
   }
   if (menu.title === '') {
-    return businessError(res, '标题不能为空!');
+    return businessError({ res, msg: '标题不能为空!' });
   }
   if (menu.icon === '') {
-    return businessError(res, '请选择图标!');
+    return businessError({ res, msg: '请选择图标!' });
   }
   findAccessMenuList()
     .then((doc) => {
       return postSaveMenu(res, menu, doc);
     })
     .catch(() => {
-      businessError(res, '服务器错误');
+      businessError({ res, msg: '服务器错误' });
     });
 };
 

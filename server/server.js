@@ -49,5 +49,5 @@ let host = process.env.HOST || '0.0.0.0'; // eslint-disable-line
 let port = process.env.PORT || PORT; // eslint-disable-line
 // pm2 start process.yml --env production // eslint-disable-line
 app.listen(port, host, () => {
-  // console.log('server is listening ', port);
+  console.log('server is listening ', port);
 });

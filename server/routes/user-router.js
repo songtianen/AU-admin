@@ -5,6 +5,8 @@ const { UserModel } = require('../model/model'); // 引入模型
 const { md5PWD, secretKey } = require('../util/md5');
 const { businessError, success } = require('../lib/responseTemplate');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
+const { checkRegister } = require('../util/userUtil');
+const { postRegister } = require('../controllers/user');
 
 const {
   getUserInfo,
@@ -47,10 +49,17 @@ router.post('/login', (req, res) => {
         });
         success({ res, data: { accessToken: token } });
       } else {
-        businessError(res, 'fail');
+        businessError({ res, msg: 'fail' });
       }
     },
   );
+});
+// 注册
+router.post('/register', (req, res) => {
+  checkRegister(req.body, res);
+  // 用户信息保存数据库，返回token
+  postRegister({ req, res });
+  // success({ res, data: { accessToken: 'song' } });
 });
 router.post('/logout', (req, res) => {
   console.log('推出登陆');
@@ -75,7 +84,7 @@ router.post(
     postEditRoleuser({ req, res });
   },
 );
-router.post(
+router.get(
   '/getalluser',
   PermissionCheck({
     permission: ['role_user_edit', 'user_role_edit'],

@@ -49,7 +49,7 @@ export function getUserPagedList(query) {
 export function getAllUser(query) {
   return request({
     url: '/user/getalluser',
-    method: 'post',
+    method: 'get',
     params: query,
   });
 }
