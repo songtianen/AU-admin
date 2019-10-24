@@ -54,8 +54,10 @@ module.exports = {
 
   delRole: async ({ req, res }) => {
     let id = req.body.id;
-    await roleService.delRole(id);
-    return responseTemplate.success({ res, msg: '删除成功' });
+    const isRemove = await roleService.delRole(id);
+    isRemove
+      ? responseTemplate.success({ res, msg: '删除成功' })
+      : responseTemplate.businessError({ res, msg: '数据库保存失败' });
   },
 
   delRoles: async ({ req, res }) => {

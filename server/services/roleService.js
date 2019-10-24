@@ -136,8 +136,8 @@ module.exports = {
     };
   },
   delRole: async (id) => {
-    // const a = await RoleModel.findOneAndRemove({ id: id });
-    // console.log('删除角色Role', a);
+    const isRemoveRole = await RoleModel.findOneAndDelete({ id: id });
+    return isRemoveRole;
   },
   saveRole: async (role) => {
     let exist = await RoleModel.findOne({ code: role.code });
