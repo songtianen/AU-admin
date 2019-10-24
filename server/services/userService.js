@@ -10,7 +10,7 @@ const _ = require('lodash');
 // const roleService = require('./roleService')
 // const functionService = require('./functionService')
 const getUserInfoById = (id) => {
-  return UserModel.findOne({ _id: id }).exec();
+  return UserModel.findOne({ id: id }).exec();
 };
 const getUserPagelist = async (
   pageIndex,
@@ -156,22 +156,22 @@ const getAllUser = async ({
 };
 // 用户注册
 const postRegister = async ({ req, res }) => {
-  const { mail, password, mobile, username } = req.body;
+  const { email, password, phone, username } = req.body;
   // 查询username是否存在，如果存在，返回错误
   const user = await UserModel.findOne({
     // 判断密码是否正确
     userName: username,
   });
   if (user) {
-    return businessError({ res, msg: '用户名以存在!', data: 'username' });
+    return businessError({ res, msg: '用户名已经存在!', data: 'username' });
   } else {
     const info = await new UserModel({
       id: uuidv4(),
-      email: mail,
-      isAdmin: 0,
+      email: email,
+      isAdmin: 'user',
       userName: username,
       pwd: md5PWD(password),
-      phone: mobile,
+      phone: phone,
     });
     // console.log('userinfo', info);
     info.save(function(err) {
@@ -180,7 +180,7 @@ const postRegister = async ({ req, res }) => {
       }
       const tokenObj = {
         username: info.userName,
-        isAdmin: 0,
+        isAdmin: info.isAdmin,
         userId: info.id,
       };
       // 用户登录成功过后生成token返给前端

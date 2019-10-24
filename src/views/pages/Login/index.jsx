@@ -29,7 +29,7 @@ class Login extends React.PureComponent {
     }, 200);
   };
 
-  handleRegister = () => {
+  gotoRegister = () => {
     const { history } = this.props;
     history.push('/register');
   };
@@ -119,7 +119,7 @@ class Login extends React.PureComponent {
           })(<Checkbox>记住我</Checkbox>)}
           <Button
             type='primary'
-            onClick={this.handleRegister}
+            onClick={this.gotoRegister}
             style={{ float: 'right' }}
           >
             注册

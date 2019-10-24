@@ -3,7 +3,7 @@ const user = require('./user-router');
 const menu = require('./menu-router');
 const func = require('./func-router');
 const role = require('./role-router');
-const jwtAuth = require('./jwt');
+const jwtAuth = require('../middleware/jwt');
 // 注册路由
 const router = express.Router();
 // 所有请求过来都会进行身份验证

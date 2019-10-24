@@ -24,7 +24,7 @@ const productsSchema = new mongoose.Schema({
 let ProductsModel = mongoose.model('Products', productsSchema);
 
 const userSchema = new mongoose.Schema({
-  isAdmin: { type: Number },
+  isAdmin: { type: String },
   id: String,
   email: String,
   userPermission: [String],

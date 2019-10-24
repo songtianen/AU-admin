@@ -6,12 +6,12 @@ let postRegister = async ({ req, res }) => {
   userSservice.postRegister({ req, res });
 };
 let getUserInfo = ({ req, res }) => {
-  // console.log('user-controller', req.user)
+  console.log('user-controller', req.user);
   let user = req.user;
   if (!user || !user.userId) {
     return businessError({ res, msg: '获取用户信息失败!' });
   }
-  UserModel.findOne({ _id: user.userId }, function(err, doc) {
+  UserModel.findOne({ id: user.userId }, function(err, doc) {
     if (err) {
       return businessError({ res, msg: '获取用户信息失败!' });
     }
@@ -61,8 +61,6 @@ const postEditRoleuser = async ({ req, res }) => {
 };
 
 const getAllUser = async ({ req, res }) => {
-  console.log('宋天恩', req.query);
-  console.log('宋天恩body', req.body);
   let pageIndex = req.query.pageIndex;
   let pageSize = req.query.pageSize;
   let sortBy = req.query.sortBy;

@@ -3,11 +3,12 @@ const { businessError } = require('../lib/responseTemplate');
 
 const PermissionCheck = ({ permission = [], role = [] }) => {
   return (req, res, next) => {
-    // console.log('PermissionCheck--s--');
+    console.log('PermissionCheck--s--', req.user);
     getUserInfoById(req.user.userId).then((result) => {
       const { isAdmin, userRole, userPermission } = result;
+      // const { userRole, userPermission } = result;
       // 哪些用户角色可以编辑哪些权限。
-      if (!req.user || !req.user.userId) {
+      if (!req.user || !req.user.userId || !req.user.isAdmin) {
         return businessError({ res, msg: '没有访问权限' });
       }
       // 如果是管理员

@@ -14,6 +14,15 @@ export function loginByUsername(username, password) {
   });
 }
 
+export function loginRegister(params) {
+  return request({
+    url: '/user/register',
+    method: 'post',
+    data: qs.stringify(params),
+    // loading: 'spin',
+  });
+}
+
 export function logout() {
   return request({
     url: '/user/logout',

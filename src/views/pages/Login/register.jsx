@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { Form, Input, Icon, Row, Col, Button, Card } from 'antd';
+import { loginRegister } from '../../../api';
 import logo from '../../../resource/assets/logo.jpg';
+import { setToken } from '../../../util/token';
 
 const { Meta } = Card;
 
@@ -10,6 +11,7 @@ class RegistrationForm extends React.Component {
   state = {
     confirmDirty: false,
     count: 0,
+    loading: false,
   };
 
   interval = undefined;
@@ -18,11 +20,38 @@ class RegistrationForm extends React.Component {
     clearInterval(this.interval);
   }
 
+  startLogin = () => {
+    this.setState({ loading: true });
+  };
+
+  endLogin = () => {
+    this.setState({ loading: false });
+  };
+
   handleSubmit = (e) => {
+    const { history } = this.props;
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
+    this.props.form.validateFieldsAndScroll(async (err, values) => {
+      console.log('Received values of form: ', values);
+
       if (!err) {
-        console.log('Received values of form: ', values);
+        this.startLogin();
+        // const userName = values.userName;
+        // const password = values.password;
+        try {
+          let res = await loginRegister(values);
+          // console.log('loginByUsername', res);
+          const data = res.data;
+          setToken(data.accessToken);
+          // eslint-disable-next-line no-shadow
+        } catch (e) {
+          // eslint-disable-line
+          console.log('Login; err', e);
+        }
+        setTimeout(() => {
+          this.endLogin();
+          history.push('/');
+        }, 2000);
       }
     });
   };
@@ -182,7 +211,7 @@ class RegistrationForm extends React.Component {
         </Form.Item>
 
         <Form.Item>
-          <Button type='primary' htmlType='submit'>
+          <Button type='primary' loading={this.state.loading} htmlType='submit'>
             提交
           </Button>
         </Form.Item>
@@ -232,7 +261,7 @@ class RegistrationForm extends React.Component {
   }
 }
 RegistrationForm.propTypes = {
-  // history: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
 };
 

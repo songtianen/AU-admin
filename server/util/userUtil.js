@@ -9,18 +9,18 @@ const checkAllinfos = (localinfos, reqInfos, res) => {
   }
   if (errInfo.length) {
     let msg = errInfo.join();
-    return businessError({ res, msg });
+    return businessError({ res, msg: `请求参数错误`, data: msg });
   }
 };
-const checkDetailInfo = ({ mail, password, confirm, mobile }, res) => {
+const checkDetailInfo = ({ email, password, confirm, phone }, res) => {
   // eslint-disable-next-line no-useless-escape
   const mobileReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
   const phoneReg = /^1[3-578]\d{9}$/;
-  if (!mobileReg.test(mail)) {
-    return businessError({ res, msg: '邮箱格式不正确', data: 'mail' });
+  if (!mobileReg.test(email)) {
+    return businessError({ res, msg: '邮箱格式不正确', data: 'email' });
   }
-  if (!phoneReg.test(mobile)) {
-    return businessError({ res, msg: '手机格式式不正确', data: 'mobile' });
+  if (!phoneReg.test(phone)) {
+    return businessError({ res, msg: '手机格式式不正确', data: 'phone' });
   }
   if (confirm !== password) {
     return businessError({ res, msg: '手机格式式不正确', data: 'confirm' });
@@ -29,12 +29,11 @@ const checkDetailInfo = ({ mail, password, confirm, mobile }, res) => {
 const checkRegister = (reqinfos, res) => {
   const infoArr = [
     'username',
-    'mail',
+    'email',
     'password',
     'confirm',
-    'mobile',
+    'phone',
     'captcha',
-    'prefix',
   ];
   let info = Object.keys(reqinfos);
   checkAllinfos(infoArr, info, res);

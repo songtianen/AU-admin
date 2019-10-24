@@ -41,7 +41,7 @@ router.post('/login', (req, res) => {
         const tokenObj = {
           username: user.userName,
           isAdmin: user.isAdmin,
-          userId: user._id,
+          userId: user.id,
         };
         // 用户登录成功过后生成token返给前端
         let token = jwt.sign(tokenObj, secretKey, {
@@ -56,13 +56,15 @@ router.post('/login', (req, res) => {
 });
 // 注册
 router.post('/register', (req, res) => {
+  console.log(req.body);
+  // 验证参数是否合法
   checkRegister(req.body, res);
   // 用户信息保存数据库，返回token
   postRegister({ req, res });
   // success({ res, data: { accessToken: 'song' } });
 });
 router.post('/logout', (req, res) => {
-  console.log('推出登陆');
+  // console.log('推出登陆');
   return success({ res, data: { logout: true } });
 });
 
