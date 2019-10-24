@@ -6,7 +6,7 @@ let postRegister = async ({ req, res }) => {
   userSservice.postRegister({ req, res });
 };
 let getUserInfo = ({ req, res }) => {
-  console.log('user-controller', req.user);
+  // console.log('user-controller', req.user);
   let user = req.user;
   if (!user || !user.userId) {
     return businessError({ res, msg: '获取用户信息失败!' });

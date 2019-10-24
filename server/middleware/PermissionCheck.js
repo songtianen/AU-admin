@@ -3,7 +3,7 @@ const { businessError } = require('../lib/responseTemplate');
 
 const PermissionCheck = ({ permission = [], role = [] }) => {
   return (req, res, next) => {
-    console.log('PermissionCheck--s--', req.user);
+    // console.log('PermissionCheck--s--', req.user);
     getUserInfoById(req.user.userId).then((result) => {
       const { isAdmin, userRole, userPermission } = result;
       // const { userRole, userPermission } = result;
@@ -12,7 +12,7 @@ const PermissionCheck = ({ permission = [], role = [] }) => {
         return businessError({ res, msg: '没有访问权限' });
       }
       // 如果是管理员
-      if (isAdmin) {
+      if (isAdmin === 'admin') {
         // console.log('PermissionCheck-----1');
         return next();
       }

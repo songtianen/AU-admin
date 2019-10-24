@@ -46,7 +46,7 @@ export function getUserList() {
     method: 'get',
   });
 }
-// 获取用户列表
+// 根据角色获取用户列表
 export function getUserPagedList(query) {
   return request({
     url: '/user/pagedlist',

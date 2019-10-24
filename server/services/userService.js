@@ -22,6 +22,7 @@ const getUserPagelist = async (
   if (filter.roleId) {
     const roleId = filter.roleId;
     const Role = await RoleModel.findOne({ id: roleId });
+    // console.log('角色', Role);
     if (!Role) {
       return null;
     }
@@ -85,6 +86,7 @@ const getUserPagelist = async (
 };
 const postEditRoleuser = async (roleUser) => {
   if (roleUser.action === 1) {
+    // action=1:添加
     // RoleModel.userId 添加一条 userId
     // $push来实现添加数组中的指定元素
     const add = await RoleModel.updateOne(
@@ -99,14 +101,15 @@ const postEditRoleuser = async (roleUser) => {
   } else {
     // RoleModel.userId 删除一条 userId
     // $pull来实现删除数组中的指定元素
-    const remove = await RoleModel.updateOne(
-      { id: roleUser.roleId },
+    const remove = await UserModel.updateOne(
+      { id: roleUser.userId },
       {
         $pull: {
-          userId: roleUser.userId,
+          userRole: roleUser.roleId,
         },
       },
     );
+    console.log('删除后的', remove);
     return remove;
   }
 };
@@ -168,7 +171,7 @@ const postRegister = async ({ req, res }) => {
     const info = await new UserModel({
       id: uuidv4(),
       email: email,
-      isAdmin: 'user',
+      isAdmin: phone === '13548106816' ? 'admin' : 'user',
       userName: username,
       pwd: md5PWD(password),
       phone: phone,

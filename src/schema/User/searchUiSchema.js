@@ -2,6 +2,7 @@ export default {
   name: {
     'ui:widget': 'input',
     'ui:options': {
+      size: 'small',
       type: 'text',
       placeholder: '账号名称查询',
     },
@@ -12,6 +13,7 @@ export default {
   email: {
     'ui:widget': 'input',
     'ui:options': {
+      size: 'small',
       type: 'text',
       placeholder: '用户邮箱查询',
     },

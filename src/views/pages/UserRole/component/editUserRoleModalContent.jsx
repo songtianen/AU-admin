@@ -195,6 +195,7 @@ class EditUserRoleModalContent extends React.PureComponent {
           loading={this.state.tableLoading}
           onChange={this.handleTableChange}
           scroll={{ x: 768 }}
+          size='small'
           bordered
         />
       </div>
