@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Menu, Icon, Layout, Row, Col } from 'antd';
+import { Menu, Icon, Layout, Row, Col, Avatar, Badge } from 'antd';
 import { connect } from 'react-redux';
-import uuidv4 from 'uuid/v4';
+// import uuidv4 from 'uuid/v4';
 // import '@/style/header.less'
 import ModuleMenu from './ModuleMenu';
 import appActions from '../../../redux/redux_app';
@@ -11,8 +11,6 @@ import { logout } from '../../../api';
 import { removeToken } from '../../../util/token';
 import FullScreen from './FullScreen';
 import SearchInput from './SearchInput';
-
-import logo from '../../../resource/assets/logo.jpg';
 
 import './index.less';
 
@@ -69,7 +67,7 @@ class MyHeader extends React.PureComponent {
         <Row type='flex' justify='start'>
           <Col xs={6} sm={4} md={2} lg={2} xl={2}>
             <Menu style={{ border: 'none' }} selectable={false}>
-              <Menu.Item key={uuidv4()}>
+              <Menu.Item key={'style'}>
                 {/* 修改样式 */}
                 {/* <ul className="top-nav" style={{ lineHeight: '38px', marginLeft: 10 }}>
                 <li> */}
@@ -99,7 +97,7 @@ class MyHeader extends React.PureComponent {
           {/* SearchInput */}
           <Col xs={24} sm={12} md={7} lg={6} xl={6}>
             <Menu style={{ border: 'none' }} selectable={false}>
-              <Menu.Item key={uuidv4()}>
+              <Menu.Item key={'searchInput'}>
                 <SearchInput
                   style={{ width: '100%', height: 50, padding: '0px 20px' }}
                 />
@@ -111,7 +109,7 @@ class MyHeader extends React.PureComponent {
             <Menu style={{ border: 'none' }} selectable={false}>
               <Menu.Item
                 // style={{padding: '4 0 0 0'}}
-                key={uuidv4()}
+                key={'github'}
               >
                 <a
                   target={'_blank'}
@@ -128,7 +126,7 @@ class MyHeader extends React.PureComponent {
           {/* FullScreen */}
           <Col xs={6} sm={4} md={2} lg={2} xl={2}>
             <Menu style={{ border: 'none' }} selectable={false}>
-              <Menu.Item key={uuidv4()}>
+              <Menu.Item key={'fullScreen'}>
                 <FullScreen />
               </Menu.Item>
             </Menu>
@@ -144,10 +142,9 @@ class MyHeader extends React.PureComponent {
             >
               <SubMenu
                 title={
-                  <span className='avatar'>
-                    <img src={logo} alt='头像' />
-                    <i className='on bottom b-white' />
-                  </span>
+                  <Badge dot>
+                    <Avatar shape='circle'>User</Avatar>
+                  </Badge>
                 }
               >
                 <MenuItemGroup title='用户中心'>
