@@ -1,3 +1,4 @@
+// 也可看作是uiSchema.js 的补充
 export default {
   $id: 'role-edit-schema',
   title: 'role-edit-schema',

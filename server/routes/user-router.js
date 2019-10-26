@@ -6,13 +6,14 @@ const { md5PWD, secretKey } = require('../util/md5');
 const { businessError, success } = require('../lib/responseTemplate');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
 const { checkRegister } = require('../util/userUtil');
-const { postRegister } = require('../controllers/user');
+const { postRegister, postSaveUser } = require('../controllers/user');
 
 const {
   getUserInfo,
   getUserPagelist,
   postEditRoleuser,
   getAllUser,
+  postDelUser,
 } = require('../controllers/user');
 
 const User = UserModel;
@@ -93,6 +94,24 @@ router.get(
   }),
   (req, res) => {
     getAllUser({ req, res });
+  },
+);
+router.post(
+  '/saveuser',
+  PermissionCheck({
+    permission: ['role_user_edit', 'user_role_edit'],
+  }),
+  (req, res) => {
+    postSaveUser({ req, res });
+  },
+);
+router.post(
+  '/del',
+  PermissionCheck({
+    permission: ['role_user_edit', 'user_role_edit'],
+  }),
+  (req, res) => {
+    postDelUser({ req, res });
   },
 );
 

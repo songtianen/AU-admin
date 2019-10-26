@@ -6,8 +6,8 @@ import { Table, Popconfirm, Divider, Button, notification } from 'antd';
 import { getRolePagedList, delRole, delRoles, saveRole } from '../../../../api';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
 import schema from '../../../../schema/Role';
-import EditRoleModal from './editRoleModal';
-// import EditRoleModal from './editRoleModal';
+import CommonModal from '../../Common/CommonModal';
+import AddRemoveComponent from '../../Common/AddRemoveConponent';
 
 class Role extends React.PureComponent {
   state = {
@@ -254,17 +254,13 @@ class Role extends React.PureComponent {
           handleReset={this.handleReset}
         />
         <Divider />
-        <div style={{ marginBottom: 16 }}>
-          <Button type='primary' icon='plus-square-o' onClick={this.addRole}>
-            新增
-          </Button>
-          <Divider type='vertical' />
-          <Popconfirm title='确定删除?' onConfirm={this.batchDelRole}>
-            <Button type='danger' disabled={!hasSelected} icon='delete'>
-              删除
-            </Button>
-          </Popconfirm>
-        </div>
+        <AddRemoveComponent
+          addFunc={this.addRole}
+          onConfirm={this.batchDelRole}
+          hasSelected={hasSelected}
+          addTitle={'新增'}
+          removeTitle={'删除'}
+        />
         <Table
           rowSelection={rowSelection}
           columns={this.columns}
@@ -277,7 +273,7 @@ class Role extends React.PureComponent {
           size='small'
           bordered
         />
-        <EditRoleModal
+        <CommonModal
           visible={this.state.editModalVisible}
           title={this.editFormData.id ? '编辑' : '新增'}
           onCancel={this.editModalOnCancel}

@@ -35,7 +35,7 @@ let getUserPagelist = async ({ req, res }) => {
   let sortBy = req.query.sortBy;
   let descending = req.query.descending;
   let filter = JSON.parse(req.query.filter);
-  console.log('用户角色管理接收', req.query);
+  // console.log('用户角色管理接收', req.query);
   const info = await userSservice.getUserPagelist(
     pageIndex,
     pageSize,
@@ -51,9 +51,9 @@ let getUserPagelist = async ({ req, res }) => {
 
 const postEditRoleuser = async ({ req, res }) => {
   let roleUser = req.body;
-  console.log('移除和添加角色用户的接口', roleUser);
+  // console.log('移除和添加角色用户的接口', roleUser);
   const edit = await userSservice.postEditRoleuser(roleUser);
-  console.log('edit--', edit);
+  // console.log('edit--', edit);
   if (!edit) {
     return businessError({ res, msg: '数据库保存错误' });
   }
@@ -79,10 +79,30 @@ const getAllUser = async ({ req, res }) => {
   return success({ res, data: allUser });
 };
 
+let postSaveUser = async ({ req, res }) => {
+  userSservice.postSaveUser({ req, res });
+};
+let postDelUser = async ({ req, res }) => {
+  let ids = JSON.parse(req.body.ids);
+  let removes = ids.map((id) => {
+    return userSservice.postDelUser(id);
+  });
+
+  await Promise.all(removes)
+    .then(() => {
+      success({ res, msg: '删除成功' });
+    })
+    .catch((err) => {
+      businessError({ res, msg: err });
+    });
+};
+
 module.exports = {
   getUserInfo,
   getUserPagelist,
   getAllUser,
   postEditRoleuser,
   postRegister,
+  postSaveUser,
+  postDelUser,
 };

@@ -146,36 +146,7 @@ const SchemaUtils = {
   mergeSchema(formInstanceIndex, schema, uiSchema) {
     let instance = FormInstanceMap.get(formInstanceIndex);
     Object.keys(uiSchema).forEach((key) => {
-      /**
-       * schemaPropertyname: name {
-        type: 'string',
-        title: '功能名称',
-        maxLength: 25, // 可传给后端判断，暂时不使用此处配置检验前端表单,前端表单校验规则配置在uiSchema
-        minLength: 1,
-    },
-       */
       let schemaProperty = schema['properties'][key];
-      /**
-       * name: {
-       * 'ui:widget': 'input',
-          'ui:options': {
-          type: 'text',
-          placeholder: '',
-          },
-          'ui:rules': [
-            { required: true, message: '请输入功能名称' },
-            { max: 25, message: '最多输入25字符' },
-          ], // 校验规则
-          'ui:title': '功能名称',
-          'ui:description': '',
-          'ui:formItemConfig': {
-          hasFeedback: true,
-          // "extra":"121212",//未设置取ui:description
-          labelCol: { span: 6 },
-          wrapperCol: { span: 16 },
-          }, // Form.Item 配置
-        },
-       */
       let uiSchemaProperty = uiSchema[key];
       uiSchemaProperty.key = key;
       if (uiSchemaProperty['ui:rules'] === undefined) {

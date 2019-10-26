@@ -65,7 +65,7 @@ export function getAllUser(query) {
 
 export function delUser(id) {
   return request({
-    url: '/user/del',
+    url: '/user/batchdel',
     method: 'delete',
     params: id,
     loading: 'message',
@@ -75,16 +75,16 @@ export function delUser(id) {
 
 export function delUsers(ids) {
   return request({
-    url: '/user/batchdel',
-    method: 'delete',
-    params: ids,
+    url: '/user/del',
+    method: 'post',
+    data: ids,
     loading: 'message',
   });
 }
 
 export function saveUser(data) {
   return request({
-    url: '/user/save',
+    url: '/user/saveuser',
     method: 'post',
     data,
     loading: 'message',

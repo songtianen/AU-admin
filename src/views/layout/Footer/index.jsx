@@ -30,7 +30,16 @@ export default class Foot extends React.PureComponent {
               type='copyright'
               style={{ paddingRight: '2px', paddingLeft: '1px' }}
             />
-            <span>2019&nbsp;songten@icloud.com</span>
+            <span>2019&nbsp;多元宇宙科技有限公司</span>
+            <div>
+              Email:
+              <a
+                style={{ color: '#bebebe' }}
+                href='mailto:songten@icloud.com?subject=test&cc=抄送人邮箱&subject=主题&body=内容'
+              >
+                songten@icloud.com
+              </a>
+            </div>
             <div>WeChat:13548106816</div>
             <div>QQ:715298152</div>
           </div>

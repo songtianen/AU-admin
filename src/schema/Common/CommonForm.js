@@ -10,9 +10,11 @@ class CommonForm extends React.PureComponent {
         // 还是要交给上层组件处理
         let copy = {
           ...values,
-          name: values.name.trim(),
-          code: values.code.trim(),
+          // name: values.name.trim(),
+          // code: values.code.trim(),
+          // 可以在此做一些验证
         };
+        // 执行父组件的函数
         this.props.modalSaveFunctionData(copy);
       }
     });

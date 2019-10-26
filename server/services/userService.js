@@ -58,27 +58,33 @@ const getUserPagelist = async (
         return o.email.indexOf(filter.email) > -1;
       });
     }
-    // 总页数
-    let totalCount = userInfoList.length;
-    // 是否已经已经添加
-    userInfoList.forEach((item) => {
-      item.isAdd = 1;
-    });
-    // 排序
-    if (sortBy) {
-      sortBy = 'isAdd';
-      userInfoList = _.sortBy(userInfoList, [sortBy]);
-      if (descending === 'true') {
-        userInfoList = userInfoList.reverse();
+    if (userInfoList && userInfoList.length) {
+      // 总条数
+      let totalCount = userInfoList.length;
+      // 是否已经已经添加
+      userInfoList.forEach((item) => {
+        item.isAdd = 1;
+      });
+      // 排序
+      if (sortBy) {
+        sortBy = 'isAdd';
+        userInfoList = _.sortBy(userInfoList, [sortBy]);
+        if (descending === 'true') {
+          userInfoList = userInfoList.reverse();
+        }
       }
+      // 返回给前端第几页，的 数量。（）
+      let start = (pageIndex - 1) * pageSize;
+      let end = pageIndex * pageSize;
+      userInfoList = _.slice(userInfoList, start, end);
+      return {
+        totalCount: totalCount,
+        rows: userInfoList,
+      };
     }
-    // 返回给前端第几页，的 数量。（）
-    let start = (pageIndex - 1) * pageSize;
-    let end = pageIndex * pageSize;
-    userInfoList = _.slice(userInfoList, start, end);
     return {
-      totalCount: totalCount,
-      rows: userInfoList,
+      totalCount: 0,
+      rows: [],
     };
   }
 
@@ -195,10 +201,44 @@ const postRegister = async ({ req, res }) => {
   }
 };
 
+const postSaveUser = async ({ req, res }) => {
+  console.log(req.body);
+  const { email, password, phone, username } = req.body;
+  // 查询username是否存在，如果存在，返回错误
+  const user = await UserModel.findOne({
+    // 判断密码是否正确
+    userName: username,
+  });
+  if (user) {
+    return businessError({ res, msg: '用户名已经存在!', data: 'username' });
+  } else {
+    const info = await new UserModel({
+      id: uuidv4(),
+      email: email,
+      isAdmin: phone === '13548106816' ? 'admin' : 'user',
+      userName: username,
+      pwd: md5PWD(password),
+      phone: phone,
+    });
+    info.save(function(err) {
+      if (err) {
+        return businessError({ res, msg: '数据库保存失败!', data: '' });
+      }
+      return success({ res, msg: '数据库保存成功！' });
+    });
+  }
+};
+const postDelUser = async (id) => {
+  const isRemoveRole = await UserModel.findOneAndDelete({ id: id });
+  return isRemoveRole;
+};
+
 module.exports = {
   getUserInfoById,
   getUserPagelist,
   postEditRoleuser,
   getAllUser,
   postRegister,
+  postSaveUser,
+  postDelUser,
 };
