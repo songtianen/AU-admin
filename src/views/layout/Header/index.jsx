@@ -50,6 +50,7 @@ class MyHeader extends React.PureComponent {
 
   render() {
     console.log('MyHeader render'); // withRouter的缘故，每次点击同一个菜单，都会re-render
+    let isDisplay = this.props.itemDisplay;
     return (
       <Header
         style={{
@@ -86,7 +87,7 @@ class MyHeader extends React.PureComponent {
             </Menu>
           </Col>
           {/* ModuleMenu */}
-          <Col xs={17} sm={18} md={8} lg={7} xl={7}>
+          <Col xs={14} sm={18} md={8} lg={7} xl={7}>
             <ModuleMenu
               style={{ border: 'none' }}
               moduleList={this.props.moduleList}
@@ -95,7 +96,13 @@ class MyHeader extends React.PureComponent {
             />
           </Col>
           {/* SearchInput */}
-          <Col xs={24} sm={12} md={7} lg={6} xl={6}>
+          <Col
+            sm={12}
+            md={7}
+            lg={6}
+            xl={6}
+            style={{ display: isDisplay ? 'block' : 'none' }}
+          >
             <Menu style={{ border: 'none' }} selectable={false}>
               <Menu.Item key={'searchInput'}>
                 <SearchInput
@@ -105,7 +112,13 @@ class MyHeader extends React.PureComponent {
             </Menu>
           </Col>
           {/* githubIcon */}
-          <Col xs={12} sm={4} md={1} lg={1} xl={2}>
+          <Col
+            sm={4}
+            md={1}
+            lg={1}
+            xl={2}
+            style={{ display: isDisplay ? 'block' : 'none' }}
+          >
             <Menu style={{ border: 'none' }} selectable={false}>
               <Menu.Item
                 // style={{padding: '4 0 0 0'}}
@@ -124,7 +137,14 @@ class MyHeader extends React.PureComponent {
             </Menu>
           </Col>
           {/* FullScreen */}
-          <Col xs={6} sm={4} md={2} lg={2} xl={2}>
+          <Col
+            xs={0}
+            sm={4}
+            md={2}
+            lg={2}
+            xl={2}
+            style={{ display: isDisplay ? 'block' : 'none' }}
+          >
             <Menu style={{ border: 'none' }} selectable={false}>
               <Menu.Item key={'fullScreen'}>
                 <FullScreen />
@@ -134,7 +154,7 @@ class MyHeader extends React.PureComponent {
           {/* SubMenu */}
           {/* src={this.props.avatar} */}
           {/* <Col xs={12} sm={8} md={7} lg={6} xl={7}> */}
-          <Col xs={6} sm={4} md={3} lg={2} xl={2}>
+          <Col xs={4} sm={4} md={3} lg={2} xl={2}>
             <Menu
               mode='horizontal'
               style={{ lineHeight: '48px', border: 'none' }}
@@ -200,6 +220,7 @@ MyHeader.propTypes = {
   history: PropTypes.object.isRequired,
   accessMenu: PropTypes.array.isRequired,
   toggleNavTab: PropTypes.func.isRequired,
+  itemDisplay: PropTypes.bool.isRequired,
 };
 export default withRouter(
   connect(

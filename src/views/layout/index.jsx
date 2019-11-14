@@ -27,6 +27,7 @@ class MyLayout extends React.PureComponent {
     responsive: false,
     navTabShow: true,
     navTabTop: 50,
+    headerItemDisplay: true,
   };
 
   componentDidMount() {
@@ -56,21 +57,24 @@ class MyLayout extends React.PureComponent {
       responsive: clientWidth <= 992,
       collapsed: clientWidth <= 992,
     });
-    if (clientWidth < 576) {
+    if (clientWidth < 577) {
       this.setState({
-        navTabTop: 150,
+        navTabTop: 50,
+        headerItemDisplay: false,
       });
       return;
     }
     if (clientWidth < 768) {
       this.setState({
         navTabTop: 100,
+        headerItemDisplay: true,
       });
       return;
     }
     if (clientWidth >= 768) {
       this.setState({
         navTabTop: 50,
+        headerItemDisplay: true,
       });
     }
   };
@@ -158,6 +162,7 @@ class MyLayout extends React.PureComponent {
             toggle={this.toggle}
             toggleNavTab={this.toggleNavTab}
             navTabshow={this.state.navTabShow}
+            itemDisplay={this.state.headerItemDisplay}
           />
           <Content
             style={{
