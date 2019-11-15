@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
   <style>
     .loader {
       position: fixed;
@@ -16,10 +16,10 @@
       margin: -80px 0px 0px -80px;
       background-color: transparent;
       border-radius: 50%;
-      border: 2px solid #E3E4DC;
+      border: 2px solid #e3e4dc;
     }
 
-    .loader:before {
+    /* .loader:before {
       content: '';
       width: 164px;
       height: 164px;
@@ -35,9 +35,9 @@
       animation: rotate infinite;
       animation-duration: 3s;
       animation-timing-function: linear;
-    }
+    } */
 
-    .loader:after {
+    /* .loader:after {
       content: '';
       width: 164px;
       height: 164px;
@@ -51,7 +51,7 @@
       clip: rect(0px, 164px, 150px, 0px);
       z-index: 9;
       animation: rotate2 3s linear infinite;
-    }
+    } */
 
     .hexagon-container {
       position: relative;
@@ -70,11 +70,11 @@
       position: absolute;
       width: 40px;
       height: 23px;
-      background-color: #556C82;
+      background-color: #556c82;
     }
 
     .hexagon:before {
-      content: "";
+      content: '';
       position: absolute;
       top: -11px;
       left: 0;
@@ -82,11 +82,11 @@
       height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
-      border-bottom: 11.5px solid #556C82;
+      border-bottom: 11.5px solid #556c82;
     }
 
     .hexagon:after {
-      content: "";
+      content: '';
       position: absolute;
       top: 23px;
       left: 0;
@@ -94,7 +94,7 @@
       height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
-      border-top: 11.5px solid #556C82;
+      border-top: 11.5px solid #556c82;
     }
 
     .hexagon.hex_1 {
@@ -207,19 +207,18 @@
       }
     }
   </style>
-<body>
-  <div id="StartLoading" class="loader">
-    <ul class="hexagon-container">
-      <li class="hexagon hex_1"></li>
-      <li class="hexagon hex_2"></li>
-      <li class="hexagon hex_3"></li>
-      <li class="hexagon hex_4"></li>
-      <li class="hexagon hex_5"></li>
-      <li class="hexagon hex_6"></li>
-      <li class="hexagon hex_7"></li>
-    </ul>
-  </div>
-  <div id="root"></div>
-</body>
-
+  <body>
+    <div id="StartLoading" class="loader">
+      <ul class="hexagon-container">
+        <li class="hexagon hex_1"></li>
+        <li class="hexagon hex_2"></li>
+        <li class="hexagon hex_3"></li>
+        <li class="hexagon hex_4"></li>
+        <li class="hexagon hex_5"></li>
+        <li class="hexagon hex_6"></li>
+        <li class="hexagon hex_7"></li>
+      </ul>
+    </div>
+    <div id="root"></div>
+  </body>
 </html>

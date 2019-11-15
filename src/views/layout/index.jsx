@@ -180,7 +180,7 @@ class MyLayout extends React.PureComponent {
               show={this.state.navTabShow}
             />
           </Content>
-          <Footer />
+          <Footer itemDisplay={this.state.headerItemDisplay} />
         </Layout>
       </Layout>
     );

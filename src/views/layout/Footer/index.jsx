@@ -1,15 +1,17 @@
 import React from 'react';
 import { Layout, Icon } from 'antd';
+import PropTypes from 'prop-types';
 
 const { Footer } = Layout;
 // eslint-disable-next-line react/prefer-stateless-function
-export default class Foot extends React.PureComponent {
+class Foot extends React.PureComponent {
   render() {
+    const { itemDisplay } = this.props;
     return (
       <Footer>
         <div
           style={{
-            // padding: '10px 24px 24px',
+            display: itemDisplay ? 'block' : 'none',
             textAlign: 'center',
             color: '#bebebe',
             // backgroundColor: 'pink',
@@ -44,7 +46,32 @@ export default class Foot extends React.PureComponent {
             <div>QQ:715298152</div>
           </div>
         </div>
+        {itemDisplay ? (
+          ''
+        ) : (
+          <div
+            style={{
+              textAlign: 'center',
+              color: '#bebebe',
+              fontSize: '12px',
+            }}
+          >
+            <a
+              href='https://github.com/songtianen'
+              target='_blank'
+              rel='noopener noreferrer'
+            >
+              AU-admin&nbsp;&nbsp;&nbsp;&nbsp;
+              <Icon type='github' size='large' />
+            </a>
+          </div>
+        )}
       </Footer>
     );
   }
 }
+Foot.propTypes = {
+  itemDisplay: PropTypes.bool.isRequired,
+};
+
+export default Foot;
