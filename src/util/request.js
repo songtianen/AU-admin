@@ -11,8 +11,7 @@ let history = createBrowserHistory({
 /*
   开发文件中的定义的变量可由webpack.DefinePlugin()中定义他会在webpack执行编译中添加变量
 */
-// eslint-disable-next-line no-undef
-console.log('WEBPACK_ENV', WEBPACK_ENV);
+
 // create an axios instance
 /*
   WEBPACK_ENV由webpack.DefinePlugin()中定义

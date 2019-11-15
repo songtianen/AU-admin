@@ -130,7 +130,4 @@ MySider.propTypes = {
   updateModule: PropTypes.func.isRequired,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(MySider);
+export default connect(mapStateToProps, mapDispatchToProps)(MySider);

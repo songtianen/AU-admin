@@ -211,7 +211,4 @@ MyLayout.propTypes = {
   location: PropTypes.object.isRequired,
 };
 
-export default connect(
-  mapStateToPorps,
-  mapDispatchToProps,
-)(MyLayout);
+export default connect(mapStateToPorps, mapDispatchToProps)(MyLayout);
