@@ -43,7 +43,6 @@ class Foot extends React.PureComponent {
               </a>
             </div>
             <div>WeChat:13548106816</div>
-            <div>QQ:715298152</div>
           </div>
         </div>
         {itemDisplay ? (

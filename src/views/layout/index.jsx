@@ -66,7 +66,7 @@ class MyLayout extends React.PureComponent {
     }
     if (clientWidth < 768) {
       this.setState({
-        navTabTop: 100,
+        navTabTop: 96,
         headerItemDisplay: true,
       });
       return;
@@ -168,7 +168,7 @@ class MyLayout extends React.PureComponent {
             style={{
               overflow: 'auto',
               background: '#efefef',
-              borderLeft: '1px solid #e8e8e8',
+              // borderLeft: '1px solid #e8e8e8',
             }}
           >
             <MyNavTabs

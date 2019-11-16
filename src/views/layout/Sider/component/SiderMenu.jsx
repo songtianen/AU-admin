@@ -65,6 +65,10 @@ class SubMenuList extends React.PureComponent {
         collapsible
         collapsed={this.props.collapsed}
         width={180}
+        style={{
+          // backgroundColor: 'red',
+          borderRight: '1px solid #e8e8e8',
+        }}
       >
         <div
           className='logo'

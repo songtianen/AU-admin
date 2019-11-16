@@ -178,13 +178,12 @@ class MyNavTabs extends React.PureComponent {
           activeKey={this.state.currentPage}
           tabBarStyle={{
             position: 'fixed',
+            overflow: 'hidden',
             zIndex: 99,
             backgroundColor: '#fff',
             width: '100%',
-            // height: 60,
-            padding: '10px 0px 10px 18px',
-            margin: 0,
-            border: 'none',
+            paddingLeft: '8px',
+            borderBottom: '1px solid #e8e8e8',
           }}
           onEdit={this.onEdit}
           type='editable-card'
@@ -203,7 +202,13 @@ class MyNavTabs extends React.PureComponent {
                 closable={page.closable} // 是否是可关闭
                 key={page.name}
               >
-                <Page />
+                <div
+                  style={{
+                    padding: '10px',
+                  }}
+                >
+                  <Page />
+                </div>
               </TabPane>
             );
           })}

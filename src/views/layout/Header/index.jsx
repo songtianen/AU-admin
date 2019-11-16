@@ -58,7 +58,7 @@ class MyHeader extends React.PureComponent {
           width: '100%',
           backgroundColor: '#fff',
           borderBottom: 'solid 1px #e8e8e8',
-          borderLeft: 'solid 1px #e8e8e8',
+          // borderLeft: 'solid 1px #e8e8e8',
           boxSizing: 'border-box',
           padding: 0,
           position: 'fixed',
