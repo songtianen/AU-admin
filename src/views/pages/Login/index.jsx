@@ -1,6 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Form, Icon, Input, Button, Card, Checkbox } from 'antd';
+import {
+  Row,
+  Col,
+  Form,
+  Icon,
+  Input,
+  Button,
+  Card,
+  Checkbox,
+  notification,
+} from 'antd';
 // import '@/style/login.less';
 import { loginByUsername } from '../../../api';
 import logo from '../../../resource/assets/logo.jpg';
@@ -47,10 +57,10 @@ class Login extends React.PureComponent {
           // console.log('loginByUsername', res);
           const data = res.data;
           setToken(data.accessToken);
-          // eslint-disable-next-line no-shadow
-        } catch (e) {
-          // eslint-disable-line
-          console.log('Login; err', e);
+        } catch (er) {
+          notification.error({
+            message: er,
+          });
         }
         setTimeout(() => {
           this.endLogin();

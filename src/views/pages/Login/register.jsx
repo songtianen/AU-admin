@@ -12,6 +12,7 @@ class RegistrationForm extends React.Component {
     confirmDirty: false,
     count: 0,
     loading: false,
+    registerData: '',
   };
 
   interval = undefined;
@@ -29,7 +30,7 @@ class RegistrationForm extends React.Component {
   };
 
   handleSubmit = (e) => {
-    const { history } = this.props;
+    // const { history } = this.props;
     e.preventDefault();
     this.props.form.validateFieldsAndScroll(async (err, values) => {
       console.log('Received values of form: ', values);
@@ -42,16 +43,20 @@ class RegistrationForm extends React.Component {
           let res = await loginRegister(values);
           // console.log('loginByUsername', res);
           const data = res.data;
+          this.setState({
+            registerData: 'sdsdsdd',
+          });
           setToken(data.accessToken);
           // eslint-disable-next-line no-shadow
         } catch (e) {
-          // eslint-disable-line
-          console.log('Login; err', e);
+          // notification.error({
+          //   message: e,
+          // });
         }
-        setTimeout(() => {
-          this.endLogin();
-          history.push('/');
-        }, 2000);
+        // setTimeout(() => {
+        //   this.endLogin();
+        //   history.push('/');
+        // }, 2000);
       }
     });
   };
@@ -99,10 +104,15 @@ class RegistrationForm extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { count } = this.state;
+    const { count, registerData } = this.state;
+    let { msg, data } = registerData;
+    console.log('宋-----', registerData);
     const form = (
       <Form onSubmit={this.handleSubmit}>
-        <Form.Item>
+        <Form.Item
+          validateStatus={data && data.info === 'username' ? 'error' : ''}
+          help={data && data.info === 'username' ? `${msg}username` : ''}
+        >
           {getFieldDecorator('username', {
             rules: [
               {
@@ -261,7 +271,7 @@ class RegistrationForm extends React.Component {
   }
 }
 RegistrationForm.propTypes = {
-  history: PropTypes.object.isRequired,
+  // history: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
 };
 

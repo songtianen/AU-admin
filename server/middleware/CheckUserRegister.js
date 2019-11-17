@@ -1,7 +1,6 @@
 const { businessError } = require('../lib/responseTemplate');
 
 const checkDetailInfo = (localinfos, reqInfos) => {
-  // eslint-disable-next-line no-useless-escape
   const mobileReg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
   const phoneReg = /^1[3-578]\d{9}$/;
   const { email, password, confirm, phone } = reqInfos;
@@ -14,18 +13,18 @@ const checkDetailInfo = (localinfos, reqInfos) => {
     }
   }
   if (errInfo.length && errInfo.length > 0) {
-    let msg = errInfo.join();
-    return { msg: `请输入${msg}` };
+    // let msg = errInfo.join();
+    return { msg: `请输入:`, data: { info: errInfo } };
   }
 
   if (!mobileReg.test(email)) {
-    return { msg: '邮箱格式不正确', data: 'mail' };
+    return { msg: '邮箱格式不正确', data: { info: 'email' } };
   }
   if (!phoneReg.test(phone)) {
-    return { msg: '手机格式式不正确', data: 'mobile' };
+    return { msg: '手机格式式不正确', data: { info: 'phone' } };
   }
   if (confirm !== password) {
-    return { msg: '手机格式式不正确', data: 'confirm' };
+    return { msg: '密码不一致', data: { info: 'confirm' } };
   }
   return 1;
 };

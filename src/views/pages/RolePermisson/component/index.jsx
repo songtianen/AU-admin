@@ -163,7 +163,9 @@ class RolePermission extends React.PureComponent {
         editModalVisible: false,
       });
     } catch (e) {
-      console.log(e);
+      notification.error({
+        message: e,
+      });
     }
   };
 

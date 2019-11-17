@@ -115,7 +115,7 @@ const postEditRoleuser = async (roleUser) => {
         },
       },
     );
-    console.log('删除后的', remove);
+    // console.log('删除后的', remove);
     return remove;
   }
 };
@@ -172,7 +172,11 @@ const postRegister = async ({ req, res }) => {
     userName: username,
   });
   if (user) {
-    return businessError({ res, msg: '用户名已经存在!', data: 'username' });
+    return businessError({
+      res,
+      msg: '用户名已经存在!',
+      data: { info: 'username' },
+    });
   } else {
     const info = await new UserModel({
       id: uuidv4(),
@@ -185,7 +189,11 @@ const postRegister = async ({ req, res }) => {
     // console.log('userinfo', info);
     info.save(function(err) {
       if (err) {
-        return businessError({ res, msg: '数据库保存失败!', data: '' });
+        return businessError({
+          res,
+          msg: '数据库保存失败!',
+          data: { info: err },
+        });
       }
       const tokenObj = {
         username: info.userName,

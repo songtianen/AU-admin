@@ -50,7 +50,7 @@ router.post('/login', (req, res) => {
         });
         success({ res, data: { accessToken: token } });
       } else {
-        businessError({ res, msg: 'fail' });
+        businessError({ res, msg: '用户名或密码错误' });
       }
     },
   );

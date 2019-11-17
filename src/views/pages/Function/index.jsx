@@ -189,7 +189,9 @@ class Function extends React.PureComponent {
         message: '删除成功',
       });
     } catch (e) {
-      console.log('delFunction', e);
+      notification.error({
+        message: e,
+      });
     }
     this.refresh();
   };
@@ -212,7 +214,9 @@ class Function extends React.PureComponent {
         message: '删除成功',
       });
     } catch (e) {
-      console.log('delFunctions', e);
+      notification.error({
+        message: e,
+      });
     }
     this.refresh();
   };
@@ -280,7 +284,9 @@ class Function extends React.PureComponent {
         message: '保存成功',
       });
     } catch (e) {
-      console.log('saveFunction', e);
+      notification.error({
+        message: e,
+      });
     }
     this.refresh();
   };

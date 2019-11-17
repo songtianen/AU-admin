@@ -4,7 +4,6 @@ import { Menu, Icon, Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import logo from '../../../../resource/assets/logo.jpg';
 import { MenuToRouter } from '../../../../conf';
-import './index.less';
 
 const { SubMenu } = Menu;
 const { Item } = Menu;
@@ -65,19 +64,43 @@ class SubMenuList extends React.PureComponent {
         collapsible
         collapsed={this.props.collapsed}
         width={180}
-        style={{
-          // backgroundColor: 'red',
-          borderRight: '1px solid #e8e8e8',
-        }}
+        // style={{
+        //   // backgroundColor: 'red',
+        //   borderRight: '1px solid #e8e8e8',
+        // }}
       >
         <div
           className='logo'
-          style={{ paddingLeft: this.props.collapsed ? '18px' : '6px' }}
+          style={{
+            height: '50px',
+            overflow: 'hidden',
+            borderBottom: 'solid 1px #e8e8e8',
+            boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
         >
-          <img src={logo} alt='logo' />
-          <span style={{ display: this.props.collapsed ? 'none' : 'block' }}>
+          <img
+            src={logo}
+            alt='logo'
+            style={{
+              height: 34,
+              width: 34,
+            }}
+          />
+          <div
+            style={{
+              fontWeight: 'bold',
+              fontSize: '18px',
+              paddingLeft: '10px',
+              color: 'rgb(97, 218, 251)',
+              display: this.props.collapsed ? 'none' : 'block',
+            }}
+          >
             AU-andmin
-          </span>
+          </div>
         </div>
         <Menu
           mode='inline'

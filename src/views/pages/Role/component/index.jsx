@@ -168,7 +168,9 @@ class Role extends React.PureComponent {
         message: '删除成功',
       });
     } catch (e) {
-      console.log('e', e);
+      notification.error({
+        message: e,
+      });
     }
     this.refresh();
   };
@@ -199,7 +201,9 @@ class Role extends React.PureComponent {
         message: '保存成功',
       });
     } catch (e) {
-      console.log(e);
+      notification.error({
+        message: e,
+      });
     }
     this.refresh();
   };
@@ -214,7 +218,9 @@ class Role extends React.PureComponent {
         message: '删除成功',
       });
     } catch (e) {
-      console.log('Role -delRole Err', e);
+      notification.error({
+        message: e,
+      });
     }
     this.refresh();
   };

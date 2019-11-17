@@ -150,13 +150,21 @@ class MyLayout extends React.PureComponent {
   render() {
     console.log('Layout render');
     return (
-      <Layout>
+      <Layout
+        style={{
+          borderTop: '1px solid #e8e8e8',
+        }}
+      >
         <MySider
           onRef={this.onRef}
           responsive={this.state.responsive}
           collapsed={this.state.collapsed}
         />
-        <Layout>
+        <Layout
+          style={{
+            borderLeft: '1px solid #e8e8e8',
+          }}
+        >
           <MyHeader
             collapsed={this.state.collapsed}
             toggle={this.toggle}
@@ -168,7 +176,6 @@ class MyLayout extends React.PureComponent {
             style={{
               overflow: 'auto',
               background: '#efefef',
-              // borderLeft: '1px solid #e8e8e8',
             }}
           >
             <MyNavTabs
