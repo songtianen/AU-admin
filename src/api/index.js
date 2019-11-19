@@ -1,11 +1,11 @@
 import qs from 'qs';
 import request from '../util/request';
 
-export function loginByUsername(username, password) {
-  const data = {
-    username,
-    password,
-  };
+export function loginByUsername(data) {
+  // const data = {
+  //   username,
+  //   password,
+  // };
   return request({
     url: '/user/login',
     method: 'post',

@@ -4,14 +4,11 @@ export default function user(state, action) {
   if (!state) {
     state = {
       token: '',
-      name: 'admin',
-      avatar: '',
-      isAdmin: 0,
       permission: [],
     };
   }
   switch (action.type) {
-    case actions.LOGIN_SUCCESS:
+    case actions.DO_LOGIN:
       // 登录
       return { ...state, token: action.token };
     case actions.GET_USERINFO_SUCCESS:

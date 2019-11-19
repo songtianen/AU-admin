@@ -42,7 +42,6 @@ class Foot extends React.PureComponent {
                 songten@icloud.com
               </a>
             </div>
-            <div>WeChat:13548106816</div>
           </div>
         </div>
         {itemDisplay ? (

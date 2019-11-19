@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Menu, Icon, Layout, Row, Col, Avatar, Badge } from 'antd';
 import { connect } from 'react-redux';
-// import uuidv4 from 'uuid/v4';
-// import '@/style/header.less'
 import ModuleMenu from './ModuleMenu';
 import appActions from '../../../redux/redux_app';
 import { logout } from '../../../api';

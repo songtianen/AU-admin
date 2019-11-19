@@ -32,8 +32,8 @@ export const updateModule = (module) => {
 // userActions
 
 // action creators
-export const login = (token) => {
-  return { type: actions.LOGIN_SUCCESS, token };
+export const login = (data) => {
+  return { type: actions.DO_LOGIN, data };
 };
 
 export const updateUserInfo = (userInfo) => {

@@ -1,20 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Row,
-  Col,
-  Form,
-  Icon,
-  Input,
-  Button,
-  Card,
-  Checkbox,
-  notification,
-} from 'antd';
-// import '@/style/login.less';
-import { loginByUsername } from '../../../api';
+import { Row, Col, Form, Icon, Input, Button, Card, Checkbox } from 'antd';
+import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
-import { setToken, getToken } from '../../../util/token';
+import { getToken } from '../../../util/token';
+import { login } from './states/actions';
 
 const FormItem = Form.Item;
 const { Meta } = Card;
@@ -32,40 +22,20 @@ class Login extends React.PureComponent {
     this.setState({ loading: false });
   };
 
-  showLoding = () => {
-    setTimeout(() => {
-      let loading = document.getElementById('StartLoading');
-      loading && document.body.removeChild(loading); // eslint-disable-line
-    }, 200);
-  };
-
   gotoRegister = () => {
     const { history } = this.props;
     history.push('/register');
   };
 
   handleSubmit = (e) => {
-    const { history } = this.props;
+    const { dispatch } = this.props;
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
         this.startLogin();
-        const userName = values.userName;
+        const username = values.userName;
         const password = values.password;
-        try {
-          let res = await loginByUsername(userName, password);
-          // console.log('loginByUsername', res);
-          const data = res.data;
-          setToken(data.accessToken);
-        } catch (er) {
-          notification.error({
-            message: er,
-          });
-        }
-        setTimeout(() => {
-          this.endLogin();
-          history.push('/');
-        }, 2000);
+        dispatch(login({ username, password }));
       }
     });
   };
@@ -76,10 +46,6 @@ class Login extends React.PureComponent {
     if (token) {
       history.push('/');
     }
-  }
-
-  componentDidMount() {
-    this.showLoding();
   }
 
   render() {
@@ -181,9 +147,30 @@ class Login extends React.PureComponent {
   }
 }
 
+const mapStateToPorps = (state) => {
+  const { token } = state.user;
+  return {
+    token,
+  };
+};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     updateUserInfo: (info) => {
+//       dispatch(updateUserInfo(info));
+//     },
+//     updateAccessMenu: (accessMenu) => {
+//       dispatch(updateAccessMenu(accessMenu));
+//     },
+//   };
+// };
+
 Login.propTypes = {
   history: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default Form.create()(Login);
+export default connect(
+  mapStateToPorps,
+  // mapDispatchToProps,
+)(Form.create()(Login));
