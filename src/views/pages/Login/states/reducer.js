@@ -8,24 +8,31 @@ export default function(state, action) {
       token: '',
       statusCode: '',
       permission: [],
-      error: '',
+      error: false,
+      data: {},
+      msg: '',
     };
   }
   switch (action.type) {
     case actionTypes.LOGIN_SUCCESS:
       // 获取用户信息
-      console.log('actions.LOGIN_SUCCESS', action);
       return {
         ...state,
         token: action.payload.data.accessToken,
-        statusCode: action.payload.statusCode,
+        ...action.payload,
+      };
+    case actionTypes.REGISTER_SUCCESS:
+      return {
+        ...state,
+        token: action.payload.data.accessToken,
+        ...action.payload,
       };
     case actionTypes.LOGIN_ERROR:
       // 登出
       return {
         ...state,
-        statusCode: action.payload.statusCode,
-        error: action.payload.msg,
+        ...action.payload,
+        error: true,
       };
     case actionTypes.LOGOUT_SUCCESS:
       // 登出
@@ -33,7 +40,6 @@ export default function(state, action) {
         token: state.token,
         name: '',
         avatar: '',
-        isAdmin: 0,
         permission: [],
       };
     default:

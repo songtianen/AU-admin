@@ -147,12 +147,12 @@ class Login extends React.PureComponent {
   }
 }
 
-const mapStateToPorps = (state) => {
-  const { token } = state.user;
-  return {
-    token,
-  };
-};
+// const mapStateToProps = (state) => {
+//   const { token } = state.user;
+//   return {
+//     token,
+//   };
+// };
 // const mapDispatchToProps = (dispatch) => {
 //   return {
 //     updateUserInfo: (info) => {
@@ -170,7 +170,6 @@ Login.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 
-export default connect(
-  mapStateToPorps,
-  // mapDispatchToProps,
-)(Form.create()(Login));
+export default connect()(Form.create()(Login));
+// mapStateToProps,
+// mapDispatchToProps,

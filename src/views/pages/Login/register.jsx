@@ -1,18 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Icon, Row, Col, Button, Card } from 'antd';
-import { loginRegister } from '../../../api';
+import { connect } from 'react-redux';
+// import { loginRegister } from '../../../api';
+
 import logo from '../../../resource/assets/logo.jpg';
-import { setToken } from '../../../util/token';
+// import { setToken } from '../../../util/token';
+import { register } from './states/actions';
 
 const { Meta } = Card;
 
 class RegistrationForm extends React.Component {
   state = {
-    confirmDirty: false,
     count: 0,
     loading: false,
-    registerData: '',
+    isValidate: false,
+    username: '',
+    email: '',
+    phone: '',
+    confirm: '',
+    password: '',
+    captcha: '',
   };
 
   interval = undefined;
@@ -30,35 +38,52 @@ class RegistrationForm extends React.Component {
   };
 
   handleSubmit = (e) => {
-    // const { history } = this.props;
+    const { dispatch } = this.props;
     e.preventDefault();
-    this.props.form.validateFieldsAndScroll(async (err, values) => {
-      console.log('Received values of form: ', values);
+    this.props.form.validateFields((err, val) => {
+      let vals = { ...val };
+      const keys = Object.keys(vals);
+      let errArr = [];
+      keys.forEach((item) => {
+        let a = vals[item];
+        a += '';
+        a = a.trim();
+        if (a === 'undefined' || '') {
+          console.log('aaaaaa', item);
+          errArr.push(a);
+          console.log('errArrerrArrerrArr', errArr);
+          this.setState({
+            [item]: a,
+          });
+        }
+      });
 
       if (!err) {
-        this.startLogin();
-        // const userName = values.userName;
-        // const password = values.password;
-        try {
-          let res = await loginRegister(values);
-          // console.log('loginByUsername', res);
-          const data = res.data;
-          this.setState({
-            registerData: 'sdsdsdd',
-          });
-          setToken(data.accessToken);
-          // eslint-disable-next-line no-shadow
-        } catch (e) {
-          // notification.error({
-          //   message: e,
-          // });
-        }
-        // setTimeout(() => {
-        //   this.endLogin();
-        //   history.push('/');
-        // }, 2000);
+        dispatch(register(val));
       }
     });
+    // let values = this.props.form.getFieldsError();
+    // const keys = Object.keys(values);
+    // // let isDoLogin = false;
+    // keys.forEach((item) => {
+    //   let a = values[item];
+    //   a += '';
+    //   a = a.trim();
+    //   if (a === 'undefined' || '') {
+    //     console.log('aaaaaa', item);
+    //     this.setState({
+    //       [item]: a,
+    //     });
+    //   }
+    // });
+
+    // console.log('EERRRRRRRR', values);
+
+    this.startLogin();
+    // dispatch(register(values));
+    this.endLogin = () => {
+      this.setState({ loading: false });
+    };
   };
   // 倒计时
 
@@ -79,48 +104,44 @@ class RegistrationForm extends React.Component {
     }, 1000);
   };
 
-  handleConfirmBlur = (e) => {
-    const { value } = e.target;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-
-  compareToFirstPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
-      // eslint-disable-next-line standard/no-callback-literal
-      callback('密码不一致!');
-    } else {
-      callback();
-    }
-  };
-
-  validateToNextPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
-  };
-
   render() {
+    console.log('-------qing', this.state);
+
     const { getFieldDecorator } = this.props.form;
-    const { count, registerData } = this.state;
-    let { msg, data } = registerData;
-    console.log('宋-----', registerData);
+    const { count } = this.state;
+    const { error, data, msg } = this.props;
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 16 },
+      },
+    };
+    // const tailFormItemLayout = {
+    //   wrapperCol: {
+    //     xs: {
+    //       span: 24,
+    //       offset: 0,
+    //     },
+    //     sm: {
+    //       span: 16,
+    //       offset: 8,
+    //     },
+    //   },
+    // };
     const form = (
-      <Form onSubmit={this.handleSubmit}>
+      <Form {...formItemLayout} onSubmit={this.handleSubmit}>
         <Form.Item
-          validateStatus={data && data.info === 'username' ? 'error' : ''}
-          help={data && data.info === 'username' ? `${msg}username` : ''}
+          // {...tailFormItemLayout}
+          label='用户名'
+          validateStatus={error && data.info === 'username' ? 'error' : ''}
+          help={error && data.info === 'username' ? `${msg}` : ''}
         >
           {getFieldDecorator('username', {
-            rules: [
-              {
-                required: true,
-                message: '请填入用户名!',
-                whitespace: true,
-              },
-            ],
+            rules: [{ required: true, message: '输入用户名' }],
           })(
             <Input
               prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -128,18 +149,13 @@ class RegistrationForm extends React.Component {
             />,
           )}
         </Form.Item>
-        <Form.Item>
+        <Form.Item
+          label='邮箱'
+          validateStatus={error && data.info === 'email' ? 'error' : ''}
+          help={error && data.info === 'email' ? `${msg}` : ''}
+        >
           {getFieldDecorator('email', {
-            rules: [
-              {
-                type: 'email',
-                message: '确保邮箱格式正确！',
-              },
-              {
-                required: true,
-                message: '请填入邮箱',
-              },
-            ],
+            rules: [{ required: true, message: '请输入邮箱' }],
           })(
             <Input
               prefix={<Icon type='mail' style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -147,17 +163,14 @@ class RegistrationForm extends React.Component {
             />,
           )}
         </Form.Item>
-        <Form.Item hasFeedback>
+        <Form.Item
+          label='密码'
+          validateStatus={error && data.info === 'password' ? 'error' : ''}
+          help={error && data.info === 'password' ? `${msg}` : ''}
+          hasFeedback
+        >
           {getFieldDecorator('password', {
-            rules: [
-              {
-                required: true,
-                message: '请填入密码',
-              },
-              {
-                validator: this.validateToNextPassword,
-              },
-            ],
+            rules: [{ required: true, message: '请输入密码' }],
           })(
             <Input.Password
               prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -167,27 +180,27 @@ class RegistrationForm extends React.Component {
             />,
           )}
         </Form.Item>
-        <Form.Item hasFeedback>
+        <Form.Item
+          label='确认密码'
+          validateStatus={error && data.info === 'confirm' ? 'error' : ''}
+          help={error && data.info === 'confirm' ? `${msg}` : ''}
+          hasFeedback
+        >
           {getFieldDecorator('confirm', {
-            rules: [
-              {
-                required: true,
-                message: '请确认你的密码',
-              },
-              {
-                validator: this.compareToFirstPassword,
-              },
-            ],
+            rules: [{ required: true, message: '确认密码' }],
           })(
             <Input.Password
               prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-              onBlur={this.handleConfirmBlur}
               visibilityToggle={false}
               placeholder='确认密码'
             />,
           )}
         </Form.Item>
-        <Form.Item>
+        <Form.Item
+          label='手机号'
+          validateStatus={error && data.info === 'phone' ? 'error' : ''}
+          help={error && data.info === 'phone' ? `${msg}` : ''}
+        >
           {getFieldDecorator('phone', {
             rules: [{ required: true, message: '请输入手机号' }],
           })(
@@ -201,7 +214,12 @@ class RegistrationForm extends React.Component {
           )}
         </Form.Item>
 
-        <Form.Item label='验证码'>
+        <Form.Item
+          label='验证码'
+          validateStatus={error && data.info === 'confirm' ? 'error' : ''}
+          help={error && data.info === 'confirm' ? `${msg}` : ''}
+          hasFeedback
+        >
           <Row gutter={8}>
             <Col span={12}>
               {getFieldDecorator('captcha', {
@@ -270,9 +288,22 @@ class RegistrationForm extends React.Component {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    error: state.user.error,
+    msg: state.user.msg,
+    data: state.user.data,
+  };
+};
 RegistrationForm.propTypes = {
   // history: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  error: PropTypes.bool.isRequired,
+  msg: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
-export default Form.create({ name: 'register' })(RegistrationForm);
+export default connect(mapStateToProps)(
+  Form.create({ name: 'register' })(RegistrationForm),
+);

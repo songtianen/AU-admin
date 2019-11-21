@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { message } from 'antd';
+import { notification } from 'antd';
 import { createBrowserHistory } from 'history';
 import { getToken, removeToken } from './token';
 import loading from './loading';
@@ -59,8 +59,9 @@ service.interceptors.response.use(
     loading.hide(response.config);
     const res = response.data;
     if (res.statusCode !== 200) {
-      message.error(res.msg);
-      return Promise.reject(res.msg);
+      notification.error(res.msg);
+      // 可提前拦截请求错误
+      // return Promise.reject(res.msg);
     }
     return response.data;
   },
@@ -69,19 +70,19 @@ service.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       removeToken();
       if (error.config.url.indexOf('logout') === -1) {
-        message.error('登陆信息已过期,请重新登陆!');
+        notification.error('登陆信息已过期,请重新登陆!');
       }
       setTimeout(() => {
         history.push('/login');
       }, 1000);
     } else if (error.response && error.response.status === 500) {
-      message.error('系统错误!');
+      notification.error('系统错误!');
     } else if (error.message && error.message.indexOf('timeout') > -1) {
-      message.error('网络超时!');
+      notification.error('网络超时!');
     } else if (error === '403') {
-      message.error('没有请求权限!');
+      notification.error('没有请求权限!');
     } else {
-      message.error('网络错误!');
+      notification.error('网络错误!');
     }
     return Promise.reject(error);
   },
