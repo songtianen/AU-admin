@@ -1,10 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Form, Icon, Input, Button, Card, Checkbox } from 'antd';
+import {
+  Row,
+  Col,
+  Form,
+  Icon,
+  Input,
+  Button,
+  Card,
+  Checkbox,
+  notification,
+} from 'antd';
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
 import { getToken } from '../../../util/token';
-import { login } from './states/actions';
+import { login, clearRegisterError } from './states/actions';
 
 const FormItem = Form.Item;
 const { Meta } = Card;
@@ -12,6 +22,8 @@ const { Meta } = Card;
 class Login extends React.PureComponent {
   state = {
     loading: false,
+    username: '#$@!#%',
+    password: '#$@!#%',
   };
 
   startLogin = () => {
@@ -29,13 +41,39 @@ class Login extends React.PureComponent {
 
   handleSubmit = (e) => {
     const { dispatch } = this.props;
+    dispatch(
+      clearRegisterError({
+        error: false,
+        data: {},
+        msg: '',
+      }),
+    );
     e.preventDefault();
-    this.props.form.validateFields(async (err, values) => {
+    this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.startLogin();
-        const username = values.userName;
+        let vals = { ...values };
+        const keys = Object.keys(vals);
+        keys.forEach((item) => {
+          let a = vals[item];
+          this.setState({
+            [item]: a,
+          });
+        });
+
+        const username = values.username;
         const password = values.password;
         dispatch(login({ username, password }));
+        this.startLogin();
+      }
+      if (err) {
+        const username = values.username;
+        const password = values.password;
+        if (!username || !password) {
+          notification.error({
+            message: '请输入用户名或密码',
+          });
+        }
+        this.endLogin();
       }
     });
   };
@@ -48,14 +86,63 @@ class Login extends React.PureComponent {
     }
   }
 
+  // 根据后端返回error数据提示
+  validateInfo = ({ error, data, msg }, key) => {
+    const { form } = this.props;
+    const FieldValue = form.getFieldValue(key);
+    const isTouched = form.isFieldTouched(key);
+    if (isTouched && (!FieldValue || !FieldValue.trim())) {
+      return {
+        error: 'error',
+        msg: '不能输入空格',
+      };
+    }
+
+    if (error && data.info === key) {
+      if (this.state[key] !== FieldValue) {
+        return '';
+      }
+      return {
+        error: 'error',
+        msg,
+      };
+    }
+    return '';
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    // 典型用法（不要忘记比较 props）：
+    if (
+      this.props.error !== prevProps.error &&
+      this.state.loading === prevState.loading
+    ) {
+      this.endLogin();
+    }
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { error, data, msg } = this.props;
+    const userNameValidateStatus = this.validateInfo(
+      {
+        error,
+        data,
+        msg,
+      },
+      'password',
+    );
+    // const phoneValidateStatus = this.validateInfo(backEndInfo, 'phone');
     const form = (
       <Form onSubmit={this.handleSubmit} className='login-form'>
         <FormItem hasFeedback>
-          {getFieldDecorator('userName', {
+          {getFieldDecorator('username', {
             initialValue: 'song',
-            rules: [{ required: true, message: '请输入登录账号!' }],
+            rules: [
+              {
+                required: true,
+                message: '请输入您的用户名!',
+              },
+            ],
           })(
             <Input
               prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -63,7 +150,13 @@ class Login extends React.PureComponent {
             />,
           )}
         </FormItem>
-        <FormItem hasFeedback>
+        <FormItem
+          validateStatus={
+            userNameValidateStatus ? userNameValidateStatus.error : ''
+          }
+          help={userNameValidateStatus ? userNameValidateStatus.msg : ''}
+          hasFeedback
+        >
           {getFieldDecorator('password', {
             initialValue: '',
             rules: [{ required: true, message: '请输入密码!' }],
@@ -147,12 +240,13 @@ class Login extends React.PureComponent {
   }
 }
 
-// const mapStateToProps = (state) => {
-//   const { token } = state.user;
-//   return {
-//     token,
-//   };
-// };
+const mapStateToProps = (state) => {
+  return {
+    error: state.user.error,
+    msg: state.user.msg,
+    data: state.user.data,
+  };
+};
 // const mapDispatchToProps = (dispatch) => {
 //   return {
 //     updateUserInfo: (info) => {
@@ -168,8 +262,9 @@ Login.propTypes = {
   history: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  error: PropTypes.bool.isRequired,
+  msg: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
-export default connect()(Form.create()(Login));
-// mapStateToProps,
-// mapDispatchToProps,
+export default connect(mapStateToProps)(Form.create()(Login));

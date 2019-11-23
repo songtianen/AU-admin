@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Icon, Row, Col, Button, Card } from 'antd';
+import { Form, Input, Icon, Row, Col, Button, Card, notification } from 'antd';
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
 // eslint-disable-next-line no-unused-vars
@@ -40,11 +40,6 @@ class RegistrationForm extends React.Component {
   };
 
   handleSubmit = (e) => {
-    // this.setState({
-    //   error: false,
-    //   data: {},
-    //   msg: '',
-    // });
     const { dispatch } = this.props;
     dispatch(
       clearRegisterError({
@@ -53,8 +48,6 @@ class RegistrationForm extends React.Component {
         msg: '',
       }),
     );
-    console.log('请求开始', this.props.form);
-
     e.preventDefault();
     this.props.form.validateFields((err, val) => {
       if (!err) {
@@ -68,14 +61,19 @@ class RegistrationForm extends React.Component {
         });
 
         dispatch(register(val));
-        this.startLogin = () => {
-          this.setState({ loading: true });
-        };
+        this.startLogin();
+      }
+      if (err) {
+        const username = val.username;
+        const password = val.phone;
+        if (!username || !password) {
+          notification.error({
+            message: '请输入用户名和手机',
+          });
+        }
+        this.endLogin();
       }
     });
-    this.endLogin = () => {
-      this.setState({ loading: false });
-    };
   };
   // 倒计时
 
@@ -120,9 +118,8 @@ class RegistrationForm extends React.Component {
   };
 
   // 根据后端返回error数据提示
-  validateInfo = (backEnd, key) => {
+  validateInfo = ({ error, data, msg }, key) => {
     const { form } = this.props;
-    const { error, data, msg } = backEnd;
     const FieldValue = form.getFieldValue(key);
     const isTouched = form.isFieldTouched(key);
     if (isTouched && (!FieldValue || !FieldValue.trim())) {
@@ -144,19 +141,38 @@ class RegistrationForm extends React.Component {
     return '';
   };
 
-  render() {
-    console.log('-------qing', this.state);
+  // eslint-disable-next-line no-unused-vars
+  componentDidUpdate(prevProps, prevState) {
+    // 典型用法（不要忘记比较 props）
+    if (
+      this.props.error !== prevProps.error &&
+      this.state.loading === prevState.loading
+    ) {
+      this.endLogin();
+    }
+  }
 
+  render() {
     const { getFieldDecorator } = this.props.form;
     const { count } = this.state;
     const { error, data, msg } = this.props;
-    let backEndInfo = {
-      error,
-      data,
-      msg,
-    };
-    const userNameValidateStatus = this.validateInfo(backEndInfo, 'username');
-    const phoneValidateStatus = this.validateInfo(backEndInfo, 'phone');
+    const userNameValidateStatus = this.validateInfo(
+      {
+        error,
+        data,
+        msg,
+      },
+      'username',
+    );
+    const phoneValidateStatus = this.validateInfo(
+      {
+        error,
+        data,
+        msg,
+      },
+      'phone',
+    );
+
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -207,7 +223,7 @@ class RegistrationForm extends React.Component {
             />,
           )}
         </Form.Item>
-        <Form.Item label='Password'>
+        <Form.Item label='密码'>
           {getFieldDecorator('password', {
             rules: [
               {
@@ -277,7 +293,12 @@ class RegistrationForm extends React.Component {
         </Form.Item>
 
         <Form.Item>
-          <Button type='primary' loading={this.state.loading} htmlType='submit'>
+          <Button
+            // disabled={error ? 1 : 0}
+            type='primary'
+            loading={this.state.loading}
+            htmlType='submit'
+          >
             提交
           </Button>
         </Form.Item>
