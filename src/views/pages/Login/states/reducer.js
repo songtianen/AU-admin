@@ -14,6 +14,11 @@ export default function(state, action) {
     };
   }
   switch (action.type) {
+    case actionTypes.REGISTER_CLEARERROR_OK:
+      return {
+        ...state,
+        ...action.payload,
+      };
     case actionTypes.LOGIN_SUCCESS:
       // 获取用户信息
       return {

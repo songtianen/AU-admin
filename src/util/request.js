@@ -57,11 +57,11 @@ service.interceptors.response.use(
   (response) => {
     // console.log('axios --- service.interceptors.response.use', response);
     loading.hide(response.config);
-    const res = response.data;
-    if (res.statusCode !== 200) {
+    const res = response;
+    if (res.status !== 200) {
       notification.error(res.msg);
       // 可提前拦截请求错误
-      // return Promise.reject(res.msg);
+      return Promise.reject(res.msg);
     }
     return response.data;
   },

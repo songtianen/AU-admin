@@ -45,6 +45,16 @@ function* register(action) {
   }
 }
 
+function* clearRegisterError(action) {
+  yield put({
+    type: actionTypes.REGISTER_CLEARERROR_OK,
+    payload: action.payload,
+  });
+}
+
+function* watchClearRegisterError() {
+  yield takeEvery(actionTypes.DO_REGISTER_CLEARERROR, clearRegisterError);
+}
 function* watchFetchUser() {
   yield takeEvery(actionTypes.DO_LOGIN, fetchUser);
 }
@@ -52,4 +62,8 @@ function* watchRegister() {
   yield takeEvery(actionTypes.DO_REGISTER, register);
 }
 
-export const loginSagas = [watchFetchUser(), watchRegister()];
+export const loginSagas = [
+  watchFetchUser(),
+  watchRegister(),
+  watchClearRegisterError(),
+];

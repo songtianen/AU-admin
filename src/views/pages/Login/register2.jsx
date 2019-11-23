@@ -2,16 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Icon, Row, Col, Button, Card } from 'antd';
 import { connect } from 'react-redux';
+// import { loginRegister } from '../../../api';
+
 import logo from '../../../resource/assets/logo.jpg';
-// eslint-disable-next-line no-unused-vars
-import { register, clearRegisterError } from './states/actions';
+// import { setToken } from '../../../util/token';
+import { register } from './states/actions';
 
 const { Meta } = Card;
 
 class RegistrationForm extends React.Component {
   state = {
     count: 0,
-    confirmDirty: false,
     loading: false,
     isValidate: false,
     username: '#$@!#%',
@@ -20,9 +21,6 @@ class RegistrationForm extends React.Component {
     confirm: '#$@!#%',
     password: '#$@!#%',
     captcha: '#$@!#%',
-    error: false,
-    data: {},
-    msg: '',
   };
 
   interval = undefined;
@@ -40,39 +38,57 @@ class RegistrationForm extends React.Component {
   };
 
   handleSubmit = (e) => {
-    // this.setState({
-    //   error: false,
-    //   data: {},
-    //   msg: '',
-    // });
     const { dispatch } = this.props;
-    dispatch(
-      clearRegisterError({
-        error: false,
-        data: {},
-        msg: '',
-      }),
-    );
-    console.log('请求开始', this.props.form);
-
     e.preventDefault();
     this.props.form.validateFields((err, val) => {
-      if (!err) {
-        let vals = { ...val };
-        const keys = Object.keys(vals);
-        keys.forEach((item) => {
-          let a = vals[item];
+      let vals = { ...val };
+      const keys = Object.keys(vals);
+      let errArr = [];
+      keys.forEach((item) => {
+        let a = vals[item];
+        a += '';
+        a = a.trim();
+        if (a === 'undefined' || a === '') {
+          a = 'undefined';
+          errArr.push(a);
           this.setState({
             [item]: a,
           });
-        });
-
+        }
+        // if (a !== 'undefined' && a !== '') {
+        //   this.setState({
+        //     [item]: a,
+        //   });
+        // }
+      });
+      if (errArr.length > 0) {
+        return;
+      }
+      if (!err && errArr.length === 0) {
         dispatch(register(val));
         this.startLogin = () => {
           this.setState({ loading: true });
         };
       }
     });
+    // let values = this.props.form.getFieldsError();
+    // const keys = Object.keys(values);
+    // // let isDoLogin = false;
+    // keys.forEach((item) => {
+    //   let a = values[item];
+    //   a += '';
+    //   a = a.trim();
+    //   if (a === 'undefined' || '') {
+    //     console.log('aaaaaa', item);
+    //     this.setState({
+    //       [item]: a,
+    //     });
+    //   }
+    // });
+
+    // console.log('EERRRRRRRR', values);
+
+    // dispatch(register(values));
     this.endLogin = () => {
       this.setState({ loading: false });
     };
@@ -96,53 +112,40 @@ class RegistrationForm extends React.Component {
     }, 1000);
   };
 
-  handleConfirmBlur = (e) => {
-    const { value } = e.target;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-
-  // 确认密码
-  compareToFirstPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('请输入一致的密码!');
-    } else {
-      callback();
+  validateInfo = (fontEnd, backEnd, key) => {
+    if (fontEnd === 'undefined') {
+      return 'error';
     }
-  };
-
-  validateToNextPassword = (rule, value, callback) => {
-    const { form } = this.props;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
-  };
-
-  // 根据后端返回error数据提示
-  validateInfo = (backEnd, key) => {
-    const { form } = this.props;
-    const { error, data, msg } = backEnd;
-    const FieldValue = form.getFieldValue(key);
-    const isTouched = form.isFieldTouched(key);
-    if (isTouched && (!FieldValue || !FieldValue.trim())) {
-      return {
-        error: 'error',
-        msg: '不能输入空格',
-      };
-    }
+    const { error, data } = backEnd;
 
     if (error && data.info === key) {
-      if (this.state[key] !== FieldValue) {
-        return '';
-      }
-      return {
-        error: 'error',
-        msg,
-      };
+      return 'error';
     }
     return '';
   };
+
+  validateHelp = (fontEnd, backEnd, key, backEndMsg) => {
+    if (fontEnd === 'undefined') {
+      return '不能输入空格';
+    }
+    const { error, data } = backEnd;
+
+    if (error && data.info === key) {
+      return `${backEndMsg}`;
+    }
+    return '';
+  };
+
+  componentDidMount() {
+    this.setState({
+      username: '#$@!#%',
+      email: '#$@!#%',
+      phone: '#$@!#%',
+      confirm: '#$@!#%',
+      password: '#$@!#%',
+      captcha: '#$@!#%',
+    });
+  }
 
   render() {
     console.log('-------qing', this.state);
@@ -153,10 +156,9 @@ class RegistrationForm extends React.Component {
     let backEndInfo = {
       error,
       data,
-      msg,
     };
-    const userNameValidateStatus = this.validateInfo(backEndInfo, 'username');
-    const phoneValidateStatus = this.validateInfo(backEndInfo, 'phone');
+    const validateInfo = this.validateInfo;
+    const validateHelp = this.validateHelp;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -174,32 +176,30 @@ class RegistrationForm extends React.Component {
           // {...tailFormItemLayout}
           label='用户名'
           validateStatus={
-            userNameValidateStatus ? userNameValidateStatus.error : ''
+            // this.state.username === 'undefined' ||
+            // (error && data.info === 'username')
+            //   ? 'error'
+            //   : ''
+            validateInfo(this.state.username, backEndInfo, 'username')
           }
-          help={userNameValidateStatus ? userNameValidateStatus.msg : ''}
+          help={validateHelp(this.state.username, backEndInfo, 'username')}
         >
-          {getFieldDecorator(
-            'username',
-            {
-              rules: [
-                { required: true, message: '输入用户名' },
-                { whitespace: true, message: '用户名不能有空格' },
-              ],
-            },
-            { validateTrigger: 'onChange' },
-          )(
+          {getFieldDecorator('username', {
+            rules: [{ required: true, message: '输入用户名' }],
+          })(
             <Input
               prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder='用户名'
             />,
           )}
         </Form.Item>
-        <Form.Item label='邮箱'>
+        <Form.Item
+          label='邮箱'
+          validateStatus={error && data.info === 'email' ? 'error' : ''}
+          help={error && data.info === 'email' ? `${msg}` : ''}
+        >
           {getFieldDecorator('email', {
-            rules: [
-              { required: true, message: '请输入邮箱' },
-              { type: 'email', message: '邮箱格式一定要正确' },
-            ],
+            rules: [{ required: true, message: '请输入邮箱' }],
           })(
             <Input
               prefix={<Icon type='mail' style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -207,42 +207,43 @@ class RegistrationForm extends React.Component {
             />,
           )}
         </Form.Item>
-        <Form.Item label='Password'>
+        <Form.Item
+          label='密码'
+          validateStatus={error && data.info === 'password' ? 'error' : ''}
+          help={error && data.info === 'password' ? `${msg}` : ''}
+          hasFeedback
+        >
           {getFieldDecorator('password', {
-            rules: [
-              {
-                required: true,
-                message: '请输入密码!',
-              },
-              {
-                validator: this.validateToNextPassword,
-              },
-            ],
+            rules: [{ required: true, message: '请输入密码' }],
           })(
             <Input.Password
               prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder='密码'
-              visibilityToggle
+              visibilityToggle={false}
+              style={{ width: '100%' }}
             />,
           )}
         </Form.Item>
-        <Form.Item label='确认密码'>
+        <Form.Item
+          label='确认密码'
+          validateStatus={error && data.info === 'confirm' ? 'error' : ''}
+          help={error && data.info === 'confirm' ? `${msg}` : ''}
+          hasFeedback
+        >
           {getFieldDecorator('confirm', {
-            rules: [
-              {
-                required: true,
-                message: '请确认密码!',
-              },
-              {
-                validator: this.compareToFirstPassword,
-              },
-            ],
-          })(<Input.Password onBlur={this.handleConfirmBlur} />)}
+            rules: [{ required: true, message: '确认密码' }],
+          })(
+            <Input.Password
+              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
+              visibilityToggle={false}
+              placeholder='确认密码'
+            />,
+          )}
         </Form.Item>
         <Form.Item
           label='手机号'
-          validateStatus={phoneValidateStatus ? phoneValidateStatus.error : ''}
-          help={phoneValidateStatus ? phoneValidateStatus.msg : ''}
+          validateStatus={error && data.info === 'phone' ? 'error' : ''}
+          help={error && data.info === 'phone' ? `${msg}` : ''}
         >
           {getFieldDecorator('phone', {
             rules: [{ required: true, message: '请输入手机号' }],
@@ -257,7 +258,12 @@ class RegistrationForm extends React.Component {
           )}
         </Form.Item>
 
-        <Form.Item label='验证码'>
+        <Form.Item
+          label='验证码'
+          validateStatus={error && data.info === 'confirm' ? 'error' : ''}
+          help={error && data.info === 'confirm' ? `${msg}` : ''}
+          hasFeedback
+        >
           <Row gutter={8}>
             <Col span={12}>
               {getFieldDecorator('captcha', {
