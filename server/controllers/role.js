@@ -2,6 +2,7 @@
 const roleService = require('../services/roleService');
 // import menuService from '../services/memuService';
 // import functionService from '../services/functionService';
+const { businessError, success } = require('../lib/responseTemplate');
 const responseTemplate = require('../lib/responseTemplate');
 
 module.exports = {
@@ -74,6 +75,99 @@ module.exports = {
       return responseTemplate.success({ res, msg: '角色权限保存成功' });
     }
     responseTemplate.businessError({ res, msg: '数据库保存失败!' });
+  },
+  addRoleForUser: async ({ req, res }) => {
+    const { moduleId, userId } = req.body;
+    const roleId = moduleId.pop();
+    roleService
+      .addRoleForUser({ roleId, userId })
+      .then((doc) => {
+        return success({ res, data: '' });
+      })
+      .catch(() => {
+        return businessError({ res, msg: '服务器错误' });
+      });
+  },
+  // 删除Role,里面的userId
+  delUserForRoleId: async ({ req, res }) => {
+    const { roleId, userIds } = req.body;
+
+    roleService
+      .delUserForRoleId({ roleId, userIds })
+      .then((doc) => {
+        return success({ res, msg: '删除成功' });
+      })
+      .catch((e) => {
+        return businessError({ res, msg: e.msg });
+      });
+  },
+
+  // 删除某个user里面的Role
+  delRoleForUserId: async ({ req, res }) => {
+    const { userId, roleIds } = req.body;
+    console.log('userId, roleIds ', userId, roleIds);
+
+    roleService
+      .delRoleForUserId({ userId, roleIds })
+      .then((doc) => {
+        console.log('docdoc-- ', doc);
+
+        return success({ res, msg: '删除成功' });
+      })
+      .catch((e) => {
+        return businessError({ res, msg: e.msg });
+      });
+  },
+  // 给Role添加用户
+  addUserForRole: async ({ req, res }) => {
+    const { userIds, roleId } = req.body;
+    roleService
+      .addUserForRole({ userIds, roleId })
+      .then((doc) => {
+        if (doc) {
+          return success({ res, msg: '添加成功' });
+        }
+      })
+      .catch((e) => {
+        return businessError({ res, msg: e.msg });
+      });
+  },
+  // 得到Roleid下的所有user
+  getUserFromRoleId: async ({ req, res }) => {
+    let pageIndex = req.query.pageIndex;
+    let pageSize = req.query.pageSize;
+    let sortBy = req.query.sortBy;
+    let descending = req.query.descending;
+    let filter = JSON.parse(req.query.filter);
+    const info = await roleService.getUserFromRoleId(
+      pageIndex,
+      pageSize,
+      sortBy,
+      descending,
+      filter,
+    );
+    if (!info) {
+      return businessError({ res, msg: '数据库保存失败' });
+    }
+    return success({ res, data: info, meg: '数据库更新成功' });
+  },
+  // 获取userID下的所有role
+  getRoleFromUserId: async ({ req, res }) => {
+    let pageIndex = req.query.pageIndex;
+    let pageSize = req.query.pageSize;
+    let sortBy = req.query.sortBy;
+    let descending = req.query.descending;
+    let filter = JSON.parse(req.query.filter);
+    console.log('前端请求过来的数据', filter);
+
+    roleService
+      .getRoleFromUserId({ filter, pageIndex, pageSize, sortBy, descending })
+      .then((doc) => {
+        success({ res, msg: '查询成功', data: doc });
+      })
+      .catch((e) => {
+        businessError({ res, msg: e.msg });
+      });
   },
 };
 

@@ -47,9 +47,9 @@ export function getUserList() {
   });
 }
 // 根据角色获取用户列表
-export function getUserPagedList(query) {
+export function getUserFromRole(query) {
   return request({
-    url: '/user/pagedlist',
+    url: '/role/userfromrole',
     method: 'get',
     params: query,
   });
@@ -91,9 +91,17 @@ export function saveUser(data) {
   });
 }
 
-export function editRoleUser(data) {
+// export function editRoleUser(data) {
+//   return request({
+//     url: '/user/editroleuser',
+//     method: 'post',
+//     data,
+//     loading: 'message',
+//   });
+// }
+export function editUserInfo(data) {
   return request({
-    url: '/user/editroleuser',
+    url: '/user/edituserinfo',
     method: 'post',
     data,
     loading: 'message',
@@ -197,6 +205,40 @@ export function getRolePagedList(query) {
     params: query,
   });
 }
+export function getRoleFromUserId(query) {
+  return request({
+    url: '/role/getrolefromuserId',
+    method: 'get',
+    params: query,
+  });
+}
+
+export function delUserForRoleId(data) {
+  return request({
+    url: '/role/deluserforroleid',
+    method: 'post',
+    data,
+    loading: 'message',
+  });
+}
+
+export function delRoleForUserId(data) {
+  return request({
+    url: '/role/delroleforuserid',
+    method: 'post',
+    data,
+    loading: 'message',
+  });
+}
+
+export function addUserForRole(data) {
+  return request({
+    url: '/role/adduserforrole',
+    method: 'post',
+    data,
+    loading: 'message',
+  });
+}
 
 export function delRole(id) {
   return request({
@@ -219,6 +261,14 @@ export function delRoles(ids) {
 export function saveRole(data) {
   return request({
     url: '/role/save',
+    method: 'post',
+    data,
+    loading: 'message',
+  });
+}
+export function addRoleForUser(data) {
+  return request({
+    url: '/role/addroleforuser',
     method: 'post',
     data,
     loading: 'message',
@@ -286,5 +336,14 @@ export function getTopPostByQuery(query) {
     params: query,
     // loading: "spin",
     permission: ['xxoo'],
+  });
+}
+
+// department
+export function getAllDepartment() {
+  return request({
+    url: '/department',
+    method: 'get',
+    // loading: 'spin',
   });
 }

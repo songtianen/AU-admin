@@ -9,7 +9,7 @@ export const actionTypes = {
   LOGOUT_SUCCESS: 'login/LOGOUT_SUCCESS',
 };
 
-export const constans = {
+export const constants = {
   NAME: 'login',
 };
 

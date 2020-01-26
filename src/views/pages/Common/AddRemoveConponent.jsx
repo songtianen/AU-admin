@@ -1,16 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Divider, Popconfirm } from 'antd';
+import { Button, Divider } from 'antd';
 
 class AddRemoveComponent extends React.PureComponent {
+  onConfirm = () => {
+    if (this.props.hasSelected) {
+      return this.props.onConfirm;
+    }
+    return false;
+  };
+
   render() {
     const {
       addFunc,
-      onConfirm,
       hasSelected,
       addTitle,
       removeTitle,
+      onConfirm,
     } = this.props;
     return (
       <div style={{ marginBottom: 16 }}>
@@ -18,11 +25,21 @@ class AddRemoveComponent extends React.PureComponent {
           {addTitle}
         </Button>
         <Divider type='vertical' />
-        <Popconfirm title='确定删除?' onConfirm={onConfirm}>
-          <Button type='danger' disabled={!hasSelected} icon='delete'>
+        {/* <Popconfirm title='确定删除?' onConfirm={this.onConfirm}> */}
+        {onConfirm ? (
+          <Button
+            type='danger'
+            disabled={!hasSelected}
+            onClick={onConfirm}
+            icon='delete'
+          >
             {removeTitle}
           </Button>
-        </Popconfirm>
+        ) : (
+          ''
+        )}
+
+        {/* </Popconfirm> */}
       </div>
     );
   }

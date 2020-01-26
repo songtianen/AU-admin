@@ -10,10 +10,10 @@ const { postRegister, postSaveUser } = require('../controllers/user');
 
 const {
   getUserInfo,
-  getUserPagelist,
-  postEditRoleuser,
+  // postEditRoleuser,
   getAllUser,
   postDelUser,
+  editUserInfo,
 } = require('../controllers/user');
 
 const User = UserModel;
@@ -75,18 +75,15 @@ router.get('/info', (req, res) => {
   // console.log('getuserinfo user=====', req.user);
   getUserInfo({ req, res });
 });
-router.get('/pagedlist', (req, res) => {
-  getUserPagelist({ req, res });
-});
-router.post(
-  '/editroleuser',
-  PermissionCheck({
-    permission: ['role_user_edit', 'user_role_edit'],
-  }),
-  (req, res) => {
-    postEditRoleuser({ req, res });
-  },
-);
+// router.post(
+//   '/editroleuser',
+//   PermissionCheck({
+//     permission: ['role_user_edit', 'user_role_edit'],
+//   }),
+//   (req, res) => {
+//     postEditRoleuser({ req, res });
+//   },
+// );
 router.get(
   '/getalluser',
   PermissionCheck({
@@ -112,6 +109,15 @@ router.post(
   }),
   (req, res) => {
     postDelUser({ req, res });
+  },
+);
+router.post(
+  '/edituserinfo',
+  PermissionCheck({
+    permission: ['role_user_edit', 'user_role_edit'],
+  }),
+  (req, res) => {
+    editUserInfo({ req, res });
   },
 );
 

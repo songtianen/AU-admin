@@ -1,9 +1,13 @@
-/* eslint-disable no-script-url */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable no-unused-vars */
 import React from 'react';
-import { Table, Popconfirm, Divider, Button, notification } from 'antd';
+// import { connect } from 'react-redux';
+import { Table, Popconfirm, Divider, notification } from 'antd';
 import { getRolePagedList, delRole, delRoles, saveRole } from '../../../../api';
+// import {
+//   getRolePagedList,
+//   delRoles,
+//   saveRole,
+//   delRole,
+// } from '../states/actions';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
 import schema from '../../../../schema/Role';
 import CommonModal from '../../Common/CommonModal';
@@ -15,6 +19,7 @@ class Role extends React.PureComponent {
       name: '',
       code: '',
     },
+    // eslint-disable-next-line react/no-unused-state
     searchFormExpand: true,
     tableSelectedRowKeys: [], // table 选择的数据
     tablePagedList: [], // table 展示的数据
@@ -54,7 +59,6 @@ class Role extends React.PureComponent {
         return (
           <div>
             <a
-              href='javascript:;'
               onClick={() => {
                 this.editRole(record);
               }}
@@ -66,7 +70,7 @@ class Role extends React.PureComponent {
               title='确定删除?'
               onConfirm={() => this.delRole(record)}
             >
-              <a href='javascript:;'>删除</a>
+              <a>删除</a>
             </Popconfirm>
           </div>
         );
@@ -81,7 +85,6 @@ class Role extends React.PureComponent {
     this.setState({ tableLoading: true });
     let ResData = await getRolePagedList(query);
     let data = ResData.data;
-
     const pagination = { ...this.state.tablePagination };
     pagination.total = data.totalCount;
     this.setState({
@@ -146,11 +149,11 @@ class Role extends React.PureComponent {
 
   // button Popconfirm 删除
   batchDelRole = async () => {
-    const ids = JSON.stringify(
-      this.state.tableSelectedRowKeys.map((s) => {
-        return s;
-      }),
-    );
+    // const ids = JSON.stringify(
+    //   this.state.tableSelectedRowKeys.map((s) => {
+    //     return s;
+    //   }),
+    // );
     // console.log('ids????????', ids);
     try {
       await delRoles({
@@ -293,5 +296,24 @@ class Role extends React.PureComponent {
     );
   }
 }
-
+// const mapStateToProps = (state) => {
+//   console.log('请求角色列表', state.role.rolePagedList);
+//   return {
+//     error: state.error,
+//     rolePagedList: state.role.rolePagedList,
+//   };
+// };
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     delRoles: (data) => {
+//       dispatch(delRoles(data));
+//     },
+//     getRolePagedList: (data) => {
+//       dispatch(getRolePagedList(data));
+//     },
+//     saveRole: (data) => {
+//       dispatch(saveRole(data));
+//     },
+//   };
+// };
 export default Role;

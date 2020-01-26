@@ -40,10 +40,10 @@ class MyHeader extends React.PureComponent {
 
   logout = async () => {
     // try {
-    await logout();
     // } catch (e) {}
     removeToken();
     this.props.history.push('/login');
+    await logout();
   };
 
   render() {

@@ -1,9 +1,16 @@
+/* eslint-disable react/no-unused-state */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Divider, notification, Badge } from 'antd';
-import { editRoleUser, getRolePagedList } from '../../../../api';
+import { Table, Divider, notification, Popconfirm } from 'antd';
+import {
+  getRoleFromUserId,
+  addRoleForUser,
+  delRoleForUserId,
+} from '../../../../api';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
-import schema from '../../../../schema/Role';
+import schema from '../../../../schema/AddRoleForUser';
+import AddRemoveComponent from '../../Common/AddRemoveConponent';
+import CommonModal from '../../Common/CommonModal';
 
 class EditUserRoleModalContent extends React.PureComponent {
   state = {
@@ -13,6 +20,8 @@ class EditUserRoleModalContent extends React.PureComponent {
       userId: this.props.formData.id,
     },
     // eslint-disable-next-line react/no-unused-state
+    tableSelectedRowKeys: [], // table 选择的数据
+    // eslint-disable-next-line react/no-unused-state
     searchFormExpand: true,
     tablePagedList: [],
     tablePagination: {
@@ -20,14 +29,17 @@ class EditUserRoleModalContent extends React.PureComponent {
       pageSize: 10,
       showQuickJumper: true,
       showSizeChanger: true,
-      showTotal: (total) => `Total ${total} items`,
+      showTotal: (total) => `共 ${total} 条`,
     },
     tableSorter: {
       field: '',
       order: '',
     },
     tableLoading: false,
+    editCommonModalVisible: false,
   };
+
+  editFormData = {};
 
   columns = [
     {
@@ -40,18 +52,18 @@ class EditUserRoleModalContent extends React.PureComponent {
       dataIndex: 'code',
       sorter: true,
     },
-    {
-      title: '添加状态',
-      dataIndex: 'isAdd',
-      align: 'center',
-      render: (text, record) => {
-        return record.isAdd === 1 ? (
-          <Badge status='success' />
-        ) : (
-          <Badge status='error' />
-        );
-      },
-    },
+    // {
+    //   title: '添加状态',
+    //   dataIndex: 'isAdd',
+    //   align: 'center',
+    //   render: (text, record) => {
+    //     return record.isAdd === 1 ? (
+    //       <Badge status='success' />
+    //     ) : (
+    //       <Badge status='error' />
+    //     );
+    //   },
+    // },
     {
       title: '操作',
       dataIndex: 'id',
@@ -59,15 +71,13 @@ class EditUserRoleModalContent extends React.PureComponent {
       fixed: 'right',
       width: 120,
       render: (text, record) => {
-        return record.isAdd === 1 ? (
-          <a
-            onClick={() => this.modifyRoleUser(record, 0)}
-            style={{ color: '#f5222d' }}
+        return (
+          <Popconfirm
+            title='确定删除?'
+            onConfirm={() => this.modifyRoleUser(record)}
           >
-            移除
-          </a>
-        ) : (
-          <a onClick={() => this.modifyRoleUser(record, 1)}>添加</a>
+            <a>删除</a>
+          </Popconfirm>
         );
       },
     },
@@ -120,27 +130,74 @@ class EditUserRoleModalContent extends React.PureComponent {
     this.fetch(query);
   };
 
-  modifyRoleUser = async (record, action) => {
-    await editRoleUser({
-      userId: this.props.formData.id,
-      roleId: record.id,
-      action,
-    });
-    if (action === 1) {
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: '添加成功',
+  // table 删除
+  modifyRoleUser = async (record) => {
+    const userId = this.props.formData.id;
+    // const roleIds = record.id;
+    let roleIds = [];
+    roleIds.push(record.id);
+    try {
+      // eslint-disable-next-line no-undef
+      const result = await delRoleForUserId({
+        userId,
+        roleIds,
       });
-    } else {
+      this.setState({
+        tableSelectedRowKeys: [],
+      });
       notification.success({
         placement: 'bottomLeft bottomRight',
-        message: '移除成功',
+        message: result.msg,
+      });
+    } catch (e) {
+      notification.error({
+        message: e,
       });
     }
     this.refresh();
   };
 
+  //  button 添加角色
+  addRole = () => {
+    this.editModalFormData = {};
+    this.setState({
+      editCommonModalVisible: true,
+    });
+  };
+
+  // button 删除
+  batchDelRole = async () => {
+    const userId = this.props.formData.id;
+    const roleIds = this.state.tableSelectedRowKeys;
+    try {
+      // eslint-disable-next-line no-undef
+      const result = await delRoleForUserId({
+        userId,
+        roleIds,
+      });
+      this.setState({
+        tableSelectedRowKeys: [],
+      });
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: result.msg,
+      });
+    } catch (e) {
+      notification.error({
+        message: e,
+      });
+    }
+    this.refresh();
+  };
+
+  // table 选择器
+  onSelectChange = (selectedRowKeys) => {
+    // console.log('table表格选择器', selectedRowKeys);
+    this.setState({ tableSelectedRowKeys: selectedRowKeys });
+  };
+
   refresh = () => {
+    console.log('请求某一个用户的角色');
     let query = {
       pageIndex: this.state.tablePagination.current,
       pageSize: this.state.tablePagination.pageSize,
@@ -153,8 +210,8 @@ class EditUserRoleModalContent extends React.PureComponent {
 
   fetch = async (query = {}) => {
     this.setState({ tableLoading: true });
-    let dataRes = await getRolePagedList(query);
-    console.log('用户所属角色编辑', dataRes);
+    let dataRes = await getRoleFromUserId(query);
+    // console.log('用户所属角色编辑', dataRes);
     let data = dataRes.data;
     const pagination = { ...this.state.tablePagination };
     pagination.total = data.totalCount;
@@ -177,7 +234,45 @@ class EditUserRoleModalContent extends React.PureComponent {
     this.refresh();
   }
 
+  // editCommonModal 的方法
+  editCommonModalOnCancel = () => {
+    this.setState({
+      editCommonModalVisible: false,
+    });
+  };
+
+  editCommonModalSaveRoleForUSer = async (data, selectedOptions) => {
+    // 请求 添加用户接口
+    console.log('U____>>>>>>', data, selectedOptions);
+    try {
+      // eslint-disable-next-line no-undef
+      await addRoleForUser({
+        moduleId: data.moduleId,
+        userId: this.state.tableFilter.userId,
+      });
+      this.setState({
+        editCommonModalVisible: false,
+      });
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: '保存成功',
+      });
+    } catch (error) {
+      notification.error({
+        message: error,
+      });
+    }
+    this.refresh();
+  };
+
   render() {
+    const { tableSelectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys: tableSelectedRowKeys,
+      onChange: this.onSelectChange,
+    };
+    const hasSelected = tableSelectedRowKeys.length > 0;
+
     return (
       <div>
         <SearchForm
@@ -187,7 +282,15 @@ class EditUserRoleModalContent extends React.PureComponent {
           handleReset={this.handleReset}
         />
         <Divider />
+        <AddRemoveComponent
+          addFunc={this.addRole}
+          onConfirm={this.batchDelRole}
+          hasSelected={hasSelected}
+          addTitle={'添加角色'}
+          removeTitle={'删除角色'}
+        />
         <Table
+          rowSelection={rowSelection}
           columns={this.columns}
           rowKey={(record) => record.id}
           dataSource={this.state.tablePagedList}
@@ -197,6 +300,18 @@ class EditUserRoleModalContent extends React.PureComponent {
           scroll={{ x: 768 }}
           size='small'
           bordered
+        />
+        {/* <Modal visible={this.state.editCommonModalVisible} /> */}
+
+        <CommonModal
+          visible={this.state.editCommonModalVisible}
+          title={'添加角色'}
+          onCancel={this.editCommonModalOnCancel}
+          destroyOnClose
+          schema={schema.modalSchema}
+          uiSchema={schema.modalUiSchema}
+          formData={this.editFormData}
+          handFormSubmit={this.editCommonModalSaveRoleForUSer}
         />
       </div>
     );

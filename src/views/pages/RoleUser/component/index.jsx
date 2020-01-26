@@ -40,6 +40,11 @@ class RoleUser extends React.Component {
       dataIndex: 'code',
       sorter: true,
     },
+    // {
+    //   title: 'ID',
+    //   dataIndex: 'id',
+    //   width: 320,
+    // },
     {
       title: '操作',
       dataIndex: 'id',
@@ -166,7 +171,7 @@ class RoleUser extends React.Component {
           pagination={this.state.tablePagination}
           loading={this.state.tableLoading}
           onChange={this.handleTableChange}
-          scroll={{ x: 768 }}
+          scroll={{ x: 1000 }}
           size='small'
           bordered
         />

@@ -110,6 +110,7 @@ class Login extends React.PureComponent {
     return '';
   };
 
+  // 请求loading的显示与关闭
   componentDidUpdate(prevProps, prevState) {
     // 典型用法（不要忘记比较 props）：
     if (
@@ -136,7 +137,6 @@ class Login extends React.PureComponent {
       <Form onSubmit={this.handleSubmit} className='login-form'>
         <FormItem hasFeedback>
           {getFieldDecorator('username', {
-            initialValue: 'song',
             rules: [
               {
                 required: true,

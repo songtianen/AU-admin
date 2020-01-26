@@ -1,5 +1,5 @@
 export default {
-  username: {
+  userName: {
     'ui:widget': 'input',
     'ui:options': {
       type: 'text',
@@ -46,8 +46,15 @@ export default {
       placeholder: '电话',
     },
     'ui:rules': [
-      { required: true, message: '请输入电话号码' },
-      // { type: 'phone', message: '请输入正确的手机格式' },
+      {
+        required: true,
+        message: '请输入电话号码',
+      },
+      {
+        type: 'string',
+        pattern: /^1[3|4|5|7|8]\d{9}$/,
+        message: '请输入正确的手机格式',
+      },
     ], // 校验规则
     'ui:title': 'phone',
     'ui:description': '',
@@ -58,7 +65,7 @@ export default {
       wrapperCol: { span: 16 },
     }, // Form.Item 配置
   },
-  password: {
+  pwd: {
     'ui:widget': 'input',
     'ui:options': {
       type: 'text',

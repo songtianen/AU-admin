@@ -55,13 +55,13 @@ service.interceptors.request.use(
 // respone interceptor
 service.interceptors.response.use(
   (response) => {
-    // console.log('axios --- service.interceptors.response.use', response);
+    console.log('axios --- service.interceptors.response.use', response);
     loading.hide(response.config);
     const res = response;
-    if (res.status !== 200) {
-      notification.error(res.msg);
+    if (res.status !== 200 || res.data.statusCode !== 200) {
+      notification.error(res.msg ? res.msg : res.data.msg);
       // 可提前拦截请求错误
-      return Promise.reject(res.msg);
+      return Promise.reject(res.msg ? res.msg : res.data.msg);
     }
     return response.data;
   },

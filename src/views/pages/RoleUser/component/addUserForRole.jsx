@@ -1,21 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Table,
-  Divider,
-  notification,
-  Popconfirm,
-  Modal,
-  Button,
-  Tag,
-} from 'antd';
-import { getUserFromRole, delUserForRoleId } from '../../../../api';
+import { Table, Divider, notification } from 'antd';
+import { getAllUser, addUserForRole } from '../../../../api';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
+// import CommonModal from '../../Common/CommonModal';
 import schema from '../../../../schema/User';
-import AddUserForRole from './addUserForRole';
 
-class EditRoleUserModalContent extends React.PureComponent {
+class AddUserForRole extends React.PureComponent {
   state = {
     // SearchForm 查询字段
     tableFilter: {
@@ -43,7 +35,6 @@ class EditRoleUserModalContent extends React.PureComponent {
       order: '',
     },
     tableLoading: false,
-    addUserForRoleModal: false,
   };
 
   columns = [
@@ -79,23 +70,23 @@ class EditRoleUserModalContent extends React.PureComponent {
     //     );
     //   },
     // },
-    {
-      title: '操作',
-      dataIndex: 'id',
-      align: 'center',
-      fixed: 'right',
-      width: 120,
-      render: (text, record) => {
-        return (
-          <Popconfirm
-            title='确定删除?'
-            onConfirm={() => this.deleteUserForRole(record)}
-          >
-            <a>删除</a>
-          </Popconfirm>
-        );
-      },
-    },
+    // {
+    //   title: '操作',
+    //   dataIndex: 'id',
+    //   align: 'center',
+    //   fixed: 'right',
+    //   width: 120,
+    //   render: (text, record) => {
+    //     return (
+    //       <Popconfirm
+    //         title='确定删除?'
+    //         onConfirm={() => this.deleteUserForRole(record)}
+    //       >
+    //         <a>删除</a>
+    //       </Popconfirm>
+    //     );
+    //   },
+    // },
   ];
 
   // SearchForm 搜索
@@ -152,41 +143,6 @@ class EditRoleUserModalContent extends React.PureComponent {
     this.fetch(query);
   };
 
-  // table 选择器
-  onSelectChange = (selectedRowKeys) => {
-    // console.log('table表格选择器', selectedRowKeys);
-    this.setState({ tableSelectedRowKeys: selectedRowKeys });
-  };
-
-  // 删除
-  // eslint-disable-next-line no-unused-vars
-  deleteUserForRole = async (record) => {
-    console.log('删除', record);
-    let userIds = [];
-    userIds.push(record.id);
-    const roleId = this.props.formData.id;
-    try {
-      const result = await delUserForRoleId({
-        roleId,
-        userIds,
-      });
-      // console.log('resulr-=====', result);
-      this.setState({
-        tableSelectedRowKeys: [],
-      });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: result.msg,
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
-    }
-
-    this.refresh();
-  };
-
   refresh = () => {
     let query = {
       pageIndex: this.state.tablePagination.current,
@@ -200,24 +156,28 @@ class EditRoleUserModalContent extends React.PureComponent {
 
   fetch = async (query = {}) => {
     this.setState({ tableLoading: true });
-    // 获取用户列表
-    let dataRes = await getUserFromRole(query);
+    let dataRes = await getAllUser(query);
     let data = dataRes.data;
-    const pagination = { ...this.state.tablePagination };
+    let pagination = { ...this.state.tablePagination };
     pagination.total = data.totalCount;
     let pagelist = data.rows;
-    // pagelist.map((item) => {
-    //   return {
-    //     userName: item.userName,
-    //     email: item.email,
-    //     phone: item.phone,
-    //   };
-    // });
+    let inRoleUsers = this.props.inRoleUsers;
+    // 找出role下的用户，与全部用户不同的
+    let newPageList = [];
+    for (let i = 0; i < pagelist.length; i++) {
+      newPageList.push(pagelist[i]);
+      for (let j = 0; j < inRoleUsers.length; j++) {
+        if (pagelist[i].id === inRoleUsers[j].id) {
+          newPageList.pop(pagelist[i]);
+        }
+      }
+    }
     this.setState({
       tableLoading: false,
-      tablePagedList: pagelist,
+      tablePagedList: newPageList,
       tablePagination: pagination,
     });
+    // console.log('this.state', this.state.tablePagedList);
   };
 
   componentDidMount() {
@@ -225,52 +185,53 @@ class EditRoleUserModalContent extends React.PureComponent {
   }
 
   //  button 新增
-  addUser = () => {
-    this.editFormData = {};
-    this.setState({
-      addUserForRoleModal: true,
-      // isAddUser: true,
-    });
-  };
-
-  // button Popconfirm 删除
-  batchDelUser = async () => {
+  addUserForRole = async () => {
+    // 给Role添加用户（请求接口）
     const userIds = this.state.tableSelectedRowKeys;
     const roleId = this.props.formData.id;
-    try {
-      const result = await delUserForRoleId({
-        roleId,
-        userIds,
-      });
-      // console.log('resulr-=====', result);
-      this.setState({
-        tableSelectedRowKeys: [],
-      });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: result.msg,
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
+    console.log('usersID', userIds === false, 'Roleid', roleId);
+    if (userIds && userIds.length) {
+      try {
+        const result = await addUserForRole({ userIds, roleId });
+        this.setState({
+          tableSelectedRowKeys: [],
+          // editCommonModalVisible: true,
+        });
+        // 父组件方法
+        this.props.editModal.refresh();
+        this.props.editModal.setState({
+          addUserForRoleModal: false,
+        });
+
+        return notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: result.msg,
+        });
+      } catch (error) {
+        return notification.error({
+          message: error.msg,
+        });
+      }
     }
-    this.refresh();
+    return notification.error({
+      message: '请选择要添加的用户',
+    });
   };
 
-  editModalOnCancel = () => {
-    this.setState({
-      addUserForRoleModal: false,
-    });
+  // table 选择器
+  onSelectChange = (selectedRowKeys) => {
+    // console.log('table表格选择器', selectedRowKeys);
+    this.setState({ tableSelectedRowKeys: selectedRowKeys });
   };
 
   render() {
-    const { tableSelectedRowKeys, tablePagedList } = this.state;
+    const { tableSelectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys: tableSelectedRowKeys,
       onChange: this.onSelectChange,
     };
     const hasSelected = tableSelectedRowKeys.length > 0;
+
     return (
       <div>
         <SearchForm
@@ -281,8 +242,8 @@ class EditRoleUserModalContent extends React.PureComponent {
         />
         <Divider />
         <AddRemoveComponent
-          addFunc={this.addUser}
-          onConfirm={this.batchDelUser}
+          addFunc={this.addUserForRole}
+          // onConfirm={this.batchDelUser}
           hasSelected={hasSelected}
           addTitle={'新增用户'}
           removeTitle={'删除用户'}
@@ -299,37 +260,15 @@ class EditRoleUserModalContent extends React.PureComponent {
           size='small'
           bordered
         />
-        <Modal
-          visible={this.state.addUserForRoleModal}
-          width={1000}
-          title={
-            <span>
-              添加&nbsp;&nbsp;
-              <Tag color='#2db7f5'>{this.props.formData.name}</Tag>
-              &nbsp;下用户
-            </span>
-          }
-          onCancel={this.editModalOnCancel}
-          footer={[
-            <Button key='back' onClick={this.editModalOnCancel}>
-              关闭
-            </Button>,
-          ]}
-          destroyOnClose
-        >
-          <AddUserForRole
-            formData={this.props.formData}
-            inRoleUsers={tablePagedList}
-            editModal={this}
-          />
-        </Modal>
       </div>
     );
   }
 }
 
-EditRoleUserModalContent.propTypes = {
+AddUserForRole.propTypes = {
   formData: PropTypes.object.isRequired,
+  inRoleUsers: PropTypes.array.isRequired,
+  editModal: PropTypes.object.isRequired,
 };
 
-export default EditRoleUserModalContent;
+export default AddUserForRole;

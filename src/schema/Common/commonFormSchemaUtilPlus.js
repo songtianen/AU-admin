@@ -205,7 +205,7 @@ const SchemaUtils = {
               // getFieldValue 获取一个输入控件的值 如form表单中的input组件
               if (value && !form.getFieldValue(required.name)) {
                 const a = form.getFieldValue(required.name);
-                console.log('效验表单--===--ooooo', a);
+                // console.log('效验表单--===--ooooo', a);
 
                 msg.push(required.message);
               }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Divider, Modal, Tag, Button, notification } from 'antd';
-import { getAllUser, saveUser, delUsers } from '../../../../api';
+import { getAllUser, saveUser, delUsers, editUserInfo } from '../../../../api';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
 import schema from '../../../../schema/UserRole';
 import EditUserRoleModalContent from './editUserRoleModalContent';
@@ -29,16 +29,17 @@ class UserRole extends React.PureComponent {
       order: '',
     },
     tableLoading: false,
-    editModalVisible: false,
+    editTableVisible: false,
     editCommonModalVisible: false,
+    isAddUser: false,
   };
 
   columns = [
-    {
-      title: '账号名称',
-      dataIndex: '_userName',
-      sorter: true,
-    },
+    // {
+    //   title: 'isAdmin',
+    //   dataIndex: 'isAdmin',
+    //   sorter: true,
+    // },
     {
       title: '用户名称',
       dataIndex: 'userName',
@@ -53,16 +54,29 @@ class UserRole extends React.PureComponent {
       title: 'phone',
       dataIndex: 'phone',
       sorter: true,
+      width: 140,
+    },
+    {
+      title: 'ID',
+      dataIndex: 'id',
     },
     {
       title: '操作',
-      dataIndex: 'id',
+      dataIndex: 'edit',
       fixed: 'right',
-      width: 120,
+      width: 140,
       render: (text, record) => {
         return (
           <div>
-            <a onClick={() => this.editUserRole(record)}>所属角色</a>
+            <a
+              onClick={() => {
+                this.editUser(record);
+              }}
+            >
+              编辑
+            </a>
+            <Divider type='vertical' />
+            <a onClick={() => this.editUserRole(record)}>角色编辑</a>
           </div>
         );
       },
@@ -71,6 +85,7 @@ class UserRole extends React.PureComponent {
 
   editFormData = {};
 
+  // SearchForm提交
   handleSearch = (filter) => {
     const pager = { ...this.state.tablePagination };
     pager.current = 1;
@@ -119,26 +134,28 @@ class UserRole extends React.PureComponent {
     console.log('编辑用户', record);
     this.editFormData = { ...record };
     this.setState({
-      editModalVisible: true,
+      editTableVisible: true,
     });
   };
 
+  // EditUserRoleModalContent组件
   editModalOnCancel = () => {
     this.setState({
-      editModalVisible: false,
+      editTableVisible: false,
     });
   };
 
   //  button 新增
-  addRole = () => {
-    this.editModalFormData = {};
+  addUser = () => {
+    this.editFormData = {};
     this.setState({
       editCommonModalVisible: true,
+      isAddUser: true,
     });
   };
 
   // button Popconfirm 删除
-  batchDelRole = async () => {
+  batchDelUser = async () => {
     const ids = JSON.stringify(
       this.state.tableSelectedRowKeys.map((s) => {
         return s;
@@ -165,6 +182,22 @@ class UserRole extends React.PureComponent {
     this.refresh();
   };
 
+  // editCommonModal 的方法
+  editCommonModalOnCancel = () => {
+    this.setState({
+      isAddUser: false,
+      editCommonModalVisible: false,
+    });
+  };
+
+  // table edit Popconfirm
+  editUser = (record) => {
+    this.editFormData = { ...record };
+    this.setState({
+      editCommonModalVisible: true,
+    });
+  };
+
   refresh = () => {
     let query = {
       pageIndex: this.state.tablePagination.current,
@@ -180,16 +213,9 @@ class UserRole extends React.PureComponent {
     this.setState({ tableLoading: true });
     let dataRes = await getAllUser(query);
     let data = dataRes.data;
-    const pagination = { ...this.state.tablePagination };
+    let pagination = { ...this.state.tablePagination };
     pagination.total = data.totalCount;
     let pagelist = data.rows;
-    pagelist.map((item) => {
-      return {
-        _userName: item.userName,
-        email: item.email,
-        phone: item.phone,
-      };
-    });
     this.setState({
       tableLoading: false,
       tablePagedList: pagelist,
@@ -208,30 +234,43 @@ class UserRole extends React.PureComponent {
     this.refresh();
   }
 
-  // editCommonModal 的方法
-  editCommonModalOnCancel = () => {
-    this.setState({
-      editCommonModalVisible: false,
-    });
-  };
-
+  // saveUser
   editCommonModalSaveUser = async (data) => {
     // 请求 添加用户接口
-    console.log('U____>>>>>>', data);
-    try {
-      await saveUser({ ...data });
-      this.setState({
-        editCommonModalVisible: false,
-      });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: '保存成功',
-      });
-    } catch (error) {
-      notification.error({
-        message: error,
-      });
+    if (this.state.isAddUser) {
+      try {
+        await saveUser({ ...data });
+        this.setState({
+          isAddUser: false,
+          editCommonModalVisible: false,
+        });
+        notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: '保存成功',
+        });
+      } catch (error) {
+        notification.error({
+          message: error,
+        });
+      }
+    } else {
+      try {
+        const id = this.editFormData.id;
+        const result = await editUserInfo({ id, ...data });
+        this.setState({
+          editCommonModalVisible: false,
+        });
+        notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: result.msg,
+        });
+      } catch (error) {
+        notification.error({
+          message: error,
+        });
+      }
     }
+
     this.refresh();
   };
 
@@ -253,8 +292,8 @@ class UserRole extends React.PureComponent {
         />
         <Divider />
         <AddRemoveComponent
-          addFunc={this.addRole}
-          onConfirm={this.batchDelRole}
+          addFunc={this.addUser}
+          onConfirm={this.batchDelUser}
           hasSelected={hasSelected}
           addTitle={'新增用户'}
           removeTitle={'删除用户'}
@@ -270,7 +309,7 @@ class UserRole extends React.PureComponent {
           pagination={this.state.tablePagination}
           loading={this.state.tableLoading}
           onChange={this.handleTableChange}
-          scroll={{ x: 768 }}
+          scroll={{ x: 1000 }}
           size='small'
           bordered
         />
@@ -285,7 +324,7 @@ class UserRole extends React.PureComponent {
           handFormSubmit={this.editCommonModalSaveUser}
         />
         <Modal
-          visible={this.state.editModalVisible}
+          visible={this.state.editTableVisible}
           width={1000}
           title={
             <span>

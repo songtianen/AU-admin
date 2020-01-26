@@ -3,6 +3,7 @@ const user = require('./user-router');
 const menu = require('./menu-router');
 const func = require('./func-router');
 const role = require('./role-router');
+const department = require('./deparment-router');
 const jwtAuth = require('../middleware/jwt');
 // 注册路由
 const router = express.Router();
@@ -35,5 +36,6 @@ router.use('/user', user);
 router.use('/menu', menu);
 router.use('/function', func);
 router.use('/role', role);
+router.use('/department', department);
 
 module.exports = router;

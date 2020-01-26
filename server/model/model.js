@@ -80,6 +80,7 @@ const roleSchema = new mongoose.Schema({
   id: String,
   permission: [String],
   userId: [String],
+  departmentId: String,
 });
 // 角色权限
 const rolePermission = new mongoose.Schema({
@@ -94,13 +95,30 @@ const rolePermission = new mongoose.Schema({
 const userPermission = new mongoose.Schema({
   permission: [String],
 });
+// 部门
+const departmentSchema = new mongoose.Schema({
+  icon: String,
+  id: String,
+  code: String,
+  leftDepartment: Boolean,
+  isLock: Boolean,
+  name: String,
+  parentId: String,
+  parentName: String,
+  path: String,
+  sort: String,
+  title: String,
+  userId: [String],
+  roleId: [String],
+});
 
 let RoleModel = mongoose.model('rolelist', roleSchema); // 角色列表
 let RolePermission = mongoose.model('role_permission', rolePermission); // 角色权限列表
 let UserPermission = mongoose.model('user_permission', userPermission); // 用户权限列表
-let UserModel = mongoose.model('User', userSchema); // 用户列表
-let AccessMemuModel = mongoose.model('AccessMemu', AccessMemu); // 菜单列表
-let FunctionModel = mongoose.model('FunctionList', functionSchema); // 功能列表
+let UserModel = mongoose.model('user', userSchema); // 用户列表
+let AccessMemuModel = mongoose.model('accessMemu', AccessMemu); // 菜单列表
+let FunctionModel = mongoose.model('functionList', functionSchema); // 功能列表
+let DepartmentModel = mongoose.model('department', departmentSchema); // 功能列表
 module.exports = {
   UserModel,
   ProductsModel,
@@ -109,4 +127,5 @@ module.exports = {
   RoleModel,
   RolePermission,
   UserPermission,
+  DepartmentModel,
 };
