@@ -30,6 +30,10 @@ const UserRole = Loadable({
   loader: () => import('../views/pages/UserRole/component'),
   loading: ContentLoader,
 });
+const Department = Loadable({
+  loader: () => import('../views/pages/Department/component'),
+  loading: ContentLoader,
+});
 // const User = Loadable({
 //   loader: () => import('@/pages/user'),
 //   loading: ContentLoader,
@@ -72,6 +76,7 @@ export default {
   rolepermission: RolePermission,
   roleuser: RoleUser,
   userrole: UserRole,
+  department: Department,
   // user_index: User,
   page404: Page404,
   page403: Page403,

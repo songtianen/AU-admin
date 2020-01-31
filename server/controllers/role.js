@@ -25,7 +25,7 @@ module.exports = {
   },
   saveRole: ({ req, res }) => {
     let func = req.body;
-    console.log('编辑角色', func);
+    // console.log('编辑角色', func);
     if (func.name === '') {
       return responseTemplate.businessError({ res, msg: '名称不能为空!' });
     }
@@ -47,8 +47,8 @@ module.exports = {
           });
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        // console.log(err);
         return responseTemplate.businessError({ res, msg: '数据库保存失败' });
       });
   },
@@ -105,12 +105,12 @@ module.exports = {
   // 删除某个user里面的Role
   delRoleForUserId: async ({ req, res }) => {
     const { userId, roleIds } = req.body;
-    console.log('userId, roleIds ', userId, roleIds);
+    // console.log('userId, roleIds ', userId, roleIds);
 
     roleService
       .delRoleForUserId({ userId, roleIds })
       .then((doc) => {
-        console.log('docdoc-- ', doc);
+        // console.log('docdoc-- ', doc);
 
         return success({ res, msg: '删除成功' });
       })
@@ -158,7 +158,7 @@ module.exports = {
     let sortBy = req.query.sortBy;
     let descending = req.query.descending;
     let filter = JSON.parse(req.query.filter);
-    console.log('前端请求过来的数据', filter);
+    // console.log('前端请求过来的数据', filter);
 
     roleService
       .getRoleFromUserId({ filter, pageIndex, pageSize, sortBy, descending })

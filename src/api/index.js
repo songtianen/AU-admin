@@ -340,10 +340,53 @@ export function getTopPostByQuery(query) {
 }
 
 // department
-export function getAllDepartment() {
+export function getAllDepartmentAndRole() {
+  return request({
+    url: '/department/departmentandrole',
+    method: 'get',
+    // loading: 'spin',
+  });
+}
+
+export function getAllDepartment(query) {
   return request({
     url: '/department',
     method: 'get',
+    params: query,
     // loading: 'spin',
+  });
+}
+
+export function getAllDepartmentTree(query) {
+  return request({
+    url: '/department/getAllDepartmentTree',
+    method: 'get',
+    params: query,
+    // loading: 'spin',
+  });
+}
+
+export function addDepartment(data) {
+  return request({
+    url: '/department/adddepartment',
+    method: 'post',
+    data,
+    loading: 'message',
+  });
+}
+export function delDepartment(data) {
+  return request({
+    url: '/department/deldepartment',
+    method: 'post',
+    data,
+    loading: 'message',
+  });
+}
+export function editDepartment(data) {
+  return request({
+    url: '/department/editdepartment',
+    method: 'post',
+    data,
+    loading: 'message',
   });
 }

@@ -14,11 +14,11 @@ import {
   Switch,
   Cascader,
   Upload,
+  TreeSelect,
 } from 'antd';
 import * as api from '../../api';
 import remoteDataUtil from '../Form/FormRemoteDataUtil';
 
-console.log('commonFormSchemaUtilPlus', api);
 const FormItem = Form.Item;
 
 // 暂存的JsxGenerator
@@ -239,6 +239,23 @@ const SchemaUtils = {
       });
     });
   },
+  // treeData 远程数据
+  getTreeSelectRemoteData(id, field) {
+    // 获取请求接口
+    const { apiKey } = field['ui:remoteConfig'];
+    return new Promise((resolve, reject) => {
+      api[apiKey]().then((res) => {
+        let data = res.data;
+        // 返回经过 uiSchema 配置文件处理的数据
+        data = field['ui:remoteConfig']['hand'](data);
+        // 给配置文件添加此数据
+        field['ui:options']['treeData'] = data;
+        // 缓存数据
+        remoteDataUtil.addData(`${id}_${field.key}`, data);
+        resolve(data);
+      });
+    });
+  },
 
   // 部件的数据远程获取
   async getRemoteData(id, uiSchema) {
@@ -267,6 +284,9 @@ const SchemaUtils = {
           case 'cascader':
             calls.push(util.getCascaderRemoteData(id, field));
             break;
+          case 'treeSelect':
+            calls.push(util.getTreeSelectRemoteData(id, field));
+            break;
           default:
             calls.push(util.getCascaderRemoteData(id, field));
         }
@@ -282,7 +302,7 @@ const SchemaUtils = {
     const util = this;
     Object.keys(uiSchema).forEach((key) => {
       let field = uiSchema[key];
-      console.log('CommonForm文件 parse函数 formData[field.key] ', field.key);
+      // console.log('CommonForm文件 parse函数 formData[field.key] ', field.key);
       const schemaProperty = schemaProperties[key];
       // 注意, 每个字段transform之后, 返回的也都是一个回调函数, 所以items其实是一个回调函数的集合
       switch (field['ui:widget']) {
@@ -315,6 +335,9 @@ const SchemaUtils = {
           break;
         case 'upload':
           items.push(util.transformUpload(field, schemaProperty));
+          break;
+        case 'treeSelect':
+          items.push(util.transformTreeSelect(field, schemaProperty));
           break;
         default:
           items.push(util.transformNormal(field, schemaProperty));
@@ -467,12 +490,14 @@ const SchemaUtils = {
     return this.formItemWrapper(
       // 接收 render() 函数的参数 this.generateJsx(this.state.index, formData)
       // 返回 一个函数
-      (getFieldDecorator, formData) =>
-        getFieldDecorator(field.key, {
+      (getFieldDecorator, formData) => {
+        console.log('......formdata......', formData);
+        return getFieldDecorator(field.key, {
           // 连级选择器的初始值 Cascader
           initialValue: formData[field.key] || field['ui:defaultEndValue'],
           rules: [...field['ui:rules']],
-        })(<Cascader {...field['ui:options']} />), // 函数作为参数传递
+        })(<Cascader {...field['ui:options']} />);
+      }, // 函数作为参数传递
       field,
     );
   },
@@ -531,6 +556,23 @@ const SchemaUtils = {
         );
     }
   },
+
+  transformTreeSelect(field, schemaProperty) {
+    // 接收parse 函数 的 field， schemaProperty 返回 formItemWrapper
+    return this.formItemWrapper(
+      // 接收 render() 函数的参数 this.generateJsx(this.state.index, formData)
+      // 返回 一个函数
+      (getFieldDecorator, formData) => {
+        return getFieldDecorator(field.key, {
+          // 连级选择器的初始值 Cascader
+          initialValue: formData[field.key] || field['ui:defaultEndValue'],
+          rules: [...field['ui:rules']],
+        })(<TreeSelect {...field['ui:options']} />);
+      }, // 函数作为参数传递
+      field,
+    );
+  },
+
   formItemWrapper(formItem, field) {
     // 接收 parse 函数 transformCascader的 field和 (getFieldDecorator, formData) => getFieldDecorator(fie
     return (getFieldDecorator, formDatas) => (

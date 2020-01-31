@@ -110,6 +110,7 @@ const departmentSchema = new mongoose.Schema({
   title: String,
   userId: [String],
   roleId: [String],
+  level: String,
 });
 
 let RoleModel = mongoose.model('rolelist', roleSchema); // 角色列表

@@ -293,7 +293,7 @@ module.exports = {
           },
         },
       );
-      console.log('updataUserModel删除userModel下的RoleIds', updateUserModel);
+      // console.log('updataUserModel删除userModel下的RoleIds', updateUserModel);
 
       return updateRoleModel && updateUserModel;
     } else {

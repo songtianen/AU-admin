@@ -6,7 +6,7 @@ export default {
   rolepermission: '/app/permission/rolepermission',
   roleuser: '/app/permission/roleuser',
   userrole: '/app/permission/userrole',
-  department: '',
+  department: '/app/department',
   position: '',
   用户管理: '',
   user_index: '/app/user/index',

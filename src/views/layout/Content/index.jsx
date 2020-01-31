@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tabs } from 'antd';
 import { withRouter } from 'react-router-dom';
-import MenuToRouter from '../../../conf/menuToRouter';
-import MenuMapToComponent from '../../../conf/menuMapToComponent';
+import { MenuToRouter, MenuMapToComponent } from '../../../conf';
 
 const TabPane = Tabs.TabPane;
 

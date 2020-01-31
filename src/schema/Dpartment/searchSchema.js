@@ -1,7 +1,7 @@
 export default {
-  $id: 'userRole-search-schema',
-  title: 'userRole-search-schema',
-  description: 'userRole-search-schema.',
+  $id: 'role-search-schema',
+  title: 'role-search-schema',
+  description: 'role-search-schema.',
   type: 'object',
   required: [],
   properties: {

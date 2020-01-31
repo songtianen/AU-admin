@@ -2,12 +2,12 @@ export default {
   moduleId: {
     'ui:widget': 'cascader', // 级联
     'ui:options': {
-      fieldNames: { label: 'title', value: 'id', children: 'children' },
+      fieldNames: { label: 'name', value: 'id', children: 'children' },
       options: [],
     }, // 组件属性配置
     'ui:rules': [{ required: true, message: '请选择模块!' }], // 校验规则
     'ui:remoteConfig': {
-      apiKey: 'getAllDepartment',
+      apiKey: 'getAllDepartmentAndRole',
       hand: (data) => {
         return data;
       }, // 数据处理函数

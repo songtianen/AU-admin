@@ -39,7 +39,7 @@ class EditUserRoleModalContent extends React.PureComponent {
     editCommonModalVisible: false,
   };
 
-  editFormData = {};
+  // editFormData = {};
 
   columns = [
     {
@@ -310,7 +310,7 @@ class EditUserRoleModalContent extends React.PureComponent {
           destroyOnClose
           schema={schema.modalSchema}
           uiSchema={schema.modalUiSchema}
-          formData={this.editFormData}
+          // formData={this.editFormData}
           handFormSubmit={this.editCommonModalSaveRoleForUSer}
         />
       </div>

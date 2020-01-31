@@ -1,4 +1,5 @@
-import menuList from './MenuConf';
+import menuConf from './menuConf';
 import MenuToRouter from './menuToRouter';
+import MenuMapToComponent from './menuMapToComponent';
 
-export { menuList, MenuToRouter };
+export { menuConf, MenuToRouter, MenuMapToComponent };
