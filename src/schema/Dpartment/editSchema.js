@@ -11,13 +11,13 @@ export default {
     },
     name: {
       type: 'string',
-      title: '角色名称',
+      title: '部门名称',
       maxLength: 25, // 可传给后端判断，暂时不使用此处配置检验前端表单,前端表单校验规则配置在uiSchema
       minLength: 1,
     },
     code: {
       type: 'string',
-      title: '角色编码',
+      title: '部门编码',
       maxLength: 25,
       minLength: 1,
     },

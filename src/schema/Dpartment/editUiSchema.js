@@ -10,10 +10,10 @@ export default {
       // },
     },
     'ui:rules': [
-      { required: true, message: '请输入角色名称' },
+      { required: true, message: '请输入部门名称' },
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
-    'ui:title': '角色名称',
+    'ui:title': '部门名称',
     'ui:description': '',
     'ui:formItemConfig': {
       hasFeedback: true,
@@ -33,10 +33,10 @@ export default {
       placeholder: '',
     },
     'ui:rules': [
-      { required: true, message: '请输入角色编码' },
+      { required: true, message: '请输入部门编码' },
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
-    'ui:title': '角色编码',
+    'ui:title': '部门编码',
     'ui:description': '',
     'ui:formItemConfig': {
       hasFeedback: true,
