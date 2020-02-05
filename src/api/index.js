@@ -117,10 +117,11 @@ export function getAccessMemu() {
   });
 }
 
-export function getAllMenu() {
+export function getAllMenu(query) {
   return request({
     url: '/menu',
     method: 'get',
+    params: query,
     // loading: 'spin',
   });
 }

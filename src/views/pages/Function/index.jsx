@@ -1,5 +1,5 @@
 import React from 'react';
-import { notification, Table, Popconfirm, Divider, Button, Modal } from 'antd';
+import { notification, Table, Popconfirm, Divider } from 'antd';
 import {
   getFunctionPagedList,
   delFunction,
@@ -7,16 +7,19 @@ import {
   saveFunction,
 } from '../../../api';
 import SearchForm from '../../../schema/SearchForm/SearchForm';
-import CommonForm from '../../../schema/Common/CommonForm';
+// import CommonForm from '../../../schema/Common/CommonForm';
+import CommonModal from '../Common/CommonModal';
+import AddRemoveComponent from '../Common/AddRemoveConponent';
+
 import schema from '../../../schema/Function';
-import PermissionContainer from '../../common/permission';
+// import PermissionContainer from '../../common/permission';
 // 缓存远程表单选项数据，key为对应schema $id+'_'+字段名
 import formRemoteDataUtil from '../../../schema/Form/FormRemoteDataUtil';
 import util from '../../../util/util';
 
-const style = { display: 'none' };
-
 class Function extends React.PureComponent {
+  // style = { display: 'none' };
+
   state = {
     filter: {
       module: '',
@@ -332,7 +335,7 @@ class Function extends React.PureComponent {
         <Divider />
         <div style={{ marginBottom: 16 }}>
           {/* 权限验证 */}
-          <PermissionContainer permission={['function_edit']}>
+          {/* <PermissionContainer permission={['function_edit']}>
             <Button
               type='primary'
               icon='plus-square-o'
@@ -340,15 +343,22 @@ class Function extends React.PureComponent {
             >
               新增
             </Button>
-          </PermissionContainer>
+          </PermissionContainer> */}
           <Divider type='vertical' />
-          <PermissionContainer permission={['function_del']}>
+          {/* <PermissionContainer permission={['function_del']}>
             <Popconfirm title='确定删除?' onConfirm={this.batchDelFunction}>
               <Button type='danger' disabled={!hasSelected} icon='delete'>
                 删除
               </Button>
             </Popconfirm>
-          </PermissionContainer>
+          </PermissionContainer> */}
+          <AddRemoveComponent
+            addFunc={this.addFunction}
+            onConfirm={this.batchDelFunction}
+            hasSelected={hasSelected}
+            addTitle={'新增'}
+            removeTitle={'删除'}
+          />
         </div>
         <Table
           rowSelection={rowSelection}
@@ -362,7 +372,7 @@ class Function extends React.PureComponent {
           size='small'
           bordered
         />
-        <Modal
+        {/* <Modal
           visible={this.state.editModalVisible}
           cancelText='关闭'
           okText='提交'
@@ -380,13 +390,23 @@ class Function extends React.PureComponent {
             formData={this.editFormData}
             modalSaveFunctionData={this.modalSaveFunctionData}
           />
-        </Modal>
-        {/* 隐藏组件,做数据初始化,style不先定义每次父组件render都会跟着render */}
-        <CommonForm
+        </Modal> */}
+        <CommonModal
+          visible={this.state.editModalVisible}
+          title={this.editFormData.id ? '编辑' : '新增'}
+          onCancel={this.editModalOnCancel}
+          destroyOnClose
           schema={schema.editSchema}
           uiSchema={schema.editUiSchema}
-          style={style}
+          formData={this.editFormData}
+          handFormSubmit={this.modalSaveFunctionData}
         />
+        {/* 隐藏组件,做数据初始化,style不先定义每次父组件render都会跟着render */}
+        {/* <CommonForm
+          schema={schema.editSchema}
+          uiSchema={schema.editUiSchema}
+          style={this.style}
+        /> */}
       </div>
     );
   }

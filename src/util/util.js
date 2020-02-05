@@ -51,10 +51,9 @@ util.oneOf = function(ele, targetArr) {
 };
 util.getParentMenusByName = function(openAccesseMenu, name) {
   let temp = [];
-  // eslint-disable-next-line no-shadow
-  let forFn = function(openAccesseMenu, name) {
-    for (let item of openAccesseMenu) {
-      if (item.name === name && item.path !== '/') {
+  let forFn = function(Menu, _name) {
+    for (let item of Menu) {
+      if (item.name === _name && item.path !== '/') {
         temp.push(item);
         forFn(openAccesseMenu, item.parentName);
       }
@@ -62,7 +61,6 @@ util.getParentMenusByName = function(openAccesseMenu, name) {
   };
   forFn(openAccesseMenu, name);
   temp.reverse();
-  // console.log('util函数getParentMenusByName', temp);
   return temp;
 };
 // 打开的菜单
@@ -79,7 +77,6 @@ util.openAccesseMenu = function(accesseMenu) {
     }
   };
   forFn(accesseMenu, '');
-  // console.log('util函数-openAccesseMenu', openAccesseMenu);
   return openAccesseMenu;
 };
 

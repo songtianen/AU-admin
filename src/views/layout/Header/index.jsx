@@ -18,18 +18,23 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 class MyHeader extends React.PureComponent {
+  // 更新左侧的菜单
   updateModule = (e) => {
+    const { dispatch } = this.props;
     let accesseMenu = this.props.accessMenu;
     let moduleList = accesseMenu.filter((item) => {
       return item.leftMenu && item.name === e.key;
     });
     let moduleMenu = moduleList[0].children;
-    this.props.updateModule({
-      currentModule: e.key,
-      moduleMenu,
-    });
+    dispatch(
+      updateModule({
+        currentModule: e.key,
+        moduleMenu,
+      }),
+    );
   };
 
+  // 头像list
   menuClick = (e) => {
     // console.log('navTab toggle', e);
     // eslint-disable-next-line no-unused-expressions
@@ -190,35 +195,24 @@ class MyHeader extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    name: state.user.name,
-    avatar: state.user.avatar,
+    name: state.app.name,
+    avatar: state.app.avatar,
     currentModule: state.app.currentModule,
     moduleList: state.app.moduleList,
     accessMenu: state.app.accessMenu,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateModule: (module) => {
-      dispatch(updateModule(module));
-    },
-  };
-};
 
 MyHeader.propTypes = {
-  updateModule: PropTypes.func.isRequired,
-  // navTabshow: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
   moduleList: PropTypes.array.isRequired,
   currentModule: PropTypes.string.isRequired,
   toggle: PropTypes.func.isRequired,
   collapsed: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
-  // avatar: PropTypes.string,
   history: PropTypes.object.isRequired,
   accessMenu: PropTypes.array.isRequired,
   toggleNavTab: PropTypes.func.isRequired,
   itemDisplay: PropTypes.bool.isRequired,
 };
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(MyHeader),
-);
+export default withRouter(connect(mapStateToProps)(MyHeader));

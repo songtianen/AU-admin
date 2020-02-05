@@ -4,23 +4,16 @@ import { connect } from 'react-redux';
 import { Layout } from 'antd';
 import MyHeader from './Header';
 import Footer from './Footer';
-// import MySiderContainer from './Sider/component'
 import Sider from './Sider';
 import MyNavTabs from './Content/index';
 import { getToken } from '../../util/token';
-import { getUserInfo, getAccessMemu } from '../../api';
-import reduxUser from '../../redux/redux_user';
 import reduxApp from '../../redux/redux_app';
-import util from '../../util/util';
-// 不需要后端返回的菜单
-import constantMenu from '../../conf/MenuConf';
 import './layout.less';
 
 const { Content } = Layout;
 const { MySider } = Sider;
-const { updateUserInfo } = reduxUser.actions;
 
-const { updateAccessMenu } = reduxApp.actions;
+const { getUserInfo, updateAccessMenu } = reduxApp.actions;
 class MyLayout extends React.PureComponent {
   state = {
     collapsed: false,
@@ -31,6 +24,7 @@ class MyLayout extends React.PureComponent {
   };
 
   componentDidMount() {
+    console.log('this.props--', this.props);
     this.initAppData(); // 数据初始化完后再触发一次render
     this.getClientWidth(); // 判断屏幕尺寸再触发一次render(不需要可去掉)
     window.onresize = () => {
@@ -100,40 +94,17 @@ class MyLayout extends React.PureComponent {
       this.props.history.push('/login');
       return;
     }
-    let [infoRes, menuRes] = await Promise.all([
-      getUserInfo(),
-      getAccessMemu(),
-    ]);
-    // console.log('infoRes', infoRes, 'menuRes', menuRes);
-    let permission = [...infoRes.data.userRole, ...infoRes.data.userPermission];
-    let isAdmin = infoRes.data.isAdmin;
-    let userInfo = {
-      // 用户信息
-      name: infoRes.data.userName,
-      avatar: infoRes.data.avatarUrl,
-      isAdmin,
-      permission,
-    };
-    localStorage.setItem('permission', JSON.stringify(permission));
-    localStorage.setItem('isAdmin', isAdmin);
-    menuRes.data.push(...constantMenu); // 添加不需要后端返回的菜单列表
-    let openAccessMenu = util.openAccesseMenu(menuRes.data); // 添加parentName属性,传入后端返回的菜单数据
-    // console.log('openAccesseMenu', openAccesseMenu);
-    let moduleList = menuRes.data.filter((item) => {
-      // 是左侧菜单(leftMenu字段控制是否显示此菜单)
-      return item.leftMenu;
-    });
-    let currentModule = moduleList[0].name; // 当前显示的菜单
-    let moduleMenu = moduleList[0].children;
-    this.props.updateAccessMenu({
-      // redux 设置菜单
-      currentModule, // 当前打开模块
-      accessMenu: menuRes.data, // 所有菜单
-      openAccessMenu, // 打开的菜单
-      moduleMenu, // 当前打开有左侧菜单第一个children
-      moduleList, // 是左侧菜单的菜单 header tab 所有菜单
-    });
-    this.props.updateUserInfo(userInfo); // redux 存入userInfo
+    // let [infoRes, menuRes] = await Promise.all([
+    //   getUserInfo(),
+    //   getAccessMemu(),
+    // ]);
+    console.log('layou--props', this.props);
+
+    // eslint-disable-next-line no-shadow
+    const { dispatch } = this.props;
+    dispatch(getUserInfo());
+    dispatch(updateAccessMenu());
+
     // 初始化子组件
     this.initChildData(this.props);
   };
@@ -195,27 +166,31 @@ class MyLayout extends React.PureComponent {
 }
 
 const mapStateToPorps = (state) => {
-  // console.log('app state', state)
-  const { name } = state.user;
+  console.log('app state', state);
+  const { name } = state.app;
   return {
     name,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  return {
-    updateUserInfo: (info) => {
-      dispatch(updateUserInfo(info));
-    },
-    updateAccessMenu: (accessMenu) => {
-      dispatch(updateAccessMenu(accessMenu));
-    },
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     getUserInfo: (info) => {
+//       dispatch(getUserInfo(info));
+//     },
+//     updateAccessMenu: (accessMenu) => {
+//       dispatch(updateAccessMenu(accessMenu));
+//     },
+//   };
+// };
 MyLayout.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  updateAccessMenu: PropTypes.func.isRequired,
-  updateUserInfo: PropTypes.func.isRequired,
+  // infoRes: PropTypes.object.isRequired,
+  // menuRes: PropTypes.object.isRequired,
+
+  // getUserInfo: PropTypes.func.isRequired,
+  // updateAccessMenu: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToPorps, mapDispatchToProps)(MyLayout);
+export default connect(mapStateToPorps)(MyLayout);

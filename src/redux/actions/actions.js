@@ -1,45 +1,31 @@
-import * as actions from './actionTypes';
-
-// export const isFetching = ({ viewType, data }) => ({
-//   type: viewType,
-//   payload: data
-// });
-// export const sessionStorage = ({ viewType, data }) => ({
-//   type: viewType,
-//   payload: data
-// });
-// export const clearStates = ({ viewType, data }) => ({
-//   type: viewType,
-//   payload: data
-// });
-
-// export const spinLoading = (loading) => {
-//   return { type: SPIN_LOADING, spinLoading: loading }
-// }
-
-// export const updateToPath = (toPath) => {
-//   return { type: UPDATE_TOPATH, toPath: toPath }
-// }
-
-export const updateAccessMenu = (data) => {
-  return { type: actions.UPDATE_ACCESSMENU, ...data };
+export const actionTypes = {
+  DO_UPDATE_MODULE: 'app/DO_UPDATE_MODULE',
+  UPDATE_MODULE_SUCCESS: 'app/DO_UPDATE_MODULE_SUCCESS',
+  DO_UPDATE_ACCESSMENU: 'app/DO_UPDATE_ACCESSMENU',
+  UPDATE_ACCESSMENU_SUCCESS: 'app/UPDATE_ACCESSMENU_SUCCESS',
+  GET_USERINFO_SUCCESS: 'user/GET_USERINFO_SUCCESS',
+  DO_GET_USERINFO: 'user/DO_GET_USERINFO',
 };
 
-export const updateModule = (module) => {
-  return { type: actions.UPDATE_MODULE, ...module };
+export const updateAccessMenu = (data) => {
+  return { type: actionTypes.DO_UPDATE_ACCESSMENU, payload: data };
+};
+export const updateAccessMenuSuccess = (data) => {
+  return { type: actionTypes.UPDATE_ACCESSMENU_SUCCESS, payload: data };
+};
+
+export const updateModule = (data) => {
+  return { type: actionTypes.DO_UPDATE_MODULE, payload: data };
+};
+export const updateModuleSucess = (data) => {
+  return { type: actionTypes.UPDATE_MODULE_SUCCESS, payload: data };
 };
 
 // userActions
 
-// action creators
-export const login = (data) => {
-  return { type: actions.DO_LOGIN, data };
+export const getUserInfoSuccess = (data) => {
+  return { type: actionTypes.GET_USERINFO_SUCCESS, payload: data };
 };
-
-export const updateUserInfo = (userInfo) => {
-  return { type: actions.GET_USERINFO_SUCCESS, ...userInfo };
-};
-
-export const logout = () => {
-  return { type: actions.LOGOUT_SUCCESS };
+export const getUserInfo = (data) => {
+  return { type: actionTypes.DO_GET_USERINFO, payload: data };
 };

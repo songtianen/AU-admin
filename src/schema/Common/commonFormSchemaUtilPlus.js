@@ -73,7 +73,6 @@ const SchemaUtils = {
           index: `${id}-${index}`,
         };
       },
-      // 组件将要渲染
       componentWillMount() {
         // console.log('tmp-CommonForm componentWillMount');
 
@@ -82,7 +81,6 @@ const SchemaUtils = {
           this.generateJsx = JsxGeneratorMap.get(id);
         }
       },
-      // 组件渲染完毕
       async componentDidMount() {
         // console.log('tmp-CommonForm 异步componentDidMount');
 
@@ -113,7 +111,6 @@ const SchemaUtils = {
           inited: true,
         });
       },
-      // react 将要卸载
       componentWillUnmount() {
         FormInstanceMap.delete(this.state.index);
         console.log(
@@ -491,7 +488,7 @@ const SchemaUtils = {
       // 接收 render() 函数的参数 this.generateJsx(this.state.index, formData)
       // 返回 一个函数
       (getFieldDecorator, formData) => {
-        console.log('......formdata......', formData);
+        // console.log('......formdata......', formData);
         return getFieldDecorator(field.key, {
           // 连级选择器的初始值 Cascader
           initialValue: formData[field.key] || field['ui:defaultEndValue'],

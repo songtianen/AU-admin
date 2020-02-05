@@ -1,337 +1,357 @@
-// 菜单管理
 import React from 'react';
-import PropTypes from 'prop-types';
-import {
-  Row,
-  Col,
-  Tree,
-  Form,
-  TreeSelect,
-  Input,
-  Button,
-  Switch,
-  InputNumber,
-  message,
-  Tag,
-  Icon,
-} from 'antd';
+// import { connect } from 'react-redux';
+import { Table, Popconfirm, Divider, notification } from 'antd';
+import { getAllMenu, delRole, delRoles, saveRole } from '../../../api';
 
-import { getAllMenu, saveMenu } from '../../../api';
-import Icons from '../../../conf/icon';
-
-const TreeNode = Tree.TreeNode;
-const FormItem = Form.Item;
-const SelectTreeNode = TreeSelect.TreeNode;
-const iconsTree = [];
+import SearchForm from '../../../schema/SearchForm/SearchForm';
+import schema from '../../../schema/Menu';
+import CommonModal from '../Common/CommonModal';
+import AddRemoveComponent from '../Common/AddRemoveConponent';
 
 class Menu extends React.PureComponent {
   state = {
-    menuList: [],
-    tempMenu: {
-      id: '',
-      parentId: 0,
+    tableFilter: {
+      title: '',
+      functionCode: '',
     },
-    selected: false,
-    addChild: false,
+    // eslint-disable-next-line react/no-unused-state
+    searchFormExpand: true,
+    tableSelectedRowKeys: [], // table 选择的数据
+    pagedList: [], // table 展示的数据
+    // table 分页器
+    pagination: {
+      current: 1,
+      pageSize: 10,
+      showQuickJumper: true,
+      showSizeChanger: true,
+      showTotal: (total) => `Total ${total} items`,
+    },
+    sorter: {
+      field: '',
+      order: '',
+    },
+    loading: false, // table 加载
+    editModalVisible: false, // modal 模态框的 显示
   };
 
-  getIConsTree = () => {
-    for (let item of Icons) {
-      let children = [];
-      for (let child of item.icons) {
-        children.push(
-          <SelectTreeNode
-            value={child.icon}
-            title={
-              <span>
-                <Icon type={child.icon} style={{ color: '#08c' }} />
-                &nbsp;&nbsp;{child.title}
-              </span>
-            }
-            key={child.icon}
-          />,
+  columns = [
+    {
+      title: '菜单title',
+      dataIndex: 'title',
+      sorter: true,
+    },
+    {
+      title: '菜单名称',
+      dataIndex: 'name',
+      sorter: true,
+    },
+    {
+      title: '菜单编码',
+      dataIndex: 'functionCode',
+      sorter: true,
+    },
+    {
+      title: '菜单路径',
+      dataIndex: 'path',
+      sorter: true,
+    },
+    {
+      title: '父菜单',
+      dataIndex: 'parentId',
+      sorter: true,
+    },
+    {
+      title: '图标',
+      dataIndex: 'icon',
+    },
+    {
+      title: '左侧菜单',
+      dataIndex: 'leftMenu',
+      sorter: true,
+    },
+    {
+      title: '是否锁定',
+      dataIndex: 'isLock',
+      sorter: true,
+    },
+    {
+      title: '操作',
+      dataIndex: 'id',
+      fixed: 'right',
+      width: 120,
+      render: (text, record) => {
+        return (
+          <div>
+            <a
+              onClick={() => {
+                this.editRole(record);
+              }}
+            >
+              编辑
+            </a>
+            <Divider type='vertical' />
+            <Popconfirm
+              title='确定删除?'
+              onConfirm={() => this.delRole(record)}
+            >
+              <a>删除</a>
+            </Popconfirm>
+          </div>
         );
-      }
-      iconsTree.push(
-        <SelectTreeNode title={item.title} key={item.title}>
-          {children}
-        </SelectTreeNode>,
-      );
-    }
+      },
+    },
+  ];
+
+  // 模态框 数据组
+  editFormData = {};
+
+  fetch = async (query = {}) => {
+    this.setState({ loading: true });
+    let ResData = await getAllMenu(query);
+    let data = ResData.data;
+    const pagination = { ...this.state.tablePagination };
+    pagination.total = data.totalCount;
+    this.setState({
+      loading: false,
+      pagedList: data.rows,
+      pagination,
+    });
   };
 
-  componentWillMount() {
-    this.getIConsTree();
-  }
+  refresh = () => {
+    let query = {
+      pageIndex: this.state.pagination.current,
+      pageSize: this.state.pagination.pageSize,
+      sortBy: this.state.sorter.field,
+      descending: this.state.sorter.order === 'descend',
+      filter: this.state.tableFilter,
+    };
+    this.fetch(query);
+  };
 
   componentDidMount() {
-    this.initData();
+    this.refresh();
   }
 
-  initData = async () => {
-    let menuListRes = await getAllMenu();
-    let menuList = menuListRes.data;
-    // console.log('http请求getAllMenu', menuList);
+  /**
+   * @description 查询
+   */
+  handleSearch = (filter) => {
+    const pager = { ...this.state.pagination };
+    pager.current = 1;
     this.setState({
-      menuList,
+      tableFilter: filter,
+      pagination: pager,
     });
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  onSelect = (selectedKeys, info) => {
-    let { setFieldsValue, resetFields } = this.props.form;
-    // console.log('selectedKeys----', selectedKeys, info);
-    if (selectedKeys.length === 0) {
-      resetFields();
-      this.setState({
-        selected: false,
-        addChild: false,
-        tempMenu: {
-          id: '',
-          parentId: '0',
-        },
-      });
-      return;
-    }
-    let id = selectedKeys[0];
-    // console.log('id---', id);
-    let menu = this.findMenubyId(id);
-    this.setState({
-      selected: true,
-      addChild: false,
-      tempMenu: { ...menu },
-    });
-    setFieldsValue({
-      name: menu.name,
-      title: menu.title,
-      functionCode: menu.functionCode,
-      sort: menu.sort,
-      leftMenu: menu.leftMenu,
-      isLock: menu.isLock,
-      icon: menu.icon,
-    });
-  };
-
-  findMenubyId = (id) => {
-    let menu = {};
-    let getMenu = (menuList) => {
-      for (let item of menuList) {
-        if (item.id === id) {
-          menu = { ...item };
-          // console.log('menu-----', menu);
-          menu.children = null;
-          break;
-        } else if (item.children && item.children.length > 0) {
-          getMenu(item.children);
-        }
-      }
+    let query = {
+      pageIndex: 1,
+      pageSize: this.state.pagination.pageSize,
+      sortBy: this.state.sorter.field,
+      descending: this.state.sorter.order === 'descend',
+      filter,
     };
-    getMenu(this.state.menuList);
-    // console.log('menu-----', this.state.menuList);
-    return menu;
+    // console.log('query---1', query);
+    this.fetch(query);
   };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll(async (err, values) => {
-      // console.log('菜单提交的数据', values);
-      if (!err) {
-        let data = {
-          id: this.state.tempMenu.id,
-          parentId: this.state.tempMenu.parentId,
-          ...values,
-        };
-        try {
-          await saveMenu(data);
-          message.success('提交成功');
-          this.initData();
-        } catch (ex) {
-          console.log('菜单标记提交失败', ex);
-        }
-      }
+  /**
+   * @description 重置查询
+   */
+  handleReset = () => {
+    this.setState({
+      tableFilter: {},
     });
   };
 
-  addChildMenu = () => {
+  //  button 新增
+  addRole = () => {
+    this.editFormData = {};
     this.setState({
-      addChild: true,
-      selected: false,
-      tempMenu: {
-        ...this.state.tempMenu,
-        id: '',
-        parentId: this.state.tempMenu.id,
+      editModalVisible: true,
+    });
+  };
+
+  // button Popconfirm 删除
+  batchDelRole = async () => {
+    // const ids = JSON.stringify(
+    //   this.state.tableSelectedRowKeys.map((s) => {
+    //     return s;
+    //   }),
+    // );
+    // console.log('ids????????', ids);
+    try {
+      await delRoles({
+        ids: JSON.stringify(
+          this.state.tableSelectedRowKeys.map((s) => {
+            return s;
+          }),
+        ),
+      });
+      this.setState({
+        tableSelectedRowKeys: [],
+      });
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: '删除成功',
+      });
+    } catch (e) {
+      notification.error({
+        message: e,
+      });
+    }
+    this.refresh();
+  };
+
+  // table 选择器
+  onSelectChange = (selectedRowKeys) => {
+    // console.log('table表格选择器', selectedRowKeys);
+    this.setState({ tableSelectedRowKeys: selectedRowKeys });
+  };
+
+  // modal
+  editModalOnCancel = () => {
+    this.setState({
+      editModalVisible: false,
+    });
+  };
+
+  // modal
+  saveRole = async (data) => {
+    let formData = { ...this.editFormData, ...data };
+    try {
+      await saveRole(formData);
+      this.setState({
+        editModalVisible: false,
+      });
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: '保存成功',
+      });
+    } catch (e) {
+      notification.error({
+        message: e,
+      });
+    }
+    this.refresh();
+  };
+
+  // table delete Popconfirm
+  delRole = async (record) => {
+    const { id } = record;
+    try {
+      await delRole({ id });
+      notification.success({
+        placement: 'bottomLeft bottomRight',
+        message: '删除成功',
+      });
+    } catch (e) {
+      notification.error({
+        message: e,
+      });
+    }
+    this.refresh();
+  };
+
+  // table edit Popconfirm
+  editRole = (record) => {
+    let obj = Object.assign(
+      {},
+      {
+        id: record.id,
+        name: record.name,
+        code: record.code,
+        description: record.description,
+      },
+    );
+    // console.log('fuck-0000', record);
+    this.editFormData = { ...obj };
+    this.setState({
+      editModalVisible: true,
+    });
+  };
+
+  // table 表格 分页、排序、筛选变化时触发
+  handleTableChange = (pagination, filters, sorter) => {
+    // console.log(
+    //   'Function  table 表格 分页、排序、筛选变化时触发 pagination----',
+    //   pagination,
+    // );
+    // console.log(
+    //   'Function  table 表格 分页、排序、筛选变化时触发 filters----',
+    //   filters,
+    // );
+    // console.log(
+    //   'Function  table 表格 分页、排序、筛选变化时触发 sorter----',
+    //   sorter,
+    // );
+    const pager = { ...this.state.pagination };
+    pager.current = pagination.current;
+    pager.pageSize = pagination.pageSize;
+    this.setState({
+      pagination: pager,
+      sorter: {
+        field: sorter.field,
+        order: sorter.order,
       },
     });
-    this.props.form.resetFields();
-  };
-
-  addTopMenu = () => {
-    this.setState({
-      addChild: false,
-      selected: false,
-      tempMenu: {
-        ...this.state.tempMenu,
-        id: '',
-        parentId: 0,
-      },
-    });
+    let query = {
+      pageIndex: pager.current,
+      pageSize: pager.pageSize,
+      sortBy: sorter.field,
+      descending: sorter.order === 'descend',
+      filter: this.state.tableFilter,
+    };
+    this.fetch(query);
   };
 
   render() {
-    console.log('menu render');
-    const renderMenu = (menuList) =>
-      menuList.map((menu) => (
-        <TreeNode title={menu.title} key={menu.id}>
-          {menu.children && menu.children.length > 0
-            ? renderMenu(menu.children)
-            : ''}
-        </TreeNode>
-      ));
-    const { getFieldDecorator } = this.props.form;
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 6 },
-        sm: { span: 4 },
-        md: { span: 8 },
-      },
-      wrapperCol: {
-        xs: { span: 12 },
-        sm: { span: 16 },
-        md: { span: 15 },
-      },
+    console.log('Role, render');
+    const { tableSelectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys: tableSelectedRowKeys,
+      onChange: this.onSelectChange,
     };
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 16,
-          offset: 8,
-        },
-      },
-    };
+    const hasSelected = tableSelectedRowKeys.length > 0;
     return (
-      <div style={{ backgroundColor: '#fff', padding: '20px' }}>
-        <Row type='flex' justify='start'>
-          <Col
-            xs={24}
-            sm={24}
-            md={12}
-            lg={6}
-            xl={8}
-            style={{ backgroundColor: '#fafafa', marginRight: '20px' }}
-          >
-            <Tree onSelect={this.onSelect}>
-              {renderMenu(this.state.menuList)}
-            </Tree>
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={9} xl={9}>
-            <div style={{ padding: 8 }}>
-              <Button icon='plus' size='small' onClick={this.addTopMenu}>
-                顶级菜单
-              </Button>
-              <Button
-                disabled={!this.state.selected}
-                icon='plus'
-                size='small'
-                onClick={this.addChildMenu}
-              >
-                子级菜单
-              </Button>
-            </div>
-            <Form
-              {...formItemLayout}
-              onSubmit={this.handleSubmit}
-              // style={{ backgroundColor: 'pink' }}
-            >
-              <div
-                style={{
-                  padding: 10,
-                  paddingLeft: 50,
-                  display: this.state.selected ? 'block' : 'none',
-                }}
-              >
-                正在编辑菜单：
-                <Tag color='#108ee9'>{this.state.tempMenu.title}</Tag>
-              </div>
-              <div
-                style={{
-                  padding: 10,
-                  paddingLeft: 50,
-                  display: this.state.addChild ? 'block' : 'none',
-                }}
-              >
-                添加&nbsp;&nbsp;
-                <Tag color='#108ee9'>{this.state.tempMenu.title}</Tag>子菜单
-              </div>
-              <FormItem hasFeedback label='名称'>
-                {getFieldDecorator('name', {
-                  rules: [
-                    {
-                      whitespace: true,
-                      required: true,
-                      message: '名字不能为空',
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem hasFeedback label='标题'>
-                {getFieldDecorator('title', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '标题不能为空!',
-                    },
-                  ],
-                })(<Input />)}
-              </FormItem>
-              <FormItem hasFeedback label='权限码'>
-                {getFieldDecorator('functionCode')(<Input />)}
-              </FormItem>
-              <FormItem label='排序'>
-                {getFieldDecorator('sort', { initialValue: 0 })(
-                  <InputNumber min={0} />,
-                )}
-              </FormItem>
-              <FormItem label='是否左侧显示'>
-                {getFieldDecorator('leftMenu', { valuePropName: 'checked' })(
-                  <Switch />,
-                )}
-              </FormItem>
-              <FormItem label='是否锁定'>
-                {getFieldDecorator('isLock', { valuePropName: 'checked' })(
-                  <Switch />,
-                )}
-              </FormItem>
-              <FormItem hasFeedback label='图标'>
-                {getFieldDecorator('icon', { initialValue: '' })(
-                  <TreeSelect
-                    showSearch
-                    dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
-                    placeholder='Please select'
-                    allowClear
-                    treeDefaultExpandAll
-                  >
-                    {iconsTree}
-                  </TreeSelect>,
-                )}
-              </FormItem>
-              <FormItem {...tailFormItemLayout}>
-                <Button type='primary' htmlType='submit'>
-                  提交
-                </Button>
-              </FormItem>
-            </Form>
-          </Col>
-        </Row>
+      <div style={{ backgroundColor: '#fff', padding: '18px' }}>
+        <SearchForm
+          schema={schema.searchSchema}
+          uiSchema={schema.searchUiSchema}
+          handleSubmit={this.handleSearch}
+          handleReset={this.handleReset}
+        />
+        <Divider />
+        <AddRemoveComponent
+          addFunc={this.addRole}
+          onConfirm={this.batchDelRole}
+          hasSelected={hasSelected}
+          addTitle={'新增'}
+          removeTitle={'删除'}
+        />
+        <Table
+          rowSelection={rowSelection}
+          columns={this.columns}
+          rowKey={(record) => record.id}
+          dataSource={this.state.pagedList}
+          pagination={this.state.pagination}
+          loading={this.state.loading}
+          onChange={this.handleTableChange}
+          scroll={{ x: 1000 }}
+          size='small'
+          bordered
+        />
+        <CommonModal
+          visible={this.state.editModalVisible}
+          title={this.editFormData.id ? '编辑' : '新增'}
+          onCancel={this.editModalOnCancel}
+          destroyOnClose
+          schema={schema.editSchema}
+          uiSchema={schema.editUiSchema}
+          formData={this.editFormData}
+          handFormSubmit={this.saveRole}
+        />
       </div>
     );
   }
 }
-
-Menu.propTypes = {
-  form: PropTypes.object.isRequired,
-};
-export default Form.create()(Menu);
+export default Menu;

@@ -27,12 +27,12 @@ class CommonForm extends React.PureComponent {
 
   render() {
     console.log('CommonForm render');
-    const { schema, uiSchema, formData, style } = this.props;
+    const { schema, uiSchema, formData } = this.props;
     // 根据当前的schema, 获取对应的表单组件
     const FormComponent = commonFormSchemaUtil.getForm(schema, uiSchema);
 
     return (
-      <div style={style}>
+      <div>
         <FormComponent
           formData={formData}
           wrappedComponentRef={(instance) => {
@@ -48,6 +48,6 @@ CommonForm.propTypes = {
   uiSchema: PropTypes.object.isRequired,
   formData: PropTypes.object,
   modalSaveFunctionData: PropTypes.func,
-  style: PropTypes.object.isRequired,
+  // style: PropTypes.object.isRequired,
 };
 export default CommonForm;

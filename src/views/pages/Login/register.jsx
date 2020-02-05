@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Input, Icon, Row, Col, Button, Card, notification } from 'antd';
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
-// eslint-disable-next-line no-unused-vars
-import { register, clearRegisterError } from './states/actions';
+import { register, clearRegisterError } from './redux/actions';
 
 const { Meta } = Card;
 

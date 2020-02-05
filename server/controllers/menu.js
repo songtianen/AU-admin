@@ -1,29 +1,30 @@
 const { getUserInfoById } = require('../services/userService');
-const {
-  MenuList,
-  AccessMenuList,
-  findAccessMenuList,
-  postSaveMenu,
-  GetMenuFunctions,
-} = require('../services/menuService');
+const menuService = require('../services/menuService');
 const { getRoleFunctions } = require('../services/roleService');
 const { businessError, success } = require('../lib/responseTemplate');
 
 // 无需权限
 const getAccessMenuList = ({ req, res }) => {
   getUserInfoById(req.user.userId).then((userInfo) => {
-    findAccessMenuList().then((doc) => {
-      let menuList = AccessMenuList(req, userInfo, doc);
+    menuService.getAllMenuList().then((doc) => {
+      let menuList = menuService.AccessMenuList(req, userInfo, doc);
       return success({ res, data: menuList });
     });
   });
 };
 
-const getMenuList = ({ req, res }) => {
-  findAccessMenuList()
+// 获取所有菜单
+const getAllMenuWithPage = ({ req, res }) => {
+  console.log('获取菜单列表', req.query);
+  let pageIndex = req.query.pageIndex;
+  let pageSize = req.query.pageSize;
+  let sortBy = req.query.sortBy;
+  let descending = req.query.descending;
+  let filter = JSON.parse(req.query.filter);
+  menuService
+    .getAllMenuWithPage(pageIndex, pageSize, sortBy, descending, filter)
     .then((doc) => {
-      let menuList = MenuList(doc);
-      return success({ res, data: menuList });
+      return success({ res, data: doc });
     })
     .catch(() => {
       businessError({ res, msg: '服务器错误' });
@@ -41,9 +42,10 @@ const saveMenu = ({ req, res }) => {
   if (menu.icon === '') {
     return businessError({ res, msg: '请选择图标!' });
   }
-  findAccessMenuList()
+  menuService
+    .getAllMenuList()
     .then((doc) => {
-      return postSaveMenu(res, menu, doc);
+      return menuService.postSaveMenu(res, menu, doc);
     })
     .catch(() => {
       businessError({ res, msg: '服务器错误' });
@@ -56,7 +58,7 @@ const getMenufunctions = async ({ req, res }) => {
   let menuId = req.query.menuId;
   let roleId = req.query.roleId;
   let [menuFunctions, roleFunctions] = await Promise.all([
-    GetMenuFunctions(menuId),
+    menuService.GetMenuFunctions(menuId),
     getRoleFunctions(roleId),
   ]);
   // console.log('getRolefunctions', roleFunctions);
@@ -70,7 +72,7 @@ const getMenufunctions = async ({ req, res }) => {
 };
 module.exports = {
   getAccessMenuList,
-  getMenuList,
   saveMenu,
   getMenufunctions,
+  getAllMenuWithPage,
 };

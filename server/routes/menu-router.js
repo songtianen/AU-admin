@@ -2,7 +2,7 @@ const express = require('express');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
 const {
   getAccessMenuList,
-  getMenuList,
+  getAllMenuWithPage,
   saveMenu,
   getMenufunctions,
 } = require('../controllers/menu');
@@ -13,7 +13,7 @@ router.get('/getaccessmenu', (req, res) => {
   getAccessMenuList({ req, res });
 });
 router.get('/', PermissionCheck({ permission: ['menu_view'] }), (req, res) => {
-  getMenuList({ req, res });
+  getAllMenuWithPage({ req, res });
 });
 router.post(
   '/savemenu',

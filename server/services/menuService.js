@@ -50,7 +50,7 @@ const checkAccssMenu = (accessMenuList, menuList) => {
     );
   });
 };
-const findAccessMenuList = (selector = {}) => {
+const getAllMenuList = (selector = {}) => {
   return AccessMemuModel.find(selector).exec();
 };
 const copyMenu = (menuList) => {
@@ -69,7 +69,46 @@ const copyMenu = (menuList) => {
 };
 
 let menuService = {
-  findAccessMenuList,
+  getAllMenuList,
+  getAllMenuWithPage: async (
+    pageIndex,
+    pageSize,
+    sortBy,
+    descending,
+    filter,
+  ) => {
+    let menuLists = await AccessMemuModel.find();
+    menuLists = JSON.parse(JSON.stringify(menuLists));
+    if (filter.functionCode) {
+      menuLists = _.filter(menuLists, (o) => {
+        return o.functionCode.indexOf(filter.functionCode) > -1;
+      });
+    }
+    if (filter.name) {
+      menuLists = _.filter(menuLists, (o) => {
+        return o.name.indexOf(filter.name) > -1;
+      });
+    }
+
+    // 总页数
+    let totalCount = menuLists.length;
+    // 排序
+    if (sortBy) {
+      sortBy = 'isAdd';
+      menuLists = _.sortBy(menuLists, [sortBy]);
+      if (descending === 'true') {
+        menuLists = menuLists.reverse();
+      }
+    }
+    // 返回给前端第几页，的 数量。（）
+    let start = (pageIndex - 1) * pageSize;
+    let end = pageIndex * pageSize;
+    menuLists = _.slice(menuLists, start, end);
+    return {
+      totalCount: totalCount,
+      rows: menuLists,
+    };
+  },
   // 可访问的菜单
   AccessMenuList: (req, userInfo, doc) => {
     // for (let i = 0; i < dbConfig.menu.length; i++) {
@@ -166,7 +205,7 @@ let menuService = {
   },
   getMenuWithChildren: async (menuId) => {
     // console.log(typeof menuId);
-    let menuList = await findAccessMenuList();
+    let menuList = await getAllMenuList();
     let menuWithChildren = [];
     let menu = menuList.filter((s) => {
       return (s.parentId === '0' && menuId === '0') || s.id === menuId;

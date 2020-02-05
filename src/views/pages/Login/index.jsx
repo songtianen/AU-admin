@@ -14,7 +14,7 @@ import {
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
 import { getToken } from '../../../util/token';
-import { login, clearRegisterError } from './states/actions';
+import { login, clearRegisterError } from './redux/actions';
 
 const FormItem = Form.Item;
 const { Meta } = Card;
@@ -242,9 +242,9 @@ class Login extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    error: state.user.error,
-    msg: state.user.msg,
-    data: state.user.data,
+    error: state.login.error,
+    msg: state.login.msg,
+    data: state.login.data,
   };
 };
 // const mapDispatchToProps = (dispatch) => {
