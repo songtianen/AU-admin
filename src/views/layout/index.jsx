@@ -98,7 +98,6 @@ class MyLayout extends React.PureComponent {
     //   getUserInfo(),
     //   getAccessMemu(),
     // ]);
-    console.log('layou--props', this.props);
 
     // eslint-disable-next-line no-shadow
     const { dispatch } = this.props;

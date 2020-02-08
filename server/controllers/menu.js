@@ -3,8 +3,8 @@ const menuService = require('../services/menuService');
 const { getRoleFunctions } = require('../services/roleService');
 const { businessError, success } = require('../lib/responseTemplate');
 
-// 无需权限
 const getAccessMenuList = ({ req, res }) => {
+  console.log('获取菜单', req.user);
   getUserInfoById(req.user.userId).then((userInfo) => {
     menuService.getAllMenuList().then((doc) => {
       let menuList = menuService.AccessMenuList(req, userInfo, doc);
@@ -52,6 +52,27 @@ const saveMenu = ({ req, res }) => {
     });
 };
 
+const editMenu = ({ req, res }) => {
+  const menu = req.body;
+  if (menu.name === '') {
+    return businessError({ res, msg: '名称不能为空!' });
+  }
+  if (menu.title === '') {
+    return businessError({ res, msg: '标题不能为空!' });
+  }
+  if (menu.icon === '') {
+    return businessError({ res, msg: '请选择图标!' });
+  }
+  menuService
+    .editMenu()
+    .then((doc) => {
+      return success({ res, data: doc });
+    })
+    .catch(() => {
+      businessError({ res, msg: '服务器错误' });
+    });
+};
+
 // 角色权限管理
 const getMenufunctions = async ({ req, res }) => {
   console.log('moduleID', req.query.menuId);
@@ -75,4 +96,5 @@ module.exports = {
   saveMenu,
   getMenufunctions,
   getAllMenuWithPage,
+  editMenu,
 };

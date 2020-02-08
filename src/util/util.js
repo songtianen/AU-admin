@@ -1,3 +1,6 @@
+import React from 'react';
+import { Icon } from 'antd';
+
 // eslint-disable-next-line import/no-mutable-exports
 let util = {};
 util.title = function(title) {
@@ -114,6 +117,54 @@ util.openTreeData = (data) => {
   };
   forFn(data);
   return openAccesseMenu;
+};
+
+util.treeData = (data) => {
+  const changeData = function(params) {
+    for (let i = 0; i < params.length; i++) {
+      params[i].value = params[i].id;
+      params[i].key = params[i].id;
+      if (params[i].children) {
+        changeData(params[i].children);
+      }
+    }
+    return params;
+  };
+  const a = changeData(data);
+
+  return a;
+};
+util.iconTreeData = (data) => {
+  const changeData = function(params) {
+    let count = 1;
+    for (let i = 0; i < params.length; i++) {
+      params[i].key = `${params[i].icon}${count++}`;
+      params[i].children = params[i].icons;
+      if (params[i].icon) {
+        params[i].value = params[i].icon;
+        params[i].title = (
+          <span>
+            <Icon type={params[i].icon} style={{ color: '#08c' }} />
+            &nbsp;&nbsp;{params[i].icon}
+          </span>
+        );
+      }
+      if (params[i].children) {
+        changeData(params[i].children);
+      }
+    }
+    return params;
+  };
+  const a = changeData(data);
+  // const tree = a.filter((item) => {
+  //   if (!item.value) {
+  //     delete item.value;
+  //   }
+  //   delete item.icons;
+  //   return item;
+  // });
+
+  return a;
 };
 
 export default util;

@@ -109,7 +109,7 @@ export function editUserInfo(data) {
 }
 
 // menu
-export function getAccessMemu() {
+export function getAccessMenu() {
   return request({
     url: '/menu/getaccessmenu',
     method: 'get',
@@ -129,6 +129,15 @@ export function getAllMenu(query) {
 export function saveMenu(menu) {
   return request({
     url: '/menu/savemenu',
+    method: 'post',
+    data: menu,
+    loading: 'message',
+    permission: ['menu_edit'],
+  });
+}
+export function editMenu(menu) {
+  return request({
+    url: '/menu/editmenu',
     method: 'post',
     data: menu,
     loading: 'message',

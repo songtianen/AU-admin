@@ -5,10 +5,10 @@ const {
   getAllMenuWithPage,
   saveMenu,
   getMenufunctions,
+  editMenu,
 } = require('../controllers/menu');
 
 const router = express.Router();
-// 无需权限验证
 router.get('/getaccessmenu', (req, res) => {
   getAccessMenuList({ req, res });
 });
@@ -20,6 +20,13 @@ router.post(
   PermissionCheck({ permission: ['menu_edit'] }),
   (req, res) => {
     saveMenu({ req, res });
+  },
+);
+router.post(
+  '/editmenu',
+  PermissionCheck({ permission: ['menu_edit'] }),
+  (req, res) => {
+    editMenu({ req, res });
   },
 );
 // 角色权限接口

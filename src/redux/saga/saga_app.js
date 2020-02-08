@@ -1,6 +1,6 @@
 import { takeEvery, call, put } from 'redux-saga/effects';
 import { notification } from 'antd';
-import { getAccessMemu, getUserInfo } from '../../api';
+import { getAccessMenu, getUserInfo } from '../../api';
 import { actionTypes } from '../actions/actions';
 import util from '../../util/util';
 // 不需要后端返回的菜单
@@ -49,10 +49,11 @@ function* watchFetchUserInfo() {
 
 function* fetchAccessMemu(action) {
   try {
-    const accessMemu = yield call(getAccessMemu, action.payload);
+    const accessMenu = yield call(getAccessMenu, action.payload);
 
-    if (accessMemu.statusCode === 200) {
-      let menuRes = accessMemu.data;
+    if (accessMenu.statusCode === 200) {
+      localStorage.setItem('accessMenu', JSON.stringify(accessMenu.data));
+      let menuRes = accessMenu.data;
       menuRes.push(...constantMenu); // 添加不需要后端返回的菜单列表
       let moduleList = menuRes.filter((item) => {
         // 是左侧菜单(leftMenu字段控制是否显示此菜单)
@@ -70,15 +71,13 @@ function* fetchAccessMemu(action) {
         moduleMenu, // sider左侧菜单数据，第一个children
         moduleList, // leftMenu等于true的菜单
       };
-      console.log('请求菜单1', accessMenuData);
-
       yield put({
         type: actionTypes.UPDATE_ACCESSMENU_SUCCESS,
         payload: accessMenuData,
       });
     }
-    if (accessMemu.statusCode === 500) {
-      yield put({ type: actionTypes.LOGIN_ERROR, payload: accessMemu });
+    if (accessMenu.statusCode === 500) {
+      yield put({ type: actionTypes.LOGIN_ERROR, payload: accessMenu });
     }
   } catch (error) {
     notification.error({

@@ -1,3 +1,11 @@
+import icon from '../../conf/icon';
+import util from '../../util/util';
+
+const treeData = util.treeData;
+const iconTreeData = util.iconTreeData;
+console.log('图标树', iconTreeData(icon));
+const arr = JSON.parse(localStorage.getItem('accessMenu'));
+
 export default {
   title: {
     'ui:widget': 'input',
@@ -85,79 +93,75 @@ export default {
     }, // Form.Item 配置
   },
   leftMenu: {
-    'ui:widget': 'input',
+    'ui:widget': 'radio',
     'ui:options': {
-      type: 'text',
-      placeholder: '',
+      initialValue: true,
+      options: [
+        { label: '是', value: true },
+        { label: '否', value: false },
+      ],
     },
-    'ui:rules': [
-      { required: true, message: '请输入角色编码' },
-      { max: 25, message: '最多输入25字符' },
-    ], // 校验规则
+    'ui:rules': [{ required: true, message: '请输入角色编码' }], // 校验规则
     'ui:title': '左侧',
     'ui:description': '',
     'ui:formItemConfig': {
-      hasFeedback: true,
+      // hasFeedback: true,
       // "extra":"121212",//未设置取ui:description
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
     }, // Form.Item 配置
   },
   isLock: {
-    'ui:widget': 'input',
+    'ui:widget': 'radio',
     'ui:options': {
-      type: 'text',
-      placeholder: '',
+      initialValue: true,
+      options: [
+        { label: '是', value: true },
+        { label: '否', value: false },
+      ],
     },
-    'ui:rules': [
-      { required: true, message: '请输入角色编码' },
-      { max: 25, message: '最多输入25字符' },
-    ], // 校验规则
+    'ui:rules': [{ required: true, message: '请输入角色编码' }], // 校验规则
     'ui:title': '锁定',
     'ui:description': '',
     'ui:formItemConfig': {
-      hasFeedback: true,
+      // hasFeedback: true,
       // "extra":"121212",//未设置取ui:description
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
     }, // Form.Item 配置
   },
   parentId: {
-    'ui:widget': 'input',
+    'ui:widget': 'treeSelect', // 级联
     'ui:options': {
-      type: 'text',
-      placeholder: '',
+      // fieldNames: { title: 'name', value: 'id', key: 'id' },
+      treeData: treeData(arr),
     },
-    'ui:rules': [
-      { required: true, message: '请输入角色编码' },
-      { max: 25, message: '最多输入25字符' },
-    ], // 校验规则
-    'ui:title': '所属菜单',
-    'ui:description': '',
+    'ui:rules': [{ required: true, message: '请选择模块!' }], // 校验规则
+    'ui:title': '所属菜单', // 未设置取schema 中定义的title
+    'ui:description': '请选择模块',
     'ui:formItemConfig': {
       hasFeedback: true,
       // "extra":"121212",//未设置取ui:description
+      // label: '角色', // 未设置取ui:title,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
     }, // Form.Item 配置
   },
   icon: {
-    'ui:widget': 'input',
+    'ui:widget': 'treeSelect', // 级联
     'ui:options': {
-      type: 'text',
-      placeholder: '',
+      // fieldNames: { title: 'name', value: 'id', key: 'id' },
+      treeData: iconTreeData(icon),
     },
-    'ui:rules': [
-      { required: true, message: '请输入角色编码' },
-      { max: 25, message: '最多输入25字符' },
-    ], // 校验规则
-    'ui:title': '图标',
-    'ui:description': '',
+    'ui:rules': [{ required: true, message: '请选择模块!' }], // 校验规则
+    'ui:title': '图标', // 未设置取schema 中定义的title
+    'ui:description': '请选择图标',
     'ui:formItemConfig': {
       hasFeedback: true,
       // "extra":"121212",//未设置取ui:description
+      // label: '角色', // 未设置取ui:title,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
-    }, // Form.Item 配置
+    },
   },
 };

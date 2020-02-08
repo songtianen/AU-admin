@@ -18,6 +18,7 @@ const buildMenu = (parentMenu, menuList) => {
   }
   parentMenu.children.push(...children);
 };
+// 构建有相应权限的菜单
 const buildAccessMenu = (parentMenu, menuList, userPermission) => {
   parentMenu.children = [];
   let children = menuList.filter((item) => {
@@ -69,6 +70,7 @@ const copyMenu = (menuList) => {
 };
 
 let menuService = {
+  // 获取所有的未经处理菜单
   getAllMenuList,
   getAllMenuWithPage: async (
     pageIndex,
@@ -111,20 +113,6 @@ let menuService = {
   },
   // 可访问的菜单
   AccessMenuList: (req, userInfo, doc) => {
-    // for (let i = 0; i < dbConfig.menu.length; i++) {
-    //   AccessMemuModel.create({ ...dbConfig.menu[i] }, function (err, small) {
-    //     if (err) return console.log('AccessMemuModel数据哭创建错误', err)
-    //     return console.log('AccessMemuModel数据创建成功', small)
-    //   })
-    // }
-    // FunctionModel.create(dbConfig.function, function (err, small) {
-    //     // console.log('dbC22222222', ...dbConfig.function)
-    //     if (err) { console.log('AccessMemuModel数据哭创建错误', err) }
-    //   })
-    // eslint-disable-next-line handle-callback-err
-    // AccessMemuModel.update({ _id: '5cb4c606baa89e4c057d0890' }, { $set: { ID: 1 } }, function (err, doc) {
-    //   console.log('更新数据库测试', doc)
-    // })
     let user = req.user;
     // let menuList = doc && doc.length > 0 ? doc : dbConfig.menu;
     let menuList = doc;
@@ -242,6 +230,9 @@ let menuService = {
       });
     }
     return copy;
+  },
+  editMenu: async () => {
+    return '123';
   },
 };
 module.exports = menuService;

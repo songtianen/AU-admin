@@ -1,7 +1,7 @@
 import React from 'react';
 // import { connect } from 'react-redux';
-import { Table, Popconfirm, Divider, notification } from 'antd';
-import { getAllMenu, delRole, delRoles, saveRole } from '../../../api';
+import { Table, Divider, notification, Badge } from 'antd';
+import { getAllMenu, editMenu, delRoles, saveRole } from '../../../api';
 
 import SearchForm from '../../../schema/SearchForm/SearchForm';
 import schema from '../../../schema/Menu';
@@ -32,6 +32,7 @@ class Menu extends React.PureComponent {
     },
     loading: false, // table 加载
     editModalVisible: false, // modal 模态框的 显示
+    isEditModal: false,
   };
 
   columns = [
@@ -68,11 +69,33 @@ class Menu extends React.PureComponent {
       title: '左侧菜单',
       dataIndex: 'leftMenu',
       sorter: true,
+      render: (text) => {
+        return text ? (
+          <div style={{ textAlign: 'center' }}>
+            <Badge status='success' />
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            <Badge status='error' />
+          </div>
+        );
+      },
     },
     {
       title: '是否锁定',
       dataIndex: 'isLock',
       sorter: true,
+      render: (text) => {
+        return text ? (
+          <div style={{ textAlign: 'center' }}>
+            <Badge status='success' />
+          </div>
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            <Badge status='error' />
+          </div>
+        );
+      },
     },
     {
       title: '操作',
@@ -89,13 +112,13 @@ class Menu extends React.PureComponent {
             >
               编辑
             </a>
-            <Divider type='vertical' />
+            {/* <Divider type='vertical' />
             <Popconfirm
               title='确定删除?'
               onConfirm={() => this.delRole(record)}
             >
               <a>删除</a>
-            </Popconfirm>
+            </Popconfirm> */}
           </div>
         );
       },
@@ -168,6 +191,7 @@ class Menu extends React.PureComponent {
     this.editFormData = {};
     this.setState({
       editModalVisible: true,
+      isEditModal: false,
     });
   };
 
@@ -212,43 +236,46 @@ class Menu extends React.PureComponent {
   editModalOnCancel = () => {
     this.setState({
       editModalVisible: false,
+      isEditModal: false,
     });
   };
 
   // modal
-  saveRole = async (data) => {
+  modalSubmit = async (data) => {
     let formData = { ...this.editFormData, ...data };
-    try {
-      await saveRole(formData);
-      this.setState({
-        editModalVisible: false,
-      });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: '保存成功',
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
+    if (this.state.isEditModal) {
+      try {
+        await editMenu(formData);
+        this.setState({
+          editModalVisible: false,
+          isEditModal: false,
+        });
+        notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: '保存成功',
+        });
+      } catch (e) {
+        notification.error({
+          message: e,
+        });
+      }
+    } else {
+      try {
+        await saveRole(formData);
+        this.setState({
+          editModalVisible: false,
+        });
+        notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: '保存成功',
+        });
+      } catch (e) {
+        notification.error({
+          message: e,
+        });
+      }
     }
-    this.refresh();
-  };
 
-  // table delete Popconfirm
-  delRole = async (record) => {
-    const { id } = record;
-    try {
-      await delRole({ id });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: '删除成功',
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
-    }
     this.refresh();
   };
 
@@ -257,10 +284,7 @@ class Menu extends React.PureComponent {
     let obj = Object.assign(
       {},
       {
-        id: record.id,
-        name: record.name,
-        code: record.code,
-        description: record.description,
+        ...record,
       },
     );
     // console.log('fuck-0000', record);
@@ -348,7 +372,7 @@ class Menu extends React.PureComponent {
           schema={schema.editSchema}
           uiSchema={schema.editUiSchema}
           formData={this.editFormData}
-          handFormSubmit={this.saveRole}
+          handFormSubmit={this.modalSubmit}
         />
       </div>
     );
