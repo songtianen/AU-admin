@@ -1,10 +1,11 @@
 const { getUserInfoById } = require('../services/userService');
+const { checkParametersEmpety } = require('../util/util');
 const menuService = require('../services/menuService');
 const { getRoleFunctions } = require('../services/roleService');
 const { businessError, success } = require('../lib/responseTemplate');
 
 const getAccessMenuList = ({ req, res }) => {
-  console.log('获取菜单', req.user);
+  // console.log('获取菜单', req.user);
   getUserInfoById(req.user.userId).then((userInfo) => {
     menuService.getAllMenuList().then((doc) => {
       let menuList = menuService.AccessMenuList(req, userInfo, doc);
@@ -15,7 +16,7 @@ const getAccessMenuList = ({ req, res }) => {
 
 // 获取所有菜单
 const getAllMenuWithPage = ({ req, res }) => {
-  console.log('获取菜单列表', req.query);
+  // console.log('获取菜单列表', req.query);
   let pageIndex = req.query.pageIndex;
   let pageSize = req.query.pageSize;
   let sortBy = req.query.sortBy;
@@ -52,30 +53,73 @@ const saveMenu = ({ req, res }) => {
     });
 };
 
+const addMenu = async ({ req, res }) => {
+  let { title, name, functionCode, path } = req.body;
+  let menuData = req.body;
+  // 非空验证
+  const isEmpety = await checkParametersEmpety(menuData);
+
+  if (isEmpety.msg || isEmpety.keys.length) {
+    return businessError({ res, msg: isEmpety.msg, data: isEmpety.keys });
+  }
+  if (isEmpety.keys.length === 0 && isEmpety.msg === '') {
+    // console.log('添加menudoc', isEmpety);
+    menuService
+      // 验证数据库内是否同名
+      .checkSameItemsInDB({ title }, { name }, { functionCode }, { path })
+      .then((data) => {
+        let msg = '';
+        if (data && data.length) {
+          data.forEach((item) => {
+            let key = Object.keys(item).pop();
+            let val = item[key];
+            msg += `已存在:${val},`;
+          });
+        }
+        return {
+          err: data,
+          msg,
+        };
+      })
+      .then((data) => {
+        if (data.err.length && data.msg) {
+          return businessError({ res, data: data.err, msg: data.msg });
+        }
+        if (data.err.length === 0 && data.msg === '') {
+          menuService
+            .addMenu(menuData)
+            .then((resdata) => {
+              success({ res, msg: '数据库保存成功' });
+            })
+            .catch((e) => {
+              businessError({ res, msg: e.msg });
+            });
+        }
+      })
+      .catch((e) => {
+        businessError({ res, msg: e.msg });
+      });
+  }
+};
+
 const editMenu = ({ req, res }) => {
   const menu = req.body;
-  if (menu.name === '') {
-    return businessError({ res, msg: '名称不能为空!' });
-  }
-  if (menu.title === '') {
-    return businessError({ res, msg: '标题不能为空!' });
-  }
-  if (menu.icon === '') {
-    return businessError({ res, msg: '请选择图标!' });
-  }
+  const data = Object.assign({}, { ...menu });
+  delete data._id;
+  delete data.__v;
+
   menuService
-    .editMenu()
+    .editMenu(data)
     .then((doc) => {
       return success({ res, data: doc });
     })
-    .catch(() => {
-      businessError({ res, msg: '服务器错误' });
+    .catch((e) => {
+      businessError({ res, msg: e });
     });
 };
 
 // 角色权限管理
 const getMenufunctions = async ({ req, res }) => {
-  console.log('moduleID', req.query.menuId);
   let menuId = req.query.menuId;
   let roleId = req.query.roleId;
   let [menuFunctions, roleFunctions] = await Promise.all([
@@ -97,4 +141,5 @@ module.exports = {
   getMenufunctions,
   getAllMenuWithPage,
   editMenu,
+  addMenu,
 };

@@ -6,6 +6,7 @@ const {
   saveMenu,
   getMenufunctions,
   editMenu,
+  addMenu,
 } = require('../controllers/menu');
 
 const router = express.Router();
@@ -23,12 +24,15 @@ router.post(
   },
 );
 router.post(
-  '/editmenu',
+  '/addmenu',
   PermissionCheck({ permission: ['menu_edit'] }),
   (req, res) => {
-    editMenu({ req, res });
+    addMenu({ req, res });
   },
 );
+router.post('/editmenu', PermissionCheck({ permission: [] }), (req, res) => {
+  editMenu({ req, res });
+});
 // 角色权限接口
 router.get('/menufunctions', (req, res) => {
   getMenufunctions({ req, res });

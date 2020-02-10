@@ -3,7 +3,7 @@ import util from '../../util/util';
 
 const treeData = util.treeData;
 const iconTreeData = util.iconTreeData;
-console.log('图标树', iconTreeData(icon));
+// console.log('图标树', iconTreeData(icon));
 const arr = JSON.parse(localStorage.getItem('accessMenu'));
 
 export default {
@@ -129,6 +129,33 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
     }, // Form.Item 配置
+  },
+  sort: {
+    'ui:widget': 'input',
+    'ui:options': {
+      type: 'text',
+      placeholder: '请输入数字',
+      // onBlur: (e) => {
+      //   const value = e.target.value;
+      //   // console.log(value);
+      // },
+    },
+    'ui:rules': [
+      { required: true, message: '输入数字' },
+      { max: 25, message: '最多输入25字符' },
+    ], // 校验规则
+    'ui:title': '排序',
+    'ui:description': '',
+    'ui:formItemConfig': {
+      hasFeedback: true,
+      // "extra":"121212",//未设置取ui:description
+      labelCol: { span: 6 },
+      wrapperCol: { span: 16 },
+    }, // Form.Item 配置
+    // 'ui:onBlur': (e) => {
+    //   const value = e.target.value;
+    //   // console.log(value);
+    // },
   },
   parentId: {
     'ui:widget': 'treeSelect', // 级联

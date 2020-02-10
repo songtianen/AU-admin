@@ -86,9 +86,9 @@ let menuService = {
         return o.functionCode.indexOf(filter.functionCode) > -1;
       });
     }
-    if (filter.name) {
+    if (filter.title) {
       menuLists = _.filter(menuLists, (o) => {
-        return o.name.indexOf(filter.name) > -1;
+        return o.title.indexOf(filter.title) > -1;
       });
     }
 
@@ -231,8 +231,42 @@ let menuService = {
     }
     return copy;
   },
-  editMenu: async () => {
-    return '123';
+  editMenu: async (data) => {
+    if (data) {
+      const isUpdate = AccessMemuModel.updateOne(
+        {
+          id: data.id,
+        },
+        {
+          ...data,
+        },
+      );
+      return isUpdate;
+    }
+    return new Error({ msg: '数据库修改错误' });
+  },
+  addMenu: async (data) => {
+    if (data) {
+      const isCreate = await AccessMemuModel.create({
+        ...data,
+        id: uuidv4(),
+      });
+      return isCreate;
+    }
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject({ msg: '没有参数' });
+  },
+  checkSameItemsInDB: async (...data) => {
+    let arr = [];
+    if (data) {
+      for (let item of data) {
+        const res = await AccessMemuModel.find({ ...item });
+        if (res && res.length) {
+          arr.push(item);
+        }
+      }
+    }
+    return arr;
   },
 };
 module.exports = menuService;

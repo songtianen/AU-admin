@@ -1,7 +1,7 @@
 import React from 'react';
 // import { connect } from 'react-redux';
 import { Table, Divider, notification, Badge } from 'antd';
-import { getAllMenu, editMenu, delRoles, saveRole } from '../../../api';
+import { getAllMenu, editMenu, delRoles, addMenu } from '../../../api';
 
 import SearchForm from '../../../schema/SearchForm/SearchForm';
 import schema from '../../../schema/Menu';
@@ -98,6 +98,11 @@ class Menu extends React.PureComponent {
       },
     },
     {
+      title: '排序',
+      dataIndex: 'sort',
+      sorter: true,
+    },
+    {
       title: '操作',
       dataIndex: 'id',
       fixed: 'right',
@@ -132,7 +137,7 @@ class Menu extends React.PureComponent {
     this.setState({ loading: true });
     let ResData = await getAllMenu(query);
     let data = ResData.data;
-    const pagination = { ...this.state.tablePagination };
+    const pagination = { ...this.state.pagination };
     pagination.total = data.totalCount;
     this.setState({
       loading: false,
@@ -242,8 +247,9 @@ class Menu extends React.PureComponent {
 
   // modal
   modalSubmit = async (data) => {
-    let formData = { ...this.editFormData, ...data };
     if (this.state.isEditModal) {
+      let formData = { ...this.editFormData, ...data };
+
       try {
         await editMenu(formData);
         this.setState({
@@ -256,12 +262,12 @@ class Menu extends React.PureComponent {
         });
       } catch (e) {
         notification.error({
-          message: e,
+          message: e.msg,
         });
       }
     } else {
       try {
-        await saveRole(formData);
+        await addMenu(data);
         this.setState({
           editModalVisible: false,
         });
@@ -271,11 +277,10 @@ class Menu extends React.PureComponent {
         });
       } catch (e) {
         notification.error({
-          message: e,
+          message: e.msg,
         });
       }
     }
-
     this.refresh();
   };
 
@@ -291,6 +296,7 @@ class Menu extends React.PureComponent {
     this.editFormData = { ...obj };
     this.setState({
       editModalVisible: true,
+      isEditModal: true,
     });
   };
 

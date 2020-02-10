@@ -136,12 +136,16 @@ util.treeData = (data) => {
 };
 util.iconTreeData = (data) => {
   const changeData = function(params) {
-    let count = 1;
+    // let count = 1;
     for (let i = 0; i < params.length; i++) {
-      params[i].key = `${params[i].icon}${count++}`;
+      params[i].key = `${i}`;
+      params[i].value = `${i}`;
+      params[i].selectable = false;
       params[i].children = params[i].icons;
       if (params[i].icon) {
         params[i].value = params[i].icon;
+        params[i].selectable = true;
+        params[i].key = params[i].icon;
         params[i].title = (
           <span>
             <Icon type={params[i].icon} style={{ color: '#08c' }} />

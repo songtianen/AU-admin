@@ -55,13 +55,15 @@ service.interceptors.request.use(
 // respone interceptor
 service.interceptors.response.use(
   (response) => {
-    console.log('axios --- service.interceptors.response.use', response);
     loading.hide(response.config);
     const res = response;
     if (res.status !== 200 || res.data.statusCode !== 200) {
-      notification.error(res.msg ? res.msg : res.data.msg);
+      notification.error({
+        message: res.msg ? res.msg : res.data.msg,
+      });
       // 可提前拦截请求错误
-      return Promise.reject(res.msg ? res.msg : res.data.msg);
+      // eslint-disable-next-line prefer-promise-reject-errors
+      return Promise.reject({ msg: res.msg ? res.msg : res.data.msg });
     }
     return response.data;
   },
@@ -76,13 +78,13 @@ service.interceptors.response.use(
         history.push('/login');
       }, 1000);
     } else if (error.response && error.response.status === 500) {
-      notification.error('系统错误!');
+      notification.error({ message: '系统错误!' });
     } else if (error.message && error.message.indexOf('timeout') > -1) {
-      notification.error('网络超时!');
+      notification.error({ message: '网络超时!' });
     } else if (error === '403') {
-      notification.error('没有请求权限!');
+      notification.error({ message: '没有请求权限!' });
     } else {
-      notification.error('网络错误!');
+      notification.error({ message: '网络错误!' });
     }
     return Promise.reject(error);
   },

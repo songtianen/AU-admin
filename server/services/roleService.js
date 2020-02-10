@@ -164,7 +164,7 @@ module.exports = {
     }
     // eslint-disable-next-line new-cap
     if (role.id) {
-      console.log('查询数据库save===--id', role.id);
+      // console.log('查询数据库save===--id', role.id);
       await RoleModel.where({ id: role.id }).update({ $set: { ...role } });
     } else {
       await RoleModel.create({

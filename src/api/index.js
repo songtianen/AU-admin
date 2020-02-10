@@ -141,7 +141,16 @@ export function editMenu(menu) {
     method: 'post',
     data: menu,
     loading: 'message',
-    permission: ['menu_edit'],
+    // permission: ['menu_edit'],
+  });
+}
+export function addMenu(menu) {
+  return request({
+    url: '/menu/addmenu',
+    method: 'post',
+    data: menu,
+    loading: 'message',
+    // permission: ['menu_edit'],
   });
 }
 
