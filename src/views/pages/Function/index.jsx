@@ -120,18 +120,6 @@ class Function extends React.PureComponent {
 
   // table 表格 分页、排序、筛选变化时触发
   handleTableChange = (pagination, filters, sorter) => {
-    // console.log(
-    //   'Function  table 表格 分页、排序、筛选变化时触发 pagination----',
-    //   pagination,
-    // );
-    // console.log(
-    //   'Function  table 表格 分页、排序、筛选变化时触发 filters----',
-    //   filters,
-    // );
-    // console.log(
-    //   'Function  table 表格 分页、排序、筛选变化时触发 sorter----',
-    //   sorter,
-    // );
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     pager.pageSize = pagination.pageSize;

@@ -153,6 +153,15 @@ export function addMenu(menu) {
     // permission: ['menu_edit'],
   });
 }
+export function delMenus(data) {
+  return request({
+    url: '/menu/delmenus',
+    method: 'post',
+    data,
+    loading: 'message',
+    // permission: ['menu_edit'],
+  });
+}
 
 export function getMenuFunctions(menuId) {
   return request({

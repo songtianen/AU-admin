@@ -118,6 +118,19 @@ const editMenu = ({ req, res }) => {
     });
 };
 
+const delMenus = ({ req, res }) => {
+  console.log('删除菜单', req.body);
+  const { ids } = req.body;
+  menuService
+    .delMenus(ids)
+    .then((doc) => {
+      return success({ res, data: doc });
+    })
+    .catch((e) => {
+      businessError({ res, msg: e.msg });
+    });
+};
+
 // 角色权限管理
 const getMenufunctions = async ({ req, res }) => {
   let menuId = req.query.menuId;
@@ -142,4 +155,5 @@ module.exports = {
   getAllMenuWithPage,
   editMenu,
   addMenu,
+  delMenus,
 };

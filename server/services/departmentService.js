@@ -141,7 +141,8 @@ const delDepartment = async ({ departmentIds }) => {
     const isdel = DepartmentModel.deleteMany({ id: departmentIds });
     return isdel;
   } else {
-    return new Error({ msg: '服务器错误' });
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject({ msg: '服务器错误' });
   }
 };
 const editDepartment = async ({ id, data }) => {
@@ -152,7 +153,8 @@ const editDepartment = async ({ id, data }) => {
     );
     return db;
   }
-  return new Error({ msg: '编辑失败没有id' });
+  // eslint-disable-next-line prefer-promise-reject-errors
+  return Promise.reject({ msg: '编辑失败没有id' });
 };
 
 module.exports = {

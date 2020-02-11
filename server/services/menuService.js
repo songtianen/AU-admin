@@ -268,5 +268,14 @@ let menuService = {
     }
     return arr;
   },
+  delMenus: async (menuIds) => {
+    if (menuIds) {
+      const isdel = AccessMemuModel.deleteMany({ id: menuIds });
+      return isdel;
+    } else {
+      // eslint-disable-next-line prefer-promise-reject-errors
+      return Promise.reject({ msg: '服务器错误' });
+    }
+  },
 };
 module.exports = menuService;

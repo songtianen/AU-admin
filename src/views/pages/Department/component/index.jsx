@@ -240,6 +240,28 @@ class Department extends React.PureComponent {
     });
   };
 
+  // table 表格 分页、排序、筛选变化时触发
+  handleTableChange = (pagination, filters, sorter) => {
+    const pager = { ...this.state.tablePagination };
+    pager.current = pagination.current;
+    pager.pageSize = pagination.pageSize;
+    this.setState({
+      tablePagination: pager,
+      tableSorter: {
+        field: sorter.field,
+        order: sorter.order,
+      },
+    });
+    let query = {
+      pageIndex: pager.current,
+      pageSize: pager.pageSize,
+      sortBy: sorter.field,
+      descending: sorter.order === 'descend',
+      filter: this.state.tableFilter,
+    };
+    this.fetch(query);
+  };
+
   render() {
     console.log('Role, render');
     const { tableSelectedRowKeys } = this.state;

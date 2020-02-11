@@ -34,10 +34,15 @@ const Department = Loadable({
   loader: () => import('../views/pages/Department/component'),
   loading: ContentLoader,
 });
-// const User = Loadable({
-//   loader: () => import('@/pages/user'),
-//   loading: ContentLoader,
-// });
+const Position = Loadable({
+  loader: () => import('../views/pages/Role/component'),
+  loading: ContentLoader,
+});
+
+const Users = Loadable({
+  loader: () => import('../views/pages/Users/component'),
+  loading: ContentLoader,
+});
 const Page404 = Loadable({
   loader: () => import('../views/common/Page404'),
   loading: ContentLoader,
@@ -50,23 +55,7 @@ const RequestLog = Loadable({
   loader: () => import('../views/common/RequsetLog'),
   loading: ContentLoader,
 });
-// example
-// const PermissionTest = Loadable({
-//   loader: () => import('@/pages/example/PermissionTest'),
-//   loading: ContentLoader,
-// });
-// const SearchForm = Loadable({
-//   loader: () => import('@/pages/example/JsonForm/SearchForm'),
-//   loading: ContentLoader,
-// });
-// const CommonForm = Loadable({
-//   loader: () => import('@/pages/example/JsonForm/CommonForm'),
-//   loading: ContentLoader,
-// });
-// const DynamicForm = Loadable({
-//   loader: () => import('@/pages/example/JsonForm/DynamicForm'),
-//   loading: ContentLoader,
-// });
+
 // key为与后端返回菜单的name相对应
 export default {
   menu: Menu,
@@ -76,16 +65,12 @@ export default {
   rolepermission: RolePermission,
   roleuser: RoleUser,
   userrole: UserRole,
+  position: Position,
   department: Department,
-  // user_index: User,
+  users: Users,
   page404: Page404,
   page403: Page403,
   requestlog: RequestLog,
-  // example
   error_404: Page404,
   error_403: Page403,
-  // permission_test: PermissionTest,
-  // search_form: SearchForm,
-  // common_form: CommonForm,
-  // dynamic_form: DynamicForm,
 };

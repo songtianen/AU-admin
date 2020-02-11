@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Divider } from 'antd';
+import { Button, Divider, Popconfirm } from 'antd';
 
 class AddRemoveComponent extends React.PureComponent {
   onConfirm = () => {
@@ -25,21 +25,16 @@ class AddRemoveComponent extends React.PureComponent {
           {addTitle}
         </Button>
         <Divider type='vertical' />
-        {/* <Popconfirm title='确定删除?' onConfirm={this.onConfirm}> */}
+
         {onConfirm ? (
-          <Button
-            type='danger'
-            disabled={!hasSelected}
-            onClick={onConfirm}
-            icon='delete'
-          >
-            {removeTitle}
-          </Button>
+          <Popconfirm title='确定删除?' onConfirm={onConfirm}>
+            <Button type='danger' disabled={!hasSelected} icon='delete'>
+              {removeTitle}
+            </Button>
+          </Popconfirm>
         ) : (
           ''
         )}
-
-        {/* </Popconfirm> */}
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 // import { connect } from 'react-redux';
 import { Table, Divider, notification, Badge } from 'antd';
-import { getAllMenu, editMenu, delRoles, addMenu } from '../../../api';
+import { getAllMenu, editMenu, delMenus, addMenu } from '../../../api';
 
 import SearchForm from '../../../schema/SearchForm/SearchForm';
 import schema from '../../../schema/Menu';
@@ -109,7 +109,7 @@ class Menu extends React.PureComponent {
       width: 120,
       render: (text, record) => {
         return (
-          <div>
+          <div style={{ textAlign: 'center' }}>
             <a
               onClick={() => {
                 this.editRole(record);
@@ -202,19 +202,13 @@ class Menu extends React.PureComponent {
 
   // button Popconfirm 删除
   batchDelRole = async () => {
-    // const ids = JSON.stringify(
-    //   this.state.tableSelectedRowKeys.map((s) => {
-    //     return s;
-    //   }),
-    // );
-    // console.log('ids????????', ids);
+    console.log(
+      'this.state.tableSelectedRowKeys',
+      this.state.tableSelectedRowKeys,
+    );
     try {
-      await delRoles({
-        ids: JSON.stringify(
-          this.state.tableSelectedRowKeys.map((s) => {
-            return s;
-          }),
-        ),
+      await delMenus({
+        ids: this.state.tableSelectedRowKeys,
       });
       this.setState({
         tableSelectedRowKeys: [],
@@ -225,7 +219,7 @@ class Menu extends React.PureComponent {
       });
     } catch (e) {
       notification.error({
-        message: e,
+        message: e.msg,
       });
     }
     this.refresh();
@@ -302,18 +296,6 @@ class Menu extends React.PureComponent {
 
   // table 表格 分页、排序、筛选变化时触发
   handleTableChange = (pagination, filters, sorter) => {
-    // console.log(
-    //   'Function  table 表格 分页、排序、筛选变化时触发 pagination----',
-    //   pagination,
-    // );
-    // console.log(
-    //   'Function  table 表格 分页、排序、筛选变化时触发 filters----',
-    //   filters,
-    // );
-    // console.log(
-    //   'Function  table 表格 分页、排序、筛选变化时触发 sorter----',
-    //   sorter,
-    // );
     const pager = { ...this.state.pagination };
     pager.current = pagination.current;
     pager.pageSize = pagination.pageSize;
