@@ -159,11 +159,6 @@ const SchemaUtils = {
         uiSchemaProperty['ui:formItemConfig']['extra'] =
           uiSchemaProperty['ui:description'];
       }
-      if (uiSchemaProperty['ui:formItemConfig']['extra'] === undefined) {
-        // 上述不存在ui:description 则 schemaProperty['ui:description']描述
-        uiSchemaProperty['ui:formItemConfig']['extra'] =
-          schemaProperty['description'];
-      }
       // 合并 title 综上
       if (uiSchemaProperty['ui:formItemConfig']['label'] === undefined) {
         uiSchemaProperty['ui:formItemConfig']['label'] =
@@ -201,7 +196,7 @@ const SchemaUtils = {
             for (let required of uiSchemaProperty['ui:required']) {
               // getFieldValue 获取一个输入控件的值 如form表单中的input组件
               if (value && !form.getFieldValue(required.name)) {
-                const a = form.getFieldValue(required.name);
+                // const a = form.getFieldValue(required.name);
                 // console.log('效验表单--===--ooooo', a);
 
                 msg.push(required.message);

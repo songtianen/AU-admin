@@ -13,30 +13,31 @@ const buildDepartList = (deparmentList) => {
     }
   }
 
-  // console.log('AccessMemuModel-----', deparmentList);
   return deparmentList.filter((item) => {
     return item.parentId === '0';
   });
 };
 const buildRoleDepartTree = (deparmentList, roleArr) => {
-  for (let departmenu = 0; departmenu < deparmentList.length; departmenu++) {
-    deparmentList[departmenu].children = [];
-
-    for (let r = 0; r < roleArr.length; r++) {
-      if (roleArr[r].departmentId === deparmentList[departmenu].id) {
-        deparmentList[departmenu].children.push(roleArr[r]);
+  // eslint-disable-next-line no-unused-vars
+  let departmentTree = buildDepartList(deparmentList);
+  const addRole = (params, role) => {
+    for (let i = 0; i < params.length; i++) {
+      for (let r = 0; r < role.length; r++) {
+        if (role[r].departmentId === params[i].id) {
+          params[i].children.push(role[r]);
+        }
+      }
+      if (params[i].children) {
+        addRole(params[i].children, role);
       }
     }
-  }
-  let filterDeparmentList = deparmentList.filter((item) => {
-    if (item.children && item.children.length) {
-      return item;
-    }
-  });
-  // console.log('........filterDeparmentList..', filterDeparmentList);
-  return filterDeparmentList;
+    return params;
+  };
+
+  return addRole(departmentTree, roleArr);
 };
 
+// eslint-disable-next-line no-unused-vars
 const copyMenu = (menuList) => {
   return JSON.parse(JSON.stringify(menuList));
   // let c = [];
@@ -51,17 +52,18 @@ const copyMenu = (menuList) => {
   // // }
   // return c;
 };
+
 const getAllDepartmentAndRole = async (selector = {}) => {
   const deparment = await DepartmentModel.find(selector).exec();
   const roleList = await RoleModel.find(selector).exec();
   // eslint-disable-next-line no-unused-vars
-  let roleArr = copyMenu(roleList);
+  // let roleArr = copyMenu(roleList);
 
   let deparmentList = copyMenu(deparment);
 
   // 总的菜单列表
-  deparmentList = _.sortBy(deparmentList, ['sort']); // 所有菜单
-  const buoldRoleDepartTree = buildRoleDepartTree(deparmentList, roleArr);
+  // deparmentList = _.sortBy(deparmentList, ['sort']); // 所有菜单
+  const buoldRoleDepartTree = buildRoleDepartTree(deparmentList, roleList);
   return buoldRoleDepartTree;
 };
 const getAllDepartment = async ({
@@ -100,9 +102,11 @@ const getAllDepartment = async ({
     }
   }
   // 返回给前端第几页，的 数量。（）
-  let start = (pageIndex - 1) * pageSize;
-  let end = pageIndex * pageSize;
-  departmentList = _.slice(departmentList, start, end);
+  if (pageIndex && pageSize) {
+    let start = (pageIndex - 1) * pageSize;
+    let end = pageIndex * pageSize;
+    departmentList = _.slice(departmentList, start, end);
+  }
   return {
     totalCount: totalCount,
     rows: departmentList,
@@ -145,10 +149,10 @@ const delDepartment = async ({ departmentIds }) => {
     return Promise.reject({ msg: '服务器错误' });
   }
 };
-const editDepartment = async ({ id, data }) => {
-  if (id) {
-    let db = await DepartmentModel.update(
-      { id: id },
+const editDepartment = async (data) => {
+  if (data.id) {
+    let db = await DepartmentModel.updateOne(
+      { id: data.id },
       { $set: { title: data.name, ...data } },
     );
     return db;

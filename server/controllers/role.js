@@ -21,7 +21,11 @@ module.exports = {
       filter,
     );
     // console.log('请求角色', pagedList);
-    responseTemplate.success({ res, data: pagedList });
+    responseTemplate.success({
+      res,
+      data: pagedList,
+      info: 'getRolePagedList',
+    });
   },
   saveRole: ({ req, res }) => {
     let func = req.body;
@@ -78,14 +82,13 @@ module.exports = {
   },
   addRoleForUser: async ({ req, res }) => {
     const { moduleId, userId } = req.body;
-    const roleId = moduleId.pop();
     roleService
-      .addRoleForUser({ roleId, userId })
+      .addRoleForUser(moduleId, userId)
       .then((doc) => {
-        return success({ res, data: '' });
+        return success({ res, data: '', msg: '服务器保存成功' });
       })
-      .catch(() => {
-        return businessError({ res, msg: '服务器错误' });
+      .catch((e) => {
+        return businessError({ res, msg: e.msg });
       });
   },
   // 删除Role,里面的userId

@@ -1,11 +1,9 @@
 import React from 'react';
-import { Table, Divider, Modal, Tag, Button, notification } from 'antd';
-import { getAllUser, saveUser, delUsers, editUserInfo } from '../../../../api';
+import { Table, Modal, Tag, Button } from 'antd';
+import { getAllUser } from '../../../../api';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
 import schema from '../../../../schema/UserRole';
 import EditUserRoleModalContent from './editUserRoleModalContent';
-import AddRemoveComponent from '../../Common/AddRemoveConponent';
-import CommonModal from '../../Common/CommonModal';
 
 class UserRole extends React.PureComponent {
   state = {
@@ -30,8 +28,6 @@ class UserRole extends React.PureComponent {
     },
     tableLoading: false,
     editTableVisible: false,
-    editCommonModalVisible: false,
-    isAddUser: false,
   };
 
   columns = [
@@ -67,15 +63,7 @@ class UserRole extends React.PureComponent {
       width: 140,
       render: (text, record) => {
         return (
-          <div>
-            <a
-              onClick={() => {
-                this.editUser(record);
-              }}
-            >
-              编辑
-            </a>
-            <Divider type='vertical' />
+          <div style={{ textAlign: 'center' }}>
             <a onClick={() => this.editUserRole(record)}>角色编辑</a>
           </div>
         );
@@ -131,7 +119,6 @@ class UserRole extends React.PureComponent {
   };
 
   editUserRole = (record) => {
-    console.log('编辑用户', record);
     this.editFormData = { ...record };
     this.setState({
       editTableVisible: true,
@@ -142,59 +129,6 @@ class UserRole extends React.PureComponent {
   editModalOnCancel = () => {
     this.setState({
       editTableVisible: false,
-    });
-  };
-
-  //  button 新增
-  addUser = () => {
-    this.editFormData = {};
-    this.setState({
-      editCommonModalVisible: true,
-      isAddUser: true,
-    });
-  };
-
-  // button Popconfirm 删除
-  batchDelUser = async () => {
-    const ids = JSON.stringify(
-      this.state.tableSelectedRowKeys.map((s) => {
-        return s;
-      }),
-    );
-    // console.log('ids????????', ids);
-    try {
-      const result = await delUsers({
-        ids,
-      });
-      console.log('resulr-=====', result);
-      this.setState({
-        tableSelectedRowKeys: [],
-      });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: result.msg,
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
-    }
-    this.refresh();
-  };
-
-  // editCommonModal 的方法
-  editCommonModalOnCancel = () => {
-    this.setState({
-      isAddUser: false,
-      editCommonModalVisible: false,
-    });
-  };
-
-  // table edit Popconfirm
-  editUser = (record) => {
-    this.editFormData = { ...record };
-    this.setState({
-      editCommonModalVisible: true,
     });
   };
 
@@ -234,46 +168,6 @@ class UserRole extends React.PureComponent {
     this.refresh();
   }
 
-  // saveUser
-  editCommonModalSaveUser = async (data) => {
-    // 请求 添加用户接口
-    if (this.state.isAddUser) {
-      try {
-        await saveUser({ ...data });
-        this.setState({
-          isAddUser: false,
-          editCommonModalVisible: false,
-        });
-        notification.success({
-          placement: 'bottomLeft bottomRight',
-          message: '保存成功',
-        });
-      } catch (error) {
-        notification.error({
-          message: error,
-        });
-      }
-    } else {
-      try {
-        const id = this.editFormData.id;
-        const result = await editUserInfo({ id, ...data });
-        this.setState({
-          editCommonModalVisible: false,
-        });
-        notification.success({
-          placement: 'bottomLeft bottomRight',
-          message: result.msg,
-        });
-      } catch (error) {
-        notification.error({
-          message: error,
-        });
-      }
-    }
-
-    this.refresh();
-  };
-
   render() {
     console.log('UserRole render');
     const { tableSelectedRowKeys } = this.state;
@@ -281,7 +175,7 @@ class UserRole extends React.PureComponent {
       selectedRowKeys: tableSelectedRowKeys,
       onChange: this.onSelectChange,
     };
-    const hasSelected = tableSelectedRowKeys.length > 0;
+    // const hasSelected = tableSelectedRowKeys.length > 0;
     return (
       <div style={{ backgroundColor: '#fff', padding: '18px' }}>
         <SearchForm
@@ -289,14 +183,6 @@ class UserRole extends React.PureComponent {
           uiSchema={schema.searchUiSchema}
           handleSubmit={this.handleSearch}
           handleReset={this.handleReset}
-        />
-        <Divider />
-        <AddRemoveComponent
-          addFunc={this.addUser}
-          onConfirm={this.batchDelUser}
-          hasSelected={hasSelected}
-          addTitle={'新增用户'}
-          removeTitle={'删除用户'}
         />
         <Table
           rowSelection={rowSelection}
@@ -312,16 +198,6 @@ class UserRole extends React.PureComponent {
           scroll={{ x: 1000 }}
           size='small'
           bordered
-        />
-        <CommonModal
-          visible={this.state.editCommonModalVisible}
-          title={'新增用户'}
-          onCancel={this.editCommonModalOnCancel}
-          destroyOnClose
-          schema={schema.modalSchema}
-          uiSchema={schema.modalUiSchema}
-          formData={this.editFormData}
-          handFormSubmit={this.editCommonModalSaveUser}
         />
         <Modal
           visible={this.state.editTableVisible}

@@ -1,15 +1,19 @@
+import util from '../../util/util';
+
 export default {
   moduleId: {
-    'ui:widget': 'cascader', // 级联
+    'ui:widget': 'treeSelect', // 级联
     'ui:options': {
       fieldNames: { label: 'name', value: 'id', children: 'children' },
-      options: [],
+      treeData: [],
     }, // 组件属性配置
     'ui:rules': [{ required: true, message: '请选择模块!' }], // 校验规则
     'ui:remoteConfig': {
       apiKey: 'getAllDepartmentAndRole',
       hand: (data) => {
-        return data;
+        console.log('部门与角色树', data);
+        const tree = util.deparmentTreeWithRole(data);
+        return tree;
       }, // 数据处理函数
     },
     'ui:title': '角色', // 未设置取schema 中定义的title

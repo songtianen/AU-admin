@@ -2,7 +2,6 @@ const departmentService = require('../services/departmentService');
 const { businessError, success } = require('../lib/responseTemplate');
 
 const getAllDepartmentAndRole = async ({ req, res }) => {
-  // console.log('部门请求含角色', req.query);
   departmentService
     .getAllDepartmentAndRole()
     .then((doc) => {
@@ -16,16 +15,16 @@ const getAllDepartmentAndRole = async ({ req, res }) => {
 };
 const getAllDepartment = async ({ req, res }) => {
   // console.log('部门请求不含角色', req.query);
-  let pageIndex = req.query.pageIndex;
-  let pageSize = req.query.pageSize;
-  let sortBy = req.query.sortBy;
-  let descending = req.query.descending;
-  let filter = JSON.parse(req.query.filter);
+  let pageIndex = req.query.pageIndex || '';
+  let pageSize = req.query.pageSize || '';
+  let sortBy = req.query.sortBy || '';
+  let descending = req.query.descending || '';
+  let filter = req.query.filter ? JSON.parse(req.query.filter) : '';
   departmentService
     .getAllDepartment({ pageIndex, pageSize, sortBy, descending, filter })
     .then((doc) => {
       // console.log('部门管理', doc);
-      return success({ res, data: doc });
+      return success({ res, data: doc, info: 'getAllDepartment' });
     })
     .catch(() => {
       // console.log('部门管理错误', err);
@@ -77,13 +76,14 @@ const delDepartment = async ({ req, res }) => {
     });
 };
 const editDepartment = async ({ req, res }) => {
-  const { id } = req.body;
-  let data = JSON.parse(JSON.stringify(req.body));
-  delete data.id;
-  // console.log('data', data);
+  // let data = JSON.parse(JSON.stringify(req.body));
+  let data = req.body;
+  console.log('.....', data);
+
   departmentService
-    .editDepartment({ id, data })
+    .editDepartment(data)
     .then((doc) => {
+      console.log('修改部门', doc);
       return success({ res, data: doc });
     })
     .catch((err) => {

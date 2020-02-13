@@ -12,14 +12,6 @@ const { PermissionCheck } = require('../middleware/PermissionCheck');
 const router = express.Router();
 
 router.get(
-  '/departmentandrole',
-  PermissionCheck({ permission: [''] }),
-  (req, res) => {
-    getAllDepartmentAndRole({ req, res });
-  },
-);
-
-router.get(
   '/getAllDepartmentTree',
   PermissionCheck({ permission: [''] }),
   (req, res) => {

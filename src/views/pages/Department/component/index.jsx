@@ -181,11 +181,10 @@ class Department extends React.PureComponent {
 
   // modal
   departmentSubmit = async (data) => {
-    const editData = this.editFormData;
-
+    let formData = { ...this.editFormData, ...data };
     if (this.state.isEditModal) {
       try {
-        await editDepartment(editData);
+        await editDepartment(formData);
         this.setState({
           editModalVisible: false,
           isEditModal: false,
@@ -200,7 +199,6 @@ class Department extends React.PureComponent {
         });
       }
     } else {
-      let formData = { ...this.editFormData, ...data };
       try {
         await addDepartment(formData);
         this.setState({

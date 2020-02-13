@@ -161,7 +161,7 @@ const postDelUser = async (id) => {
 const editUserInfo = async ({ req, res }) => {
   const info = req.body;
   // update不返回文档
-  const edituser = await UserModel.update(
+  const edituser = await UserModel.updateOne(
     { id: info.id },
     {
       ...info,

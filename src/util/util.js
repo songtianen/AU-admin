@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { Icon, Tag } from 'antd';
 
 // eslint-disable-next-line import/no-mutable-exports
 let util = {};
@@ -169,6 +169,26 @@ util.iconTreeData = (data) => {
   // });
 
   return a;
+};
+
+util.deparmentTreeWithRole = (data) => {
+  const changeTree = (dataTree) => {
+    for (let i = 0; i < dataTree.length; i++) {
+      dataTree[i].key = dataTree[i].id;
+      dataTree[i].value = dataTree[i].id;
+      dataTree[i].title = dataTree[i].title;
+      dataTree[i].selectable = false;
+      if (dataTree[i].departmentId) {
+        dataTree[i].selectable = true;
+        dataTree[i].title = <Tag color='green'>{dataTree[i].name}</Tag>;
+      }
+      if (dataTree[i].children) {
+        changeTree(dataTree[i].children);
+      }
+    }
+    return dataTree;
+  };
+  return changeTree(data);
 };
 
 export default util;

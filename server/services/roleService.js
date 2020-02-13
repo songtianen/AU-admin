@@ -165,7 +165,7 @@ module.exports = {
     // eslint-disable-next-line new-cap
     if (role.id) {
       // console.log('查询数据库save===--id', role.id);
-      await RoleModel.where({ id: role.id }).update({ $set: { ...role } });
+      await RoleModel.where({ id: role.id }).updateOne({ $set: { ...role } });
     } else {
       await RoleModel.create({
         ...role,
@@ -189,28 +189,32 @@ module.exports = {
     );
     return db;
   },
-  addRoleForUser: async ({ roleId, userId }) => {
-    // console.log('给用户添加角色', roleId);
-    // 更新RoleModal中的userId：二：更新UserModal中的userRole
-    const updateUserModel = await UserModel.updateOne(
-      { id: userId },
-      {
-        // mongoose 更新添加数组中的元素
-        $addToSet: {
-          userRole: roleId,
+  addRoleForUser: async (roleId, userId) => {
+    if (roleId && userId) {
+      // console.log('给用户添加角色', roleId);
+      // 更新RoleModal中的userId：二：更新UserModal中的userRole
+      const updateUserModel = await UserModel.updateOne(
+        { id: userId },
+        {
+          // mongoose 更新添加数组中的元素
+          $addToSet: {
+            userRole: roleId,
+          },
         },
-      },
-    );
-    const updateRoleModel = await RoleModel.updateOne(
-      { id: roleId },
-      {
-        $addToSet: {
-          userId: userId,
+      );
+      const updateRoleModel = await RoleModel.updateOne(
+        { id: roleId },
+        {
+          $addToSet: {
+            userId: userId,
+          },
         },
-      },
-    );
-    // console.log('updateUserModel', updateUserModel, updateRoleModel);
-    return updateRoleModel && updateUserModel;
+      );
+      // console.log('updateUserModel', updateUserModel, updateRoleModel);
+      return updateRoleModel && updateUserModel;
+    }
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject({ msg: '服务器参数错误' });
   },
   addUserForRole: async ({ userIds, roleId }) => {
     // 1,查询roleid

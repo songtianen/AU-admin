@@ -1,7 +1,13 @@
 import React from 'react';
 // import { connect } from 'react-redux';
-import { Table, Popconfirm, Divider, notification } from 'antd';
-import { getRolePagedList, delRole, delRoles, saveRole } from '../../../../api';
+import { Table, Popconfirm, Divider, notification, Tag } from 'antd';
+import {
+  getRolePagedList,
+  getAllDepartment,
+  delRole,
+  delRoles,
+  saveRole,
+} from '../../../../api';
 // import {
 //   getRolePagedList,
 //   delRoles,
@@ -51,6 +57,20 @@ class Role extends React.PureComponent {
       sorter: true,
     },
     {
+      title: '所属部门',
+      dataIndex: 'departmentId',
+      // eslint-disable-next-line no-unused-vars
+      render: (text, redord) => {
+        return <Tag>{this.departmentName(text)}</Tag>;
+      },
+      sorter: true,
+    },
+    {
+      title: '描述',
+      dataIndex: 'description',
+      sorter: true,
+    },
+    {
       title: '操作',
       dataIndex: 'id',
       fixed: 'right',
@@ -81,9 +101,26 @@ class Role extends React.PureComponent {
   // 模态框 数据组
   editFormData = {};
 
+  departmentList = '';
+
+  departmentName = (id) => {
+    const departmentList = this.departmentList.data.rows;
+    let name = '';
+    departmentList.forEach((item) => {
+      if (item.id === id) {
+        name = item.name;
+      }
+    });
+    return name;
+  };
+
   fetch = async (query = {}) => {
     this.setState({ tableLoading: true });
-    let ResData = await getRolePagedList(query);
+    let [ResData, AllDepartment] = await Promise.all([
+      getRolePagedList(query),
+      getAllDepartment(),
+    ]);
+    this.departmentList = AllDepartment;
     let data = ResData.data;
     const pagination = { ...this.state.tablePagination };
     pagination.total = data.totalCount;
@@ -236,6 +273,7 @@ class Role extends React.PureComponent {
         id: record.id,
         name: record.name,
         code: record.code,
+        departmentId: record.departmentId,
         description: record.description,
       },
     );
