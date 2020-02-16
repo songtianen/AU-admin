@@ -57,13 +57,13 @@ const addMenu = async ({ req, res }) => {
   let { title, name, functionCode, path } = req.body;
   let menuData = req.body;
   // 非空验证
-  const isEmpety = await checkParametersEmpety(menuData);
+  const isEmpty = await checkParametersEmpety(menuData);
 
-  if (isEmpety.msg || isEmpety.keys.length) {
-    return businessError({ res, msg: isEmpety.msg, data: isEmpety.keys });
+  if (isEmpty.msg || isEmpty.keys.length) {
+    return businessError({ res, msg: isEmpty.msg, data: isEmpty.keys });
   }
-  if (isEmpety.keys.length === 0 && isEmpety.msg === '') {
-    // console.log('添加menudoc', isEmpety);
+  if (isEmpty.keys.length === 0 && isEmpty.msg === '') {
+    // console.log('添加menudoc', isEmpty);
     menuService
       // 验证数据库内是否同名
       .checkSameItemsInDB({ title }, { name }, { functionCode }, { path })

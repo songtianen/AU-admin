@@ -14,7 +14,7 @@ const buildDepartList = (deparmentList) => {
   }
 
   return deparmentList.filter((item) => {
-    return item.parentId === '0';
+    return item.parentId === '1';
   });
 };
 const buildRoleDepartTree = (deparmentList, roleArr) => {

@@ -3,9 +3,10 @@ const { PermissionCheck } = require('../middleware/PermissionCheck');
 const {
   getRolePagedList,
   getUserFromRoleId,
-  saveRole,
+  editRole,
   delRoles,
   delRole,
+  addRole,
   savePermission,
   addRoleForUser,
   addUserForRole,
@@ -27,10 +28,10 @@ router.get(
   },
 );
 router.post(
-  '/save',
+  '/edit',
   PermissionCheck({ permission: ['role_edit'] }),
   (req, res) => {
-    saveRole({ req, res });
+    editRole({ req, res });
   },
 );
 
@@ -47,6 +48,13 @@ router.post(
   PermissionCheck({ permission: ['role_del'] }),
   (req, res) => {
     delRole({ req, res });
+  },
+);
+router.post(
+  '/addrole',
+  PermissionCheck({ permission: ['role_del'] }),
+  (req, res) => {
+    addRole({ req, res });
   },
 );
 router.post(

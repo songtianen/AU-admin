@@ -6,7 +6,8 @@ import {
   getAllDepartment,
   delRole,
   delRoles,
-  saveRole,
+  editRole,
+  addRole,
 } from '../../../../api';
 // import {
 //   getRolePagedList,
@@ -43,6 +44,7 @@ class Role extends React.PureComponent {
     },
     tableLoading: false, // table 加载
     editModalVisible: false, // modal 模态框的 显示
+    isEditRole: false,
   };
 
   columns = [
@@ -61,7 +63,7 @@ class Role extends React.PureComponent {
       dataIndex: 'departmentId',
       // eslint-disable-next-line no-unused-vars
       render: (text, redord) => {
-        return <Tag>{this.departmentName(text)}</Tag>;
+        return <Tag color='green'>{this.departmentName(text)}</Tag>;
       },
       sorter: true,
     },
@@ -181,6 +183,7 @@ class Role extends React.PureComponent {
     this.editFormData = {};
     this.setState({
       editModalVisible: true,
+      isEditRole: false,
     });
   };
 
@@ -229,22 +232,42 @@ class Role extends React.PureComponent {
   };
 
   // modal
-  saveRole = async (data) => {
+  commonModalSubmit = async (data) => {
     let formData = { ...this.editFormData, ...data };
-    try {
-      await saveRole(formData);
-      this.setState({
-        editModalVisible: false,
-      });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: '保存成功',
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
+    let isEditRole = this.state.isEditRole;
+    if (isEditRole) {
+      try {
+        await editRole(formData);
+        this.setState({
+          editModalVisible: false,
+          isEditRole: false,
+        });
+        notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: '保存成功',
+        });
+      } catch (e) {
+        notification.error({
+          message: e.msg,
+        });
+      }
+    } else {
+      try {
+        await addRole(formData);
+        this.setState({
+          editModalVisible: false,
+        });
+        notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: '保存成功',
+        });
+      } catch (e) {
+        notification.error({
+          message: e.msg,
+        });
+      }
     }
+
     this.refresh();
   };
 
@@ -281,6 +304,7 @@ class Role extends React.PureComponent {
     this.editFormData = { ...obj };
     this.setState({
       editModalVisible: true,
+      isEditRole: true,
     });
   };
 
@@ -350,7 +374,7 @@ class Role extends React.PureComponent {
           schema={schema.editSchema}
           uiSchema={schema.editUiSchema}
           formData={this.editFormData}
-          handFormSubmit={this.saveRole}
+          handFormSubmit={this.commonModalSubmit}
         />
       </div>
     );

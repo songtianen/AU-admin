@@ -286,9 +286,17 @@ export function delRoles(ids) {
   });
 }
 
-export function saveRole(data) {
+export function editRole(data) {
   return request({
-    url: '/role/save',
+    url: '/role/edit',
+    method: 'post',
+    data,
+    loading: 'message',
+  });
+}
+export function addRole(data) {
+  return request({
+    url: '/role/addrole',
     method: 'post',
     data,
     loading: 'message',

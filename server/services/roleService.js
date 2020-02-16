@@ -22,41 +22,6 @@ const findRoleById = async (id) => {
 };
 module.exports = {
   getRolePagedList: async (pageIndex, pageSize, sortBy, descending, filter) => {
-    // 创建数据库
-    // RolePermission.create(
-    //   {
-    //     name: '',
-    //     code: '',
-    //     moduleId: '',
-    //     roleId: '',
-    //     permission: [],
-    //     id: uuidv4(),
-    //   },
-    //   function(err, doc) {
-    //     console.log('插入新文档', err, doc);
-    //   },
-    // );
-    // 数据库插入一条数据
-    // const insertRole = new RoleModel({
-    //   code: 'role_test',
-    //   name: '测试账号',
-    //   description: '',
-    //   permission: [],
-    //   id: uuidv4(),
-    // });
-    // insertRole.save();
-    // 数据库更新一条数据
-    // User.update(
-    //   { userName: 'song' },
-    //   {
-    //     $set: {
-    //       userRole: ['role_test', 'role_website_admin'],
-    //     },
-    //   },
-    //   function(err, doc) {
-    //     console.log('更新数据库测试', err, doc);
-    //   },
-    // );
     // 如果有UserId就获取相应用户的角色列表
     if (filter.userId) {
       const userId = filter.userId;
@@ -133,9 +98,11 @@ module.exports = {
       }
     }
     // 返回给前端第几页，的 数量。（）
-    let start = (pageIndex - 1) * pageSize;
-    let end = pageIndex * pageSize;
-    roleLists = _.slice(roleLists, start, end);
+    if (pageIndex && pageSize) {
+      let start = (pageIndex - 1) * pageSize;
+      let end = pageIndex * pageSize;
+      roleLists = _.slice(roleLists, start, end);
+    }
     return {
       totalCount: totalCount,
       rows: roleLists,
@@ -145,7 +112,41 @@ module.exports = {
     const isRemoveRole = await RoleModel.findOneAndDelete({ id: id });
     return isRemoveRole;
   },
-  saveRole: async (role) => {
+  editRole: async (role) => {
+    let exist = await RoleModel.findOne({ code: role.code });
+    // console.log('查询数据库save', exist);
+    if (exist && exist.id !== role.id) {
+      return {
+        success: false,
+        msg: '角色编码已经存在',
+      };
+    }
+    let exist1 = await RoleModel.findOne({ name: role.name });
+    // console.log('查询数据库save', exist);
+    if (exist1 && exist1.id !== role.id) {
+      return {
+        success: false,
+        msg: '角色名称已经存在',
+      };
+    }
+    // eslint-disable-next-line new-cap
+    if (role.id) {
+      // console.log('查询数据库save===--id', role.id);
+      const res = await RoleModel.where({ id: role.id }).updateOne({
+        $set: { ...role },
+      });
+      return {
+        success: true,
+        msg: '',
+        data: res,
+      };
+    }
+    return {
+      success: false,
+      msg: '参数错误',
+    };
+  },
+  addRole: async (role) => {
     let exist = await RoleModel.findOne({ code: role.code });
     // console.log('查询数据库save', exist);
     if (exist && exist.id !== role.id) {
@@ -196,7 +197,7 @@ module.exports = {
       const updateUserModel = await UserModel.updateOne(
         { id: userId },
         {
-          // mongoose 更新添加数组中的元素
+          // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
           $addToSet: {
             userRole: roleId,
           },
@@ -205,6 +206,7 @@ module.exports = {
       const updateRoleModel = await RoleModel.updateOne(
         { id: roleId },
         {
+          // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
           $addToSet: {
             userId: userId,
           },
@@ -222,7 +224,7 @@ module.exports = {
       const updateRoleModel = await RoleModel.updateOne(
         { id: roleId },
         {
-          // mongoose 更新添加数组中的元素
+          // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
           $addToSet: {
             userId: userIds,
           },
@@ -250,7 +252,7 @@ module.exports = {
       const updateRoleModel = await RoleModel.updateOne(
         { id: roleId },
         {
-          // 删除数组内多条
+          // pullAll删除数组内多条
           $pullAll: {
             userId: userIds,
           },
@@ -291,7 +293,7 @@ module.exports = {
           id: userId,
         },
         {
-          // 删除数组内多条
+          // pullAll删除数组内多条
           $pullAll: {
             userRole: roleIds,
           },

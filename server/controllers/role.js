@@ -1,18 +1,38 @@
 // 角色
 const roleService = require('../services/roleService');
-// import menuService from '../services/memuService';
-// import functionService from '../services/functionService';
+
+// const { DepartmentModel } = require('../model/model'); // 引入模型
+
 const { businessError, success } = require('../lib/responseTemplate');
 const responseTemplate = require('../lib/responseTemplate');
+const { checkParametersEmpety } = require('../util/util');
+const { commonService } = require('../util/services');
+
+let a = {
+  findDpartment: {
+    name: 'findDpaerment',
+    modalSchema: 'DepartmentModel',
+    func: 'find',
+    query: { name: '董事会' },
+    operator: [{}],
+  },
+  findRole: {
+    name: 'findRole',
+    modalSchema: 'RoleModel',
+    func: 'find',
+    query: { name: '系统管理员' },
+    operator: [{}],
+  },
+};
 
 module.exports = {
   getRolePagedList: async ({ req, res }) => {
     // console.log('获取用户列表', req.query);
-    let pageIndex = req.query.pageIndex;
-    let pageSize = req.query.pageSize;
-    let sortBy = req.query.sortBy;
-    let descending = req.query.descending;
-    let filter = JSON.parse(req.query.filter);
+    let pageIndex = req.query.pageIndex || '';
+    let pageSize = req.query.pageSize || '';
+    let sortBy = req.query.sortBy || '';
+    let descending = req.query.descending || '';
+    let filter = req.query.filter ? JSON.parse(req.query.filter) : '';
     let pagedList = await roleService.getRolePagedList(
       pageIndex,
       pageSize,
@@ -27,9 +47,33 @@ module.exports = {
       info: 'getRolePagedList',
     });
   },
-  saveRole: ({ req, res }) => {
+  editRole: async ({ req, res }) => {
+    let roleData = req.body;
+    console.log('///', roleData);
+    const isEmpty = await checkParametersEmpety(roleData);
+    if (isEmpty.msg || isEmpty.keys.length) {
+      return businessError({ res, msg: isEmpty.msg, data: isEmpty.keys });
+    }
+    if (isEmpty.keys.length === 0 && isEmpty.msg === '') {
+      // 同时
+      const av = await commonService(a);
+
+      console.log('===', await av.findRole.data);
+
+      const editRes = await roleService.editRole(roleData);
+
+      if (!editRes.success) {
+        return businessError({ res, msg: editRes.msg });
+      }
+      if (editRes.success && editRes.data) {
+        return success({ res, msg: '服务器保存成功！' });
+      }
+    }
+  },
+
+  addRole: ({ req, res }) => {
     let func = req.body;
-    // console.log('编辑角色', func);
+    console.log('编辑角色', func);
     if (func.name === '') {
       return responseTemplate.businessError({ res, msg: '名称不能为空!' });
     }
@@ -37,7 +81,7 @@ module.exports = {
       return responseTemplate.businessError({ res, msg: '编码不能为空!' });
     }
     roleService
-      .saveRole(func)
+      .addRole(func)
       .then((result) => {
         // console.log('角色保存', result);
 

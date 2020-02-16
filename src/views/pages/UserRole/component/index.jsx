@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Modal, Tag, Button } from 'antd';
-import { getAllUser } from '../../../../api';
+import { getAllUser, getRolePagedList } from '../../../../api';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
 import schema from '../../../../schema/UserRole';
 import EditUserRoleModalContent from './editUserRoleModalContent';
@@ -53,12 +53,27 @@ class UserRole extends React.PureComponent {
       width: 140,
     },
     {
-      title: 'ID',
-      dataIndex: 'id',
+      title: '所属角色/职位',
+      dataIndex: 'userRole',
+      sorter: true,
+      render: (text, record) => {
+        const data = this.roleName(record.userRole);
+        return (
+          <span>
+            {data.map((i) => {
+              return (
+                <Tag color='green' key={i}>
+                  {i}
+                </Tag>
+              );
+            })}
+          </span>
+        );
+      },
     },
     {
       title: '操作',
-      dataIndex: 'edit',
+      dataIndex: 'id',
       fixed: 'right',
       width: 140,
       render: (text, record) => {
@@ -72,6 +87,27 @@ class UserRole extends React.PureComponent {
   ];
 
   editFormData = {};
+
+  roleList = '';
+
+  // eslint-disable-next-line no-unused-vars
+  roleName = (data) => {
+    let roleList = this.roleList.data.rows;
+    let roleArr = [];
+    for (let i = 0; i < roleList.length; i++) {
+      for (let j = 0; j < data.length; j++) {
+        if (roleList[i].id === data[j]) {
+          if (roleList[i].name) roleArr.push(roleList[i].name);
+        }
+      }
+    }
+    // if (roleArr) {
+    //   roleArr.map((item) => {
+    //     return <Button>/{item}</Button>;
+    //   });
+    // }
+    return roleArr;
+  };
 
   // SearchForm提交
   handleSearch = (filter) => {
@@ -145,7 +181,12 @@ class UserRole extends React.PureComponent {
 
   fetch = async (query = {}) => {
     this.setState({ tableLoading: true });
-    let dataRes = await getAllUser(query);
+    let [dataRes, roleList] = await Promise.all([
+      getAllUser(query),
+      getRolePagedList(),
+    ]);
+    this.roleList = roleList;
+    console.log('getRolePagedList', roleList);
     let data = dataRes.data;
     let pagination = { ...this.state.tablePagination };
     pagination.total = data.totalCount;
