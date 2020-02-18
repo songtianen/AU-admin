@@ -11,6 +11,8 @@ export default {
     },
     'ui:rules': [
       { required: true, message: '请输入角色名称' },
+      { whitespace: true, message: 'no space' },
+
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
     'ui:title': '角色名称',
@@ -34,6 +36,8 @@ export default {
     },
     'ui:rules': [
       { required: true, message: '请输入角色编码' },
+      { whitespace: true, message: 'no space' },
+
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
     'ui:title': '角色编码',

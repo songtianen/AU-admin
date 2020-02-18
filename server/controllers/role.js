@@ -8,23 +8,6 @@ const responseTemplate = require('../lib/responseTemplate');
 const { checkParametersEmpety } = require('../util/util');
 const { commonService } = require('../util/services');
 
-let a = {
-  findDpartment: {
-    name: 'findDpaerment',
-    modalSchema: 'DepartmentModel',
-    func: 'find',
-    query: { name: '董事会' },
-    operator: [{}],
-  },
-  findRole: {
-    name: 'findRole',
-    modalSchema: 'RoleModel',
-    func: 'find',
-    query: { name: '系统管理员' },
-    operator: [{}],
-  },
-};
-
 module.exports = {
   getRolePagedList: async ({ req, res }) => {
     // console.log('获取用户列表', req.query);
@@ -49,19 +32,30 @@ module.exports = {
   },
   editRole: async ({ req, res }) => {
     let roleData = req.body;
-    console.log('///', roleData);
     const isEmpty = await checkParametersEmpety(roleData);
     if (isEmpty.msg || isEmpty.keys.length) {
       return businessError({ res, msg: isEmpty.msg, data: isEmpty.keys });
     }
     if (isEmpty.keys.length === 0 && isEmpty.msg === '') {
-      // 同时
-      const av = await commonService(a);
-
-      console.log('===', await av.findRole.data);
-
+      // 更新部门中的Role
+      let departmentData = {
+        setDepartmentRole: {
+          name: 'setDepartmentRole',
+          modalSchema: 'DepartmentModel',
+          func: 'updateOne',
+          query: { id: roleData.departmentId },
+          operator: [
+            {
+              // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
+              $addToSet: {
+                roleId: roleData.id,
+              },
+            },
+          ],
+        },
+      };
+      await commonService(departmentData);
       const editRes = await roleService.editRole(roleData);
-
       if (!editRes.success) {
         return businessError({ res, msg: editRes.msg });
       }
@@ -71,20 +65,16 @@ module.exports = {
     }
   },
 
-  addRole: ({ req, res }) => {
+  addRole: async ({ req, res }) => {
     let func = req.body;
-    console.log('编辑角色', func);
-    if (func.name === '') {
-      return responseTemplate.businessError({ res, msg: '名称不能为空!' });
-    }
-    if (func.code === '') {
-      return responseTemplate.businessError({ res, msg: '编码不能为空!' });
+    // 非空
+    const isEmpty = await checkParametersEmpety(func);
+    if (isEmpty.msg || isEmpty.keys.length) {
+      return businessError({ res, msg: isEmpty.msg, data: isEmpty.keys });
     }
     roleService
       .addRole(func)
       .then((result) => {
-        // console.log('角色保存', result);
-
         if (!result.success) {
           return responseTemplate.businessError({ res, msg: result.msg });
         } else {
@@ -95,9 +85,9 @@ module.exports = {
           });
         }
       })
-      .catch(() => {
+      .catch((e) => {
         // console.log(err);
-        return responseTemplate.businessError({ res, msg: '数据库保存失败' });
+        return responseTemplate.businessError({ res, msg: e.msg });
       });
   },
 
@@ -110,10 +100,11 @@ module.exports = {
   },
 
   delRoles: async ({ req, res }) => {
-    let ids = JSON.parse(req.body.ids);
-    for (let id of ids) {
-      await roleService.delRole(id);
-    }
+    let { ids, departmentIds } = req.body;
+    console.log('删除多个Role', req.body);
+    await roleService.delRoles({ ids, departmentIds }).then((doc) => {
+      console.log('删除多个Role', doc);
+    });
     return responseTemplate.success({ res, msg: '多条删除成功' });
   },
   savePermission: async ({ req, res }) => {

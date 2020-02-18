@@ -1,10 +1,9 @@
 import React from 'react';
 // import { connect } from 'react-redux';
-import { Table, Popconfirm, Divider, notification, Tag } from 'antd';
+import { Table, Divider, notification, Tag } from 'antd';
 import {
   getRolePagedList,
   getAllDepartment,
-  delRole,
   delRoles,
   editRole,
   addRole,
@@ -79,7 +78,7 @@ class Role extends React.PureComponent {
       width: 120,
       render: (text, record) => {
         return (
-          <div>
+          <div style={{ textAlign: 'center' }}>
             <a
               onClick={() => {
                 this.editRole(record);
@@ -87,13 +86,6 @@ class Role extends React.PureComponent {
             >
               编辑
             </a>
-            <Divider type='vertical' />
-            <Popconfirm
-              title='确定删除?'
-              onConfirm={() => this.delRole(record)}
-            >
-              <a>删除</a>
-            </Popconfirm>
           </div>
         );
       },
@@ -189,19 +181,17 @@ class Role extends React.PureComponent {
 
   // button Popconfirm 删除
   batchDelRole = async () => {
-    // const ids = JSON.stringify(
-    //   this.state.tableSelectedRowKeys.map((s) => {
-    //     return s;
-    //   }),
-    // );
-    // console.log('ids????????', ids);
+    const ids = this.state.tableSelectedRowKeys.map((s) => {
+      return s.id;
+    });
+    const departmentIds = this.state.tableSelectedRowKeys.map((s) => {
+      return s.departmentId;
+    });
+    console.log('ids????????', ids);
     try {
       await delRoles({
-        ids: JSON.stringify(
-          this.state.tableSelectedRowKeys.map((s) => {
-            return s;
-          }),
-        ),
+        ids,
+        departmentIds,
       });
       this.setState({
         tableSelectedRowKeys: [],
@@ -219,9 +209,9 @@ class Role extends React.PureComponent {
   };
 
   // table 选择器
-  onSelectChange = (selectedRowKeys) => {
-    // console.log('table表格选择器', selectedRowKeys);
-    this.setState({ tableSelectedRowKeys: selectedRowKeys });
+  onSelectChange = (selectedRowKeys, selectedRows) => {
+    console.log('table表格选择器', selectedRows);
+    this.setState({ tableSelectedRowKeys: selectedRows });
   };
 
   // modal
@@ -271,23 +261,6 @@ class Role extends React.PureComponent {
     this.refresh();
   };
 
-  // table delete Popconfirm
-  delRole = async (record) => {
-    const { id } = record;
-    try {
-      await delRole({ id });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: '删除成功',
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
-    }
-    this.refresh();
-  };
-
   // table edit Popconfirm
   editRole = (record) => {
     let obj = Object.assign(
@@ -334,7 +307,7 @@ class Role extends React.PureComponent {
     console.log('Role, render');
     const { tableSelectedRowKeys } = this.state;
     const rowSelection = {
-      selectedRowKeys: tableSelectedRowKeys,
+      selectedRowKeys: tableSelectedRowKeys.map((i) => i.id),
       onChange: this.onSelectChange,
     };
     const hasSelected = tableSelectedRowKeys.length > 0;

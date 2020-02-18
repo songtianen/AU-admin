@@ -36,7 +36,6 @@ const commonService = async (serviceSchema) => {
   const nameKeys = Object.keys(serviceSchema);
   for (let i = 0; i < nameKeys.length; i++) {
     const val = serviceSchema[nameKeys[i]];
-    console.log('v-a-l', val);
     serviceData.push(transformSchema(val));
   }
   if (serviceData) {

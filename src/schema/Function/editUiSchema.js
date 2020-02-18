@@ -51,7 +51,10 @@ export default {
       autosize: { minRows: 2, maxRows: 6 },
       placeholder: '',
     },
-    'ui:rules': [{ max: 300, message: '最多输入300字符!' }], // 校验规则
+    'ui:rules': [
+      { whitespace: true, message: 'no space' },
+      { max: 300, message: '最多输入300字符!' },
+    ], // 校验规则
     'ui:title': '功能描述',
     'ui:description': '',
     'ui:formItemConfig': {

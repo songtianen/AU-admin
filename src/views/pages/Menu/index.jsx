@@ -117,13 +117,6 @@ class Menu extends React.PureComponent {
             >
               编辑
             </a>
-            {/* <Divider type='vertical' />
-            <Popconfirm
-              title='确定删除?'
-              onConfirm={() => this.delRole(record)}
-            >
-              <a>删除</a>
-            </Popconfirm> */}
           </div>
         );
       },

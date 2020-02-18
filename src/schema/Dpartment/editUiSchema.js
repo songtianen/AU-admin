@@ -11,6 +11,8 @@ export default {
     },
     'ui:rules': [
       { required: true, message: '请输入部门名称' },
+      { whitespace: true, message: 'no space' },
+
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
     'ui:title': '部门名称',
@@ -34,6 +36,8 @@ export default {
     },
     'ui:rules': [
       { required: true, message: '请输入部门编码' },
+      { whitespace: true, message: 'no space' },
+
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
     'ui:title': '部门编码',

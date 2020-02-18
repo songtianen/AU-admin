@@ -2,6 +2,8 @@
 // 角色
 const { RoleModel, UserModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
+const { commonService } = require('../util/services');
+
 const _ = require('lodash');
 
 const findRoleInfo = async (ids) => {
@@ -110,7 +112,43 @@ module.exports = {
   },
   delRole: async (id) => {
     const isRemoveRole = await RoleModel.findOneAndDelete({ id: id });
+    // console.log('isRemoveRole', isRemoveRole);
+
     return isRemoveRole;
+  },
+  delRoles: async ({ ids, departmentIds }) => {
+    let departmentRemoveRoleIdSchema = {
+      removeDepartmentRole: {
+        name: 'removeDepartmentRole',
+        modalSchema: 'DepartmentModel',
+        func: 'updateMany',
+        query: { id: departmentIds },
+        operator: [
+          {
+            // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
+            $pullAll: {
+              roleId: ids,
+            },
+          },
+        ],
+      },
+    };
+    // 删除部门中的roleId[]
+    await commonService(departmentRemoveRoleIdSchema);
+    // 删除user中的userRole[]
+    await UserModel.updateMany(
+      { userRole: { $in: ids } },
+      {
+        $pullAll: {
+          userRole: ids,
+        },
+      },
+    );
+    const isRemoveRole = await RoleModel.deleteMany({ id: ids });
+    if (isRemoveRole) {
+      return isRemoveRole;
+    }
+    return Promise.reject(new Error({ msg: '错误了song' }));
   },
   editRole: async (role) => {
     let exist = await RoleModel.findOne({ code: role.code });
@@ -163,20 +201,43 @@ module.exports = {
         msg: '角色名称已经存在',
       };
     }
-    // eslint-disable-next-line new-cap
-    if (role.id) {
-      // console.log('查询数据库save===--id', role.id);
-      await RoleModel.where({ id: role.id }).updateOne({ $set: { ...role } });
-    } else {
-      await RoleModel.create({
-        ...role,
-        id: uuidv4(),
-      });
-    }
-    return {
-      success: true,
-      msg: '',
+
+    const created = await RoleModel.create({
+      name: '',
+      code: '',
+      moduleId: 0,
+      description: '',
+      permission: [],
+      userId: [],
+      departmentId: '',
+      ...role,
+      id: uuidv4(),
+    });
+    // 更新部门中的Role
+    let departmentAddRoleIdSchema = {
+      setDepartmentRole: {
+        name: 'setDepartmentRole',
+        modalSchema: 'DepartmentModel',
+        func: 'updateOne',
+        query: { id: role.departmentId },
+        operator: [
+          {
+            // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
+            $addToSet: {
+              roleId: created.id,
+            },
+          },
+        ],
+      },
     };
+    const res = await commonService(departmentAddRoleIdSchema);
+    if (res.setDepartmentRole.data) {
+      return {
+        success: true,
+        msg: '',
+      };
+    }
+    return Promise.reject(new Error({ msg: '服务端错误' }));
   },
   getRoleFunctions: async (roleId) => {
     let roleFunctions = await RoleModel.findOne({ id: roleId });

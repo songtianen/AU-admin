@@ -7,6 +7,8 @@ export default {
     },
     'ui:rules': [
       { required: true, message: '请输入账号名称' },
+      { whitespace: true, message: 'no space' },
+
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
     'ui:title': '账号名称',
@@ -27,6 +29,8 @@ export default {
     },
     'ui:rules': [
       { required: true, message: '请输入用户名称' },
+      { whitespace: true, message: 'no space' },
+
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
     'ui:title': '用户名称',
@@ -47,6 +51,8 @@ export default {
     },
     'ui:rules': [
       { type: 'email', message: 'The input is not valid E-mail!' },
+      { whitespace: true, message: 'no space' },
+
       { max: 25, message: '最多输入25字符' },
     ], // 校验规则
     'ui:title': '用户邮箱',
@@ -65,7 +71,10 @@ export default {
       type: 'text',
       placeholder: '',
     },
-    'ui:rules': [{ max: 25, message: '最多输入25字符' }], // 校验规则
+    'ui:rules': [
+      { whitespace: true, message: 'no space' },
+      { max: 25, message: '最多输入25字符' },
+    ], // 校验规则
     'ui:title': 'phone',
     'ui:description': '',
     'ui:formItemConfig': {
