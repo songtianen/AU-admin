@@ -1,4 +1,3 @@
-// const { dbConfig } = require('../db/db');
 const uuidv4 = require('uuid/v4');
 const { AccessMemuModel } = require('../model/model'); // 引入模型
 const { businessError, success } = require('../lib/responseTemplate');

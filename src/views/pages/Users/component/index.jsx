@@ -9,7 +9,7 @@ import {
   getAllDepartment,
 } from '../../../../api';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
-import schema from '../../../../schema/UserRole';
+import schema from '../../../../schema/Users';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import CommonModal from '../../Common/CommonModal';
 

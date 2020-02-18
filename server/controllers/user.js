@@ -1,6 +1,7 @@
 const { businessError, success } = require('../lib/responseTemplate');
 const { UserModel } = require('../model/model');
 const userSservice = require('../services/userService');
+const { md5PWD } = require('../util/md5');
 
 let postRegister = async ({ req, res }) => {
   userSservice.postRegister({ req, res });
@@ -61,14 +62,24 @@ const getAllUser = async ({ req, res }) => {
 };
 
 let postSaveUser = async ({ req, res }) => {
-  const { userName } = req.body;
-  const user = await userSservice.getUserInfoUsername(userName);
+  let userInfo = req.body;
+  if (userInfo.pwd) {
+    userInfo.pwd = md5PWD(userInfo.pwd);
+  }
+  const name = userInfo.userName;
+
+  const user = await userSservice.getUserInfoUsername({ name });
   if (user) {
     return businessError({ res, msg: '用户名已注册!', data: 'username' });
   } else {
-    userSservice.postSaveUser({ req, res });
+    const user = await userSservice.postSaveUser({ userInfo });
+    if (user) {
+      return success({ res, msg: '用户保存成功' });
+    }
+    return businessError({ res, msg: '用户保存失败!' });
   }
 };
+
 let postDelUser = async ({ req, res }) => {
   let ids = JSON.parse(req.body.ids);
   let removes = ids.map((id) => {

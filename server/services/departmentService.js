@@ -1,4 +1,3 @@
-// const { dbConfig } = require('../db/db');
 const { DepartmentModel, RoleModel } = require('../model/model'); // 引入模型
 const _ = require('lodash');
 const uuidv4 = require('uuid/v4');

@@ -8,7 +8,7 @@ import {
   delRoleForUserId,
 } from '../../../../api';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
-import schema from '../../../../schema/AddRoleForUser';
+import schema from '../../../../schema/UserRole/AddRoleForUser';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import CommonModal from '../../Common/CommonModal';
 

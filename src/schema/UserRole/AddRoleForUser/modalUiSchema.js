@@ -1,4 +1,4 @@
-import util from '../../util/util';
+import util from '../../../util/util';
 
 export default {
   moduleId: {
@@ -11,7 +11,6 @@ export default {
     'ui:remoteConfig': {
       apiKey: 'getAllDepartmentAndRole',
       hand: (data) => {
-        console.log('部门与角色树', data);
         const tree = util.deparmentTreeWithRole(data);
         return tree;
       }, // 数据处理函数

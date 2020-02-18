@@ -5,7 +5,7 @@ import { getAllUser, addUserForRole } from '../../../../api';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
 // import CommonModal from '../../Common/CommonModal';
-import schema from '../../../../schema/User';
+import schema from '../../../../schema/RoleUser/User';
 
 class AddUserForRole extends React.PureComponent {
   state = {
@@ -189,7 +189,6 @@ class AddUserForRole extends React.PureComponent {
     // 给Role添加用户（请求接口）
     const userIds = this.state.tableSelectedRowKeys;
     const roleId = this.props.formData.id;
-    console.log('usersID', userIds === false, 'Roleid', roleId);
     if (userIds && userIds.length) {
       try {
         const result = await addUserForRole({ userIds, roleId });

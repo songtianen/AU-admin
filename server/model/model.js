@@ -38,13 +38,7 @@ const userSchema = new mongoose.Schema({
   pwd: { type: String },
   phone: { type: String },
   type: { type: String },
-  notification: [
-    {
-      name: { type: String },
-      title: { type: String },
-      details: { type: String },
-    },
-  ],
+  notification: [String],
   avatar: { type: String },
   desc: { type: String },
   title: { type: String },

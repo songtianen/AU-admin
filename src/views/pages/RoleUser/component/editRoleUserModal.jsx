@@ -12,7 +12,7 @@ import {
 import { getUserFromRole, delUserForRoleId } from '../../../../api';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
-import schema from '../../../../schema/User';
+import schema from '../../../../schema/RoleUser/User';
 import AddUserForRole from './addUserForRole';
 
 class EditRoleUserModalContent extends React.PureComponent {

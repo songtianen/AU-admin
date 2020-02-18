@@ -187,7 +187,6 @@ class Role extends React.PureComponent {
     const departmentIds = this.state.tableSelectedRowKeys.map((s) => {
       return s.departmentId;
     });
-    console.log('ids????????', ids);
     try {
       await delRoles({
         ids,
@@ -210,7 +209,6 @@ class Role extends React.PureComponent {
 
   // table 选择器
   onSelectChange = (selectedRowKeys, selectedRows) => {
-    console.log('table表格选择器', selectedRows);
     this.setState({ tableSelectedRowKeys: selectedRows });
   };
 

@@ -1,9 +1,9 @@
 // const _ = require('lodash')
-const { UserModel } = require('../model/model');
+const { UserModel, RoleModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
 const { md5PWD, secretKey } = require('../util/md5');
 const { businessError, success } = require('../lib/responseTemplate');
-
+const dbSchema = require('../db/dbSchema');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 
@@ -14,7 +14,7 @@ const getUserInfoById = async (id) => {
   return userinfo;
 };
 
-const getUserInfoUsername = async (name) => {
+const getUserInfoUsername = async ({ name }) => {
   const user = await UserModel.findOne({ userName: name });
   return user;
 };
@@ -137,22 +137,25 @@ const postRegister = async ({ req, res }) => {
   }
 };
 // 添加
-const postSaveUser = async ({ req, res }) => {
-  const { email, pwd, phone, userName } = req.body;
-  const info = await new UserModel({
-    id: uuidv4(),
-    email: email,
-    isAdmin: phone === '13548106816' ? 'admin' : 'user',
-    userName: userName,
-    pwd: md5PWD(pwd),
-    phone: phone,
+const postSaveUser = async ({ userInfo }) => {
+  const info = await UserModel.create({
+    ...dbSchema.User,
+    ...userInfo,
   });
-  info.save(function(err) {
-    if (err) {
-      return businessError({ res, msg: '数据库保存失败!', data: '' });
-    }
-    return success({ res, msg: '数据库保存成功！' });
-  });
+  if (info) {
+    // 更新角色中的userRole
+    console.log('userInfo.userRole', userInfo.userRole, info.id);
+    await RoleModel.updateOne(
+      { id: userInfo.userRole },
+      {
+        $addToSet: {
+          userId: info.id,
+        },
+      },
+    );
+    return info;
+  }
+  return Promise.reject(new Error({ msg: '后端出错' }));
 };
 const postDelUser = async (id) => {
   const isRemoveRole = await UserModel.findOneAndDelete({ id: id });
