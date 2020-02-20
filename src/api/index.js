@@ -268,15 +268,6 @@ export function addUserForRole(data) {
   });
 }
 
-export function delRole(id) {
-  return request({
-    url: '/role/del',
-    method: 'post',
-    data: id,
-    loading: 'message',
-  });
-}
-
 export function delRoles(ids) {
   return request({
     url: '/role/batchdel',

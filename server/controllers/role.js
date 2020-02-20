@@ -1,8 +1,6 @@
 // 角色
 const roleService = require('../services/roleService');
 
-// const { DepartmentModel } = require('../model/model'); // 引入模型
-
 const { businessError, success } = require('../lib/responseTemplate');
 const responseTemplate = require('../lib/responseTemplate');
 const { checkParametersEmpety } = require('../util/util');
@@ -91,21 +89,16 @@ module.exports = {
       });
   },
 
-  delRole: async ({ req, res }) => {
-    let id = req.body.id;
-    const isRemove = await roleService.delRole(id);
-    isRemove
-      ? responseTemplate.success({ res, msg: '删除成功' })
-      : responseTemplate.businessError({ res, msg: '数据库保存失败' });
-  },
-
   delRoles: async ({ req, res }) => {
     let { ids, departmentIds } = req.body;
-    console.log('删除多个Role', req.body);
-    await roleService.delRoles({ ids, departmentIds }).then((doc) => {
-      console.log('删除多个Role', doc);
-    });
-    return responseTemplate.success({ res, msg: '多条删除成功' });
+    await roleService
+      .delRoles({ ids, departmentIds })
+      .then((doc) => {
+        return responseTemplate.success({ res, msg: '多条删除成功' });
+      })
+      .catch((e) => {
+        return responseTemplate.businessError({ res, msg: '错误！' });
+      });
   },
   savePermission: async ({ req, res }) => {
     let { moduleId, roleId, permissions } = req.body;

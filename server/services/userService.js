@@ -14,7 +14,7 @@ const getUserInfoById = async (id) => {
   return userinfo;
 };
 
-const getUserInfoUsername = async ({ name }) => {
+const getUserInfoUsername = async (name) => {
   const user = await UserModel.findOne({ userName: name });
   return user;
 };
@@ -141,11 +141,11 @@ const postSaveUser = async ({ userInfo }) => {
   const info = await UserModel.create({
     ...dbSchema.User,
     ...userInfo,
+    id: uuidv4(),
   });
   if (info) {
     // 更新角色中的userRole
-    console.log('userInfo.userRole', userInfo.userRole, info.id);
-    await RoleModel.updateOne(
+    await RoleModel.updateMany(
       { id: userInfo.userRole },
       {
         $addToSet: {
@@ -157,20 +157,65 @@ const postSaveUser = async ({ userInfo }) => {
   }
   return Promise.reject(new Error({ msg: '后端出错' }));
 };
-const postDelUser = async (id) => {
-  const isRemoveRole = await UserModel.findOneAndDelete({ id: id });
-  return isRemoveRole;
+// 编辑
+const editUserInfo = async (userInfo) => {
+  if (userInfo) {
+    await UserModel.findOne({ id: userInfo.id }).then(async (res) => {
+      let userLength = userInfo.userRole.length;
+      let roleLength = res.userRole.length;
+      const arr = userInfo.userRole.concat(res.userRole).filter((v, i, arr) => {
+        return arr.indexOf(v) === arr.lastIndexOf(v);
+      });
+      await UserModel.updateOne({ id: userInfo.id }, { ...userInfo });
+      console.log('arr', arr);
+      if (userLength - roleLength > 0) {
+        await RoleModel.updateMany(
+          { id: arr },
+          {
+            $addToSet: {
+              userId: res.id,
+            },
+          },
+        );
+      }
+      if (userLength - roleLength < 0) {
+        await RoleModel.updateMany(
+          { id: arr },
+          {
+            $pullAll: {
+              userId: [res.id],
+            },
+          },
+        );
+      }
+      if (userLength - roleLength === 0) {
+        await RoleModel.updateMany(
+          { id: userInfo.userRole },
+          {
+            $addToSet: {
+              userId: res.id,
+            },
+          },
+        );
+      }
+    });
+    return true;
+  }
+  return Promise.reject(new Error({ msg: '没有参数' }));
 };
-const editUserInfo = async ({ req, res }) => {
-  const info = req.body;
-  // update不返回文档
-  const edituser = await UserModel.updateOne(
-    { id: info.id },
+const postDelUser = async (ids) => {
+  const deleteUser = UserModel.deleteMany({ id: ids });
+  // 删除职位中的UserId
+  const updateRole = RoleModel.updateMany(
+    { userId: { $in: ids } },
     {
-      ...info,
+      $pullAll: {
+        userId: ids,
+      },
     },
   );
-  return edituser;
+  const a = await Promise.all([deleteUser, updateRole]);
+  return a;
 };
 
 module.exports = {

@@ -140,13 +140,10 @@ const addDepartment = async ({ data }) => {
   return department;
 };
 const delDepartment = async ({ departmentIds }) => {
-  if (departmentIds) {
-    const isdel = DepartmentModel.deleteMany({ id: departmentIds });
-    return isdel;
-  } else {
-    // eslint-disable-next-line prefer-promise-reject-errors
-    return Promise.reject({ msg: '服务器错误' });
-  }
+  Promise.all([
+    DepartmentModel.deleteMany({ id: departmentIds }),
+    RoleModel.updateMany({ departmentId: departmentIds }, { departmentId: '' }),
+  ]);
 };
 const editDepartment = async (data) => {
   if (data.id) {

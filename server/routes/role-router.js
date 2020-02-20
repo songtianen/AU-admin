@@ -5,7 +5,6 @@ const {
   getUserFromRoleId,
   editRole,
   delRoles,
-  delRole,
   addRole,
   savePermission,
   addRoleForUser,
@@ -40,14 +39,6 @@ router.post(
   PermissionCheck({ permission: ['role_del'] }),
   (req, res) => {
     delRoles({ req, res });
-  },
-);
-
-router.post(
-  '/del',
-  PermissionCheck({ permission: ['role_del'] }),
-  (req, res) => {
-    delRole({ req, res });
   },
 );
 router.post(

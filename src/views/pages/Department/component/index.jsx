@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Divider, notification } from 'antd';
+import { Table, Divider, notification, Tag } from 'antd';
 import {
   delDepartment,
   addDepartment,
@@ -50,6 +50,14 @@ class Department extends React.PureComponent {
       sorter: true,
     },
     {
+      title: '上级部门',
+      dataIndex: 'parentId',
+      render: (text) => {
+        return <Tag color='green'>{this.getNextLevelName(text)}</Tag>;
+      },
+      sorter: true,
+    },
+    {
       title: '操作',
       dataIndex: 'id',
       fixed: 'right',
@@ -72,6 +80,17 @@ class Department extends React.PureComponent {
 
   // 模态框 数据组
   editFormData = {};
+
+  getNextLevelName = (id) => {
+    let name = '';
+    let data = this.state.tablePagedList;
+    for (const item of data) {
+      if (item.id === id) {
+        name = item.name;
+      }
+    }
+    return name;
+  };
 
   fetch = async (query = {}) => {
     this.setState({ tableLoading: true });

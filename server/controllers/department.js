@@ -62,16 +62,13 @@ const addDepartment = async ({ req, res }) => {
     });
 };
 const delDepartment = async ({ req, res }) => {
-  // console.log('删除部门', req.body);
   const { departmentIds } = req.body;
   departmentService
     .delDepartment({ departmentIds })
     .then((doc) => {
-      // console.log('删除部门', doc);
-      return success({ res, data: doc });
+      return success({ res, msg: '删除部门成功' });
     })
     .catch((err) => {
-      // console.log('部门管理错误', err);
       businessError({ res, msg: err.msg });
     });
 };

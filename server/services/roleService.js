@@ -1,6 +1,4 @@
-/* eslint-disable no-undef */
-// 角色
-const { RoleModel, UserModel } = require('../model/model');
+const { RoleModel, UserModel, DepartmentModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
 const { commonService } = require('../util/services');
 
@@ -117,36 +115,28 @@ module.exports = {
     return isRemoveRole;
   },
   delRoles: async ({ ids, departmentIds }) => {
-    let departmentRemoveRoleIdSchema = {
-      removeDepartmentRole: {
-        name: 'removeDepartmentRole',
-        modalSchema: 'DepartmentModel',
-        func: 'updateMany',
-        query: { id: departmentIds },
-        operator: [
-          {
-            // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
-            $pullAll: {
-              roleId: ids,
-            },
+    const update = await Promise.all([
+      RoleModel.deleteMany({ id: ids }),
+      DepartmentModel.updateMany(
+        { id: departmentIds },
+        {
+          // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
+          $pullAll: {
+            roleId: ids,
           },
-        ],
-      },
-    };
-    // 删除部门中的roleId[]
-    await commonService(departmentRemoveRoleIdSchema);
-    // 删除user中的userRole[]
-    await UserModel.updateMany(
-      { userRole: { $in: ids } },
-      {
-        $pullAll: {
-          userRole: ids,
         },
-      },
-    );
-    const isRemoveRole = await RoleModel.deleteMany({ id: ids });
-    if (isRemoveRole) {
-      return isRemoveRole;
+      ),
+      UserModel.updateMany(
+        { userRole: { $in: ids } },
+        {
+          $pullAll: {
+            userRole: ids,
+          },
+        },
+      ),
+    ]);
+    if (update) {
+      return update;
     }
     return Promise.reject(new Error({ msg: '错误了song' }));
   },

@@ -95,6 +95,7 @@ export default {
     'ui:options': {
       fieldNames: { label: 'name', value: 'id', children: 'children' },
       treeData: [],
+      multiple: true,
     }, // 组件属性配置
     'ui:rules': [{ required: true, message: '请选择模块!' }], // 校验规则
     'ui:remoteConfig': {

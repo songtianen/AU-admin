@@ -2,6 +2,7 @@ const { businessError, success } = require('../lib/responseTemplate');
 const { UserModel } = require('../model/model');
 const userSservice = require('../services/userService');
 const { md5PWD } = require('../util/md5');
+const { checkParametersEmpety } = require('../util/util');
 
 let postRegister = async ({ req, res }) => {
   userSservice.postRegister({ req, res });
@@ -31,17 +32,6 @@ let getUserInfo = ({ req, res }) => {
   });
 };
 
-// const postEditRoleuser = async ({ req, res }) => {
-//   let roleUser = req.body;
-//   // console.log('移除和添加角色用户的接口', roleUser);
-//   const edit = await userSservice.postEditRoleuser(roleUser);
-//   // console.log('edit--', edit);
-//   if (!edit) {
-//     return businessError({ res, msg: '数据库保存错误' });
-//   }
-//   return success({ res, data: '' });
-// };
-
 const getAllUser = async ({ req, res }) => {
   let pageIndex = req.query.pageIndex;
   let pageSize = req.query.pageSize;
@@ -63,12 +53,16 @@ const getAllUser = async ({ req, res }) => {
 
 let postSaveUser = async ({ req, res }) => {
   let userInfo = req.body;
+  const isEmpty = await checkParametersEmpety(userInfo);
+  if (isEmpty.msg || isEmpty.keys.length) {
+    return businessError({ res, msg: isEmpty.msg, data: isEmpty.keys });
+  }
   if (userInfo.pwd) {
     userInfo.pwd = md5PWD(userInfo.pwd);
   }
   const name = userInfo.userName;
 
-  const user = await userSservice.getUserInfoUsername({ name });
+  const user = await userSservice.getUserInfoUsername(name);
   if (user) {
     return businessError({ res, msg: '用户名已注册!', data: 'username' });
   } else {
@@ -81,36 +75,25 @@ let postSaveUser = async ({ req, res }) => {
 };
 
 let postDelUser = async ({ req, res }) => {
-  let ids = JSON.parse(req.body.ids);
-  let removes = ids.map((id) => {
-    return userSservice.postDelUser(id);
-  });
-
-  await Promise.all(removes)
-    .then(() => {
-      success({ res, msg: '删除成功' });
+  let ids = req.body.ids;
+  console.log('删除User', req.body);
+  await userSservice
+    .postDelUser(ids)
+    .then((doc) => {
+      return success({ res, msg: '删除成功' });
     })
-    .catch((err) => {
-      businessError({ res, msg: err });
+    .catch((e) => {
+      businessError({ res, msg: e });
     });
 };
 let editUserInfo = async ({ req, res }) => {
-  const { userName, id } = req.body;
-  const userinfo = await userSservice.getUserInfoById(id);
-
-  if (userinfo.userName !== userName) {
-    const hasName = await userSservice.getUserInfoUsername(userName);
-    if (hasName) {
-      return businessError({ res, msg: '用户名已注册!', data: 'username' });
-    }
+  const userInfo = req.body;
+  const isUpdate = await userSservice.editUserInfo(userInfo);
+  if (isUpdate) {
+    console.log('res', res);
+    return success({ res, msg: '用户信息更新成功！' });
   }
-  if (userinfo.userName === userName) {
-    const user = await userSservice.editUserInfo({ req, res });
-    if (user) {
-      return success({ res, msg: '用户信息更新成功！' });
-    }
-    return businessError({ res, msg: '用户信息更新失败!' });
-  }
+  return businessError({ res, msg: '服务端错误' });
 };
 
 module.exports = {

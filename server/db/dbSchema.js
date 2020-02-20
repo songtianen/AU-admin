@@ -1,5 +1,3 @@
-const uuidv4 = require('uuid/v4');
-
 module.exports = {
   User: {
     isAdmin: '',
@@ -19,6 +17,5 @@ module.exports = {
     avatar: '',
     desc: '',
     title: '',
-    id: uuidv4(),
   },
 };

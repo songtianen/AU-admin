@@ -227,11 +227,7 @@ class UserRole extends React.PureComponent {
 
   // button Popconfirm 删除
   batchDelUser = async () => {
-    const ids = JSON.stringify(
-      this.state.tableSelectedRowKeys.map((s) => {
-        return s;
-      }),
-    );
+    const ids = this.state.tableSelectedRowKeys;
     // console.log('ids????????', ids);
     try {
       const result = await delUsers({
@@ -302,8 +298,8 @@ class UserRole extends React.PureComponent {
   };
 
   // table 选择器
-  onSelectChange = (selectedRowKeys) => {
-    // console.log('table表格选择器', selectedRowKeys);
+  onSelectChange = (selectedRowKeys, selectedRows) => {
+    console.log('table表格选择器', selectedRows);
     this.setState({ tableSelectedRowKeys: selectedRowKeys });
   };
 
@@ -313,6 +309,7 @@ class UserRole extends React.PureComponent {
 
   // saveUser
   editCommonModalSaveUser = async (data) => {
+    console.log('更新', data);
     // 请求 添加用户接口
     if (this.state.isAddUser) {
       try {

@@ -73,7 +73,7 @@ class SearchForm extends React.PureComponent {
                 htmlType='submit'
                 onClick={this.handleSubmit}
               >
-                查询
+                查询/刷新
               </Button>
               <Button
                 size='small'
