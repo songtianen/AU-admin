@@ -8,11 +8,15 @@ const {
   editMenu,
   addMenu,
   delMenus,
+  getAllMenuWithFunction,
 } = require('../controllers/menu');
 
 const router = express.Router();
 router.get('/getaccessmenu', (req, res) => {
   getAccessMenuList({ req, res });
+});
+router.get('/getAllMenuWithFunction', (req, res) => {
+  getAllMenuWithFunction({ req, res });
 });
 router.get('/', PermissionCheck({ permission: ['menu_view'] }), (req, res) => {
   getAllMenuWithPage({ req, res });

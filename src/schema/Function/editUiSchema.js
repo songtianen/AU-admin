@@ -20,6 +20,12 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
     }, // Form.Item 配置
+    'ui:required': [
+      {
+        name: 'name',
+        message: '请先填写角色名称',
+      },
+    ],
   },
   code: {
     'ui:widget': 'input',
@@ -65,15 +71,16 @@ export default {
     }, // Form.Item 配置
   },
   moduleId: {
-    'ui:widget': 'cascader', // 级联
+    'ui:widget': 'treeSelect', // 级联
     'ui:options': {
-      fieldNames: { label: 'title', value: 'id', children: 'children' },
-      options: [],
+      fieldNames: { value: 'id', key: 'id' },
+      treeData: [],
     }, // 组件属性配置
     'ui:rules': [{ required: true, message: '请选择模块!' }], // 校验规则
     'ui:remoteConfig': {
-      apiKey: 'getAllMenu',
+      apiKey: 'getAllMenuWithFunction',
       hand: (data) => {
+        console.log('FunctionData', data);
         return data;
       }, // 数据处理函数
     },

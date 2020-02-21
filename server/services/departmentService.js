@@ -140,7 +140,7 @@ const addDepartment = async ({ data }) => {
   return department;
 };
 const delDepartment = async ({ departmentIds }) => {
-  Promise.all([
+  return Promise.all([
     DepartmentModel.deleteMany({ id: departmentIds }),
     RoleModel.updateMany({ departmentId: departmentIds }, { departmentId: '' }),
   ]);

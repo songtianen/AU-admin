@@ -167,7 +167,6 @@ const editUserInfo = async (userInfo) => {
         return arr.indexOf(v) === arr.lastIndexOf(v);
       });
       await UserModel.updateOne({ id: userInfo.id }, { ...userInfo });
-      console.log('arr', arr);
       if (userLength - roleLength > 0) {
         await RoleModel.updateMany(
           { id: arr },

@@ -125,6 +125,14 @@ export function getAllMenu(query) {
     // loading: 'spin',
   });
 }
+export function getAllMenuWithFunction(query) {
+  return request({
+    url: '/menu/getAllMenuWithFunction',
+    method: 'get',
+    params: query,
+    // loading: 'spin',
+  });
+}
 
 export function saveMenu(menu) {
   return request({

@@ -61,7 +61,7 @@ const functionSchema = new mongoose.Schema({
   name: String,
   code: String,
   description: String,
-  moduleId: Number,
+  moduleId: String,
   module: String,
   id: String,
 });

@@ -23,43 +23,38 @@ const FormItem = Form.Item;
 
 // 暂存的JsxGenerator
 const JsxGeneratorMap = new Map();
-
+// 检查JsxGeneratorMap是否缓存 缓存uiSchema,获取后更新uiSchema并缓存,
+// const UiSchemaMap = new Map();// 不缓存网络请求
 // 暂存表单组件, key是schema 的$id, value是对应的react组件
-const FormMap = new Map();
-
-// 检查JsxGeneratorMap是否缓存 缓存uiSchema,uiSchema中存需动态获取的数据,获取后更新uiSchema并缓存,
-const UiSchemaMap = new Map();
-
+// const FormMap = new Map();
 // 缓存表单实例maxIndex; 缓存 index 变量
 // 配合FormInstanceMap：缓存FormInstanceMap 用到的index 变量
 const FormInstanceIndexMap = new Map();
+/*
+缓存表单实例,key还是用schema 的$id+Index,组件实例化的时候存入，组件销毁的时候移除
+mergeProps方法用到 this.props.form., 组件每次render form中的数据都不一样，所以要用到${id}-${index}
+ 因为要用到 this.props.form;
+*/
 
-// 缓存表单实例,key还是用schema 的$id+Index,组件实例化的时候存入，组件销毁的时候移除
-// mergeProps方法用到 this.props.form., 组件每次render form中的数据都不一样，所以要用到${id}-${index}
-
-// 因为要用到 this.props.form;
 const FormInstanceMap = new Map();
 
 const SchemaUtils = {
   // 1 是否有缓存的表单组件
   getForm(schema, uiSchema) {
     const id = schema['$id'];
-    if (FormMap.has(id)) {
-      return FormMap.get(id);
-    }
+    // if (FormMap.has(id)) {
+    //   return FormMap.get(id);
+    // }
     const newForm = this.createForm(id, schema, uiSchema);
-    FormMap.set(id, newForm);
+    // FormMap.set(id, newForm);
     return newForm;
   },
   createForm(id, schema, uiSchema) {
-    console.log('createCommonForm');
     const util = this;
     // 只能用传统的ES5的写法, 函数式(无状态)组件应该也可以, 但是需要生命周期相关方法
     const tmpComponent = createClass({
       getInitialState() {
-        // console.log('宋天恩', FormInstanceIndexMap.get(id));
         let index = FormInstanceIndexMap.get(id);
-        // es6: this.state = ....
         if (!index) {
           index = 1;
         } else {
@@ -73,27 +68,25 @@ const SchemaUtils = {
           index: `${id}-${index}`,
         };
       },
-      componentWillMount() {
-        // console.log('tmp-CommonForm componentWillMount');
+      // componentWillMount() {
+      //   // 组件初始化时读取generator
+      //   if (JsxGeneratorMap.has(id)) {
+      //     console.log('songtianen-componentWillMount');
 
-        // 组件初始化时读取generator
-        if (JsxGeneratorMap.has(id)) {
-          this.generateJsx = JsxGeneratorMap.get(id);
-        }
-      },
+      //     this.generateJsx = JsxGeneratorMap.get(id);
+      //   }
+      // },
       async componentDidMount() {
-        // console.log('tmp-CommonForm 异步componentDidMount');
-
-        if (UiSchemaMap.has(id)) {
-          // 检查JsxGeneratorMap是否缓存/ 说明 jsx结构已经构建并缓存，不需要mergeSchema
-          return;
-        }
+        // if (UiSchemaMap.has(id)) {
+        //   // jsx结构已经构建并缓存
+        //   return;
+        // }
         // 1,合并schema数据
         util.mergeSchema(this.state.index, schema, uiSchema);
         // 2,获取组件相应的远程数据
         await util.getRemoteData(id, uiSchema);
 
-        UiSchemaMap.set(id, true);
+        // UiSchemaMap.set(id, true);
 
         /**
          * 3,parse方法返回一个真正生成jsx结构的方法，
@@ -101,10 +94,10 @@ const SchemaUtils = {
          * 从全局缓存获取组件实例传入(也可以直接传入组件实例)
          * 返回一个函数 存入this.generateJsx
          *  */
+
         const generateJsx = util.parse(id, schema, uiSchema);
 
         JsxGeneratorMap.set(id, generateJsx);
-
         this.generateJsx = generateJsx;
 
         this.setState({
@@ -113,39 +106,27 @@ const SchemaUtils = {
       },
       componentWillUnmount() {
         FormInstanceMap.delete(this.state.index);
-        console.log(
-          'tmpCommonForm--componentWillUnmount--FormInstanceMap--size',
-          FormInstanceMap.size,
-        );
       },
       // 渲染
       render() {
-        // console.log('tmpCommonForm render宋天恩', this.generateJsx);
         let formData = this.props.formData;
-        // console.log('tmpCommonForm render>>>>>>>>>>///', formData);
         formData = formData || {};
-        // 组件实例key一层层往下传递
         return this.generateJsx
           ? this.generateJsx(this.state.index, formData)
           : null;
       },
     });
-    // 注意要再用antd的create()方法包装下
+
     return Form.create({})(tmpComponent);
   },
   // 合并配置文件
-  /**
-   *
-   * @param {*} formInstanceIndex this.state.index `${id}_${index}`
-   * @param {*} schema Function/editSchema.js
-   * @param {*} uiSchema Function/editUiSchema.js
-   */
+
   mergeSchema(formInstanceIndex, schema, uiSchema) {
     let instance = FormInstanceMap.get(formInstanceIndex);
     Object.keys(uiSchema).forEach((key) => {
       let schemaProperty = schema['properties'][key];
       let uiSchemaProperty = uiSchema[key];
-      uiSchemaProperty.key = key;
+      uiSchemaProperty.key = key; // 添加一个key属性，以便缓存一些数据
       if (uiSchemaProperty['ui:rules'] === undefined) {
         uiSchemaProperty['ui:rules'] = [];
       }
@@ -187,12 +168,9 @@ const SchemaUtils = {
            *  如input组件 你的输入
            */
           validator: (rule, value, callback) => {
-            // console.log('效验表单--===--ooooo', value);
             const form = instance.props.form;
             let msg = [];
-            /**
-             *  不设置uiSchemaProperty['ui:required']
-             */
+
             for (let required of uiSchemaProperty['ui:required']) {
               // getFieldValue 获取一个输入控件的值 如form表单中的input组件
               if (value && !form.getFieldValue(required.name)) {
@@ -233,6 +211,7 @@ const SchemaUtils = {
   },
   // treeData 远程数据
   getTreeSelectRemoteData(id, field) {
+    console.log('field.keyfield.keyfield.key', field);
     // 获取请求接口
     const { apiKey } = field['ui:remoteConfig'];
     return new Promise((resolve, reject) => {
@@ -294,9 +273,7 @@ const SchemaUtils = {
     const util = this;
     Object.keys(uiSchema).forEach((key) => {
       let field = uiSchema[key];
-      // console.log('CommonForm文件 parse函数 formData[field.key] ', field.key);
       const schemaProperty = schemaProperties[key];
-      // 注意, 每个字段transform之后, 返回的也都是一个回调函数, 所以items其实是一个回调函数的集合
       switch (field['ui:widget']) {
         case 'input':
           items.push(util.transformInput(field, schemaProperty));
@@ -336,22 +313,13 @@ const SchemaUtils = {
       }
     });
     // 调用parse返回的函数，也是被缓存的函数(其实是为了缓存items,一些构建form item的函数)，真正构建jsx是调用此函数，
-    /**
-     * @param {*} formInstanceIndex this.state.index;
-     * @param {*} formData Function组件传入
-     */
     return (formInstanceIndex, formData) => {
       const formItems = [];
       // 拿到当前的 this 实例 得到 antd 的 form
       const getFieldDecorator = FormInstanceMap.get(formInstanceIndex).props
         .form.getFieldDecorator;
       // 遍历 parse 函数集 返回的函数
-      /**
-       * @param {*} items [(getFieldDecorator, formDatas),,,] length 4
-       */
       for (const item of items) {
-        // console.log('itemsitemsitemsitemsitemsitems', items);
-        // console.log('itemsitemsitemsitemsitems--item()', item());
         formItems.push(item(getFieldDecorator, formData));
       }
       return <Form>{formItems}</Form>;

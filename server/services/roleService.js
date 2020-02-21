@@ -243,60 +243,55 @@ module.exports = {
   },
   addRoleForUser: async (roleId, userId) => {
     if (roleId && userId) {
-      // console.log('给用户添加角色', roleId);
-      // 更新RoleModal中的userId：二：更新UserModal中的userRole
-      const updateUserModel = await UserModel.updateOne(
-        { id: userId },
-        {
-          // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
-          $addToSet: {
-            userRole: roleId,
+      return Promise.all([
+        UserModel.updateOne(
+          { id: userId },
+          {
+            // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
+            $addToSet: {
+              userRole: roleId,
+            },
           },
-        },
-      );
-      const updateRoleModel = await RoleModel.updateOne(
-        { id: roleId },
-        {
-          // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
-          $addToSet: {
-            userId: userId,
+        ),
+        RoleModel.updateOne(
+          { id: roleId },
+          {
+            // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
+            $addToSet: {
+              userId: userId,
+            },
           },
-        },
-      );
-      // console.log('updateUserModel', updateUserModel, updateRoleModel);
-      return updateRoleModel && updateUserModel;
+        ),
+      ]);
     }
-    // eslint-disable-next-line prefer-promise-reject-errors
-    return Promise.reject({ msg: '服务器参数错误' });
+    return Promise.reject(new Error({ msg: '参数错误' }));
   },
   addUserForRole: async ({ userIds, roleId }) => {
     // 1,查询roleid
     if (roleId && userIds) {
-      const updateRoleModel = await RoleModel.updateOne(
-        { id: roleId },
-        {
-          // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
-          $addToSet: {
-            userId: userIds,
+      return Promise.all([
+        RoleModel.updateOne(
+          { id: roleId },
+          {
+            // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
+            $addToSet: {
+              userId: userIds,
+            },
           },
-        },
-      );
-      const updataUserModel = await UserModel.updateMany(
-        {
-          id: userIds,
-        },
-        {
-          $addToSet: {
-            userRole: roleId,
+        ),
+        UserModel.updateMany(
+          {
+            id: userIds,
           },
-        },
-      );
-      // console.log('updataUserModel', updataUserModel);
-
-      return updateRoleModel && updataUserModel;
-    } else {
-      return new Error({ msg: '查询失败' });
+          {
+            $addToSet: {
+              userRole: roleId,
+            },
+          },
+        ),
+      ]);
     }
+    return Promise.reject(new Error({ msg: '参数错误' }));
   },
   delUserForRoleId: async ({ roleId, userIds }) => {
     if (roleId && userIds) {

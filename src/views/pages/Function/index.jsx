@@ -1,19 +1,16 @@
 import React from 'react';
-import { notification, Table, Popconfirm, Divider } from 'antd';
+import { connect } from 'react-redux';
+import { notification, Table, Divider, Tag } from 'antd';
 import {
   getFunctionPagedList,
-  delFunction,
   delFunctions,
   saveFunction,
+  // getAllMenu,
 } from '../../../api';
 import SearchForm from '../../../schema/SearchForm/SearchForm';
-// import CommonForm from '../../../schema/Common/CommonForm';
 import CommonModal from '../Common/CommonModal';
 import AddRemoveComponent from '../Common/AddRemoveConponent';
-
 import schema from '../../../schema/Function';
-// import PermissionContainer from '../../common/permission';
-// 缓存远程表单选项数据，key为对应schema $id+'_'+字段名
 import formRemoteDataUtil from '../../../schema/Form/FormRemoteDataUtil';
 import util from '../../../util/util';
 
@@ -50,6 +47,9 @@ class Function extends React.PureComponent {
     {
       title: '模块名称',
       dataIndex: 'module',
+      render: (text) => {
+        return <Tag color='green'>{text}</Tag>;
+      },
       sorter: true,
     },
     {
@@ -74,15 +74,8 @@ class Function extends React.PureComponent {
          * @return里面可以设置表格行/列合并
          */
         return (
-          <div>
+          <div style={{ textAlign: 'center' }}>
             <a onClick={() => this.editFunction(record)}>编辑</a>
-            <Divider type='vertical' />
-            <Popconfirm
-              title='确定删除?'
-              onConfirm={() => this.delFunction(record.id)}
-            >
-              <a>删除</a>
-            </Popconfirm>
           </div>
         );
       },
@@ -171,22 +164,6 @@ class Function extends React.PureComponent {
     this.setState({ selectedRowKeys });
   };
 
-  //  table 组件 删除一条
-  delFunction = async (id) => {
-    try {
-      await delFunction({ id });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: '删除成功',
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
-    }
-    this.refresh();
-  };
-
   // button 按钮删除 气泡确认 确定删除
   batchDelFunction = async () => {
     try {
@@ -222,29 +199,17 @@ class Function extends React.PureComponent {
   };
 
   //  Modal 框编辑功能 table表格编辑时调用
-  editFunction = (record) => {
-    // 使用缓存的 menuList
-    let menuList = formRemoteDataUtil.getData(
-      `${schema.editSchema['$id']}_moduleId`,
+  editFunction = async (record) => {
+    let obj = Object.assign(
+      {},
+      {
+        name: record.name,
+        code: record.code,
+        description: record.description,
+        moduleId: record.name,
+      },
     );
-    let openMenuList = util.openTreeData(menuList);
-    // console.log(
-    //   'let openMenuList = util.openTreeData(menuList);',
-    //   openMenuList,
-    // );
-    let menuWithParent = util.getTreeEleWithParent(
-      record.moduleId,
-      openMenuList,
-    );
-    // console.log(
-    //   'let menuWithParent = util.getTreeEleWithParent(record.moduleId, openMenuList);',
-    //   record.moduleId,
-    //   menuWithParent,
-    // );
-    let moduleId = menuWithParent.map((s) => s.id);
-    this.editFormData = { ...record, moduleId };
-    console.log('editFormData///-', this.editFormData);
-
+    this.editFormData = { ...obj };
     this.setState({
       editModalVisible: true,
     });
@@ -322,24 +287,6 @@ class Function extends React.PureComponent {
         />
         <Divider />
         <div style={{ marginBottom: 16 }}>
-          {/* 权限验证 */}
-          {/* <PermissionContainer permission={['function_edit']}>
-            <Button
-              type='primary'
-              icon='plus-square-o'
-              onClick={this.addFunction}
-            >
-              新增
-            </Button>
-          </PermissionContainer> */}
-          <Divider type='vertical' />
-          {/* <PermissionContainer permission={['function_del']}>
-            <Popconfirm title='确定删除?' onConfirm={this.batchDelFunction}>
-              <Button type='danger' disabled={!hasSelected} icon='delete'>
-                删除
-              </Button>
-            </Popconfirm>
-          </PermissionContainer> */}
           <AddRemoveComponent
             addFunc={this.addFunction}
             onConfirm={this.batchDelFunction}
@@ -360,25 +307,6 @@ class Function extends React.PureComponent {
           size='small'
           bordered
         />
-        {/* <Modal
-          visible={this.state.editModalVisible}
-          cancelText='关闭'
-          okText='提交'
-          title={this.editFormData.id ? '编辑功能' : '新增功能'}
-          onCancel={this.editModalOnCancel}
-          onOk={this.editModalOnOk}
-          destroyOnClose
-        >
-          <CommonForm
-            ref={(instance) => {
-              this.editFunctionForm = instance;
-            }}
-            schema={schema.editSchema}
-            uiSchema={schema.editUiSchema}
-            formData={this.editFormData}
-            modalSaveFunctionData={this.modalSaveFunctionData}
-          />
-        </Modal> */}
         <CommonModal
           visible={this.state.editModalVisible}
           title={this.editFormData.id ? '编辑' : '新增'}
@@ -389,14 +317,15 @@ class Function extends React.PureComponent {
           formData={this.editFormData}
           handFormSubmit={this.modalSaveFunctionData}
         />
-        {/* 隐藏组件,做数据初始化,style不先定义每次父组件render都会跟着render */}
-        {/* <CommonForm
-          schema={schema.editSchema}
-          uiSchema={schema.editUiSchema}
-          style={this.style}
-        /> */}
       </div>
     );
   }
 }
-export default Function;
+const mapStateToPorps = (state) => {
+  console.log('app state', state);
+  const { accessMenu } = state.app.accessMenu;
+  return {
+    accessMenu,
+  };
+};
+export default connect(mapStateToPorps)(Function);

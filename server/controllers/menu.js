@@ -17,11 +17,12 @@ const getAccessMenuList = ({ req, res }) => {
 // 获取所有菜单
 const getAllMenuWithPage = ({ req, res }) => {
   // console.log('获取菜单列表', req.query);
-  let pageIndex = req.query.pageIndex;
-  let pageSize = req.query.pageSize;
-  let sortBy = req.query.sortBy;
-  let descending = req.query.descending;
-  let filter = JSON.parse(req.query.filter);
+  let pageIndex = req.query.pageIndex || '';
+  let pageSize = req.query.pageSize || '';
+  let sortBy = req.query.sortBy || '';
+  let descending = req.query.descending || '';
+  let filter = req.query.filter ? JSON.parse(req.query.filter) : '';
+
   menuService
     .getAllMenuWithPage(pageIndex, pageSize, sortBy, descending, filter)
     .then((doc) => {
@@ -148,6 +149,18 @@ const getMenufunctions = async ({ req, res }) => {
     },
   });
 };
+// 获取菜单数与功能树
+const getAllMenuWithFunction = async ({ req, res }) => {
+  console.log('qingqiu---');
+  menuService
+    .getAllMenuWithFunction()
+    .then((doc) => {
+      return success({ res, data: doc });
+    })
+    .catch(() => {
+      businessError({ res, msg: '服务器错误' });
+    });
+};
 module.exports = {
   getAccessMenuList,
   saveMenu,
@@ -156,4 +169,5 @@ module.exports = {
   editMenu,
   addMenu,
   delMenus,
+  getAllMenuWithFunction,
 };

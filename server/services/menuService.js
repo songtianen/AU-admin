@@ -1,5 +1,5 @@
 const uuidv4 = require('uuid/v4');
-const { AccessMemuModel } = require('../model/model'); // 引入模型
+const { AccessMemuModel, FunctionModel } = require('../model/model'); // 引入模型
 const { businessError, success } = require('../lib/responseTemplate');
 const { findFunctionList } = require('./functionService');
 const _ = require('lodash');
@@ -67,6 +67,44 @@ const copyMenu = (menuList) => {
   // }
   return c;
 };
+const buildWithFunc = (menuLists, funcList) => {
+  for (let i = 0; i < menuLists.length; i++) {
+    for (let j = 0; j < funcList.length; j++) {
+      if (funcList[j].moduleId === menuLists[i].id) {
+        funcList[j].title = funcList[j].name;
+        menuLists[i].children.push(funcList[j]);
+      }
+    }
+    if (menuLists[i].children) {
+      buildWithFunc(menuLists[i].children, funcList);
+    }
+  }
+  return menuLists;
+};
+
+const buildMenuTreeWithFunction = (menu, funcList) => {
+  let rootMenu = menu.filter((v) => {
+    return v.parentId === '0';
+  });
+  const build = (listItem, allList) => {
+    for (let i = 0; i < listItem.length; i++) {
+      listItem[i].children = [];
+      let children = allList.filter((item) => {
+        return item.parentId === listItem[i].id;
+      });
+      listItem[i].children.push(...children);
+      if (listItem[i].children) {
+        build(listItem[i].children, allList);
+      }
+    }
+    return listItem;
+  };
+  const menuList = build(rootMenu, menu);
+
+  const menuListWithFunc = buildWithFunc(menuList, funcList);
+
+  return menuListWithFunc;
+};
 
 let menuService = {
   // 获取所有的未经处理菜单
@@ -101,10 +139,13 @@ let menuService = {
         menuLists = menuLists.reverse();
       }
     }
-    // 返回给前端第几页，的 数量。（）
-    let start = (pageIndex - 1) * pageSize;
-    let end = pageIndex * pageSize;
-    menuLists = _.slice(menuLists, start, end);
+    if (pageIndex || pageSize) {
+      // 返回给前端第几页，的 数量。（）
+      let start = (pageIndex - 1) * pageSize;
+      let end = pageIndex * pageSize;
+      menuLists = _.slice(menuLists, start, end);
+    }
+
     return {
       totalCount: totalCount,
       rows: menuLists,
@@ -275,6 +316,14 @@ let menuService = {
       // eslint-disable-next-line prefer-promise-reject-errors
       return Promise.reject({ msg: '服务器错误' });
     }
+  },
+  getAllMenuWithFunction: async () => {
+    let menu = await AccessMemuModel.find();
+    let funcList = await FunctionModel.find();
+    menu = JSON.parse(JSON.stringify(menu));
+    funcList = JSON.parse(JSON.stringify(funcList));
+    const buildMenu = buildMenuTreeWithFunction(menu, funcList);
+    return buildMenu;
   },
 };
 module.exports = menuService;

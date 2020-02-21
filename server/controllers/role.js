@@ -30,6 +30,7 @@ module.exports = {
   },
   editRole: async ({ req, res }) => {
     let roleData = req.body;
+    console.log('角色管理', roleData);
     const isEmpty = await checkParametersEmpety(roleData);
     if (isEmpty.msg || isEmpty.keys.length) {
       return businessError({ res, msg: isEmpty.msg, data: isEmpty.keys });
