@@ -324,6 +324,75 @@ let menuService = {
     funcList = JSON.parse(JSON.stringify(funcList));
     const buildMenu = buildMenuTreeWithFunction(menu, funcList);
     return buildMenu;
+    // let rootMenu = menu.filter((v) => {
+    //   return v.parentId === '0';
+    // });
+    // const build = (listItem, allList) => {
+    //   for (let i = 0; i < listItem.length; i++) {
+    //     listItem[i].children = [];
+    //     let children = allList.filter((item) => {
+    //       return item.parentId === listItem[i].id;
+    //     });
+    //     listItem[i].children.push(...children);
+    //     if (listItem[i].children) {
+    //       build(listItem[i].children, allList);
+    //     }
+    //   }
+    //   return listItem;
+    // };
+    // const menuList = build(rootMenu, menu);
+    // -------
+    // 更新func与menu最后一层的对应关系的id
+    // let a = []; // 找到没有节点的那一层
+    // const findEmpty = (data) => {
+    //   for (let i of data) {
+    //     // console.log('iiiiii', i);
+    //     if (i.children) {
+    //       findEmpty(i.children);
+    //     }
+    //     if (i.children.length === 0) {
+    //       a.push(i);
+    //     }
+    //   }
+    // };
+    // findEmpty(menuList);
+    // // 1，查找function的moduleId是 a的那一项（找到之后更新menu重的id 再查找，更新对应的function中的ID）
+
+    // const updateID = async (menuLists, funcLists) => {
+    //   for (let i of menuLists) {
+    //     for (let j of funcLists) {
+    //       if (j.moduleId === i.id) {
+    //         await AccessMemuModel.updateOne({ id: i.id }, { id: uuidv4() });
+    //         const upMenuItem = await AccessMemuModel.findOne({
+    //           title: i.title,
+    //         });
+    //         await FunctionModel.updateOne(
+    //           { id: j.id },
+    //           { moduleId: upMenuItem.id },
+    //         );
+    //       }
+    //     }
+    //   }
+    // };
+
+    // updateID(a, funcList);
+    // -------
+
+    // const updateAllMenuId = async (data) => {
+    //   for (let i of data) {
+    //     for (let j of data) {
+    //       if (i.id === j.parentId) {
+    //         const idstr = uuidv4();
+    //         await AccessMemuModel.updateOne({ id: i.id }, { id: idstr });
+    //         await AccessMemuModel.updateOne(
+    //           { parentId: j.parentId },
+    //           { parentId: idstr },
+    //         );
+    //       }
+    //     }
+    //   }
+    // };
+    // updateAllMenuId(menu);
   },
 };
 module.exports = menuService;

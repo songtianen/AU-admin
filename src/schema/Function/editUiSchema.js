@@ -19,13 +19,14 @@ export default {
       // "extra":"121212",//未设置取ui:description
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
-    }, // Form.Item 配置
-    'ui:required': [
-      {
-        name: 'name',
-        message: '请先填写角色名称',
-      },
-    ],
+    },
+    //  // Form.Item 配置
+    // 'ui:required': [
+    //   {
+    //     name: 'name',
+    //     message: '请先填写角色名称',
+    //   },
+    // ],
   },
   code: {
     'ui:widget': 'input',
@@ -73,7 +74,8 @@ export default {
   moduleId: {
     'ui:widget': 'treeSelect', // 级联
     'ui:options': {
-      fieldNames: { value: 'id', key: 'id' },
+      // fieldNames: { value: 'id', key: '_id' },
+      disabled: false,
       treeData: [],
     }, // 组件属性配置
     'ui:rules': [{ required: true, message: '请选择模块!' }], // 校验规则
@@ -81,7 +83,21 @@ export default {
       apiKey: 'getAllMenuWithFunction',
       hand: (data) => {
         console.log('FunctionData', data);
-        return data;
+        const changeList = (list) => {
+          for (let i of list) {
+            i.value = i.id;
+            i.key = i._id;
+            i.selectable = true;
+            if (i.moduleId) {
+              i.selectable = false;
+            }
+            if (i.children) {
+              changeList(i.children);
+            }
+          }
+          return list;
+        };
+        return changeList(data);
       }, // 数据处理函数
     },
     'ui:title': '模块', // 未设置取schema 中定义的title

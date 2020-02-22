@@ -192,6 +192,28 @@ class Function extends React.PureComponent {
   // buttom 按钮 新增功能
   addFunction = () => {
     this.editFormData = {};
+    schema.editUiSchema.moduleId['ui:options'].disabled = false;
+    schema.editUiSchema.moduleId['ui:remoteConfig'] = {
+      apiKey: 'getAllMenuWithFunction',
+      hand: (data) => {
+        console.log('FunctionData', data);
+        const changeList = (list) => {
+          for (let i of list) {
+            i.value = i.id;
+            i.key = i._id;
+            i.selectable = true;
+            if (i.moduleId) {
+              i.selectable = false;
+            }
+            if (i.children) {
+              changeList(i.children);
+            }
+          }
+          return list;
+        };
+        return changeList(data);
+      },
+    };
     // 模态框显示
     this.setState({
       editModalVisible: true,
@@ -200,6 +222,9 @@ class Function extends React.PureComponent {
 
   //  Modal 框编辑功能 table表格编辑时调用
   editFunction = async (record) => {
+    schema.editUiSchema.moduleId['ui:options'].disabled = true;
+    // 表单不进行网络请求
+    schema.editUiSchema.moduleId['ui:remoteConfig'] = '';
     let obj = Object.assign(
       {},
       {
@@ -269,7 +294,7 @@ class Function extends React.PureComponent {
   }
 
   render() {
-    console.log('Function render');
+    console.log('render:Function');
     // console.log('Function editFormData', this.editFormData);
     const { selectedRowKeys } = this.state;
     const rowSelection = {

@@ -68,14 +68,14 @@ const SchemaUtils = {
           index: `${id}-${index}`,
         };
       },
-      // componentWillMount() {
-      //   // 组件初始化时读取generator
-      //   if (JsxGeneratorMap.has(id)) {
-      //     console.log('songtianen-componentWillMount');
+      componentWillMount() {
+        // 组件初始化时读取generator
+        if (JsxGeneratorMap.has(id)) {
+          console.log('songtianen-componentWillMount');
 
-      //     this.generateJsx = JsxGeneratorMap.get(id);
-      //   }
-      // },
+          this.generateJsx = JsxGeneratorMap.get(id);
+        }
+      },
       async componentDidMount() {
         // if (UiSchemaMap.has(id)) {
         //   // jsx结构已经构建并缓存
@@ -85,7 +85,6 @@ const SchemaUtils = {
         util.mergeSchema(this.state.index, schema, uiSchema);
         // 2,获取组件相应的远程数据
         await util.getRemoteData(id, uiSchema);
-
         // UiSchemaMap.set(id, true);
 
         /**
@@ -109,6 +108,7 @@ const SchemaUtils = {
       },
       // 渲染
       render() {
+        console.log('render:commonFormSchemaUtilPlus');
         let formData = this.props.formData;
         formData = formData || {};
         return this.generateJsx
