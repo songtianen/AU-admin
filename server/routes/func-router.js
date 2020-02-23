@@ -1,29 +1,30 @@
 const express = require('express');
 const {
   getFunctionPagedList,
-  postSaveFunction,
+  addFunction,
   delFuntion,
   delFuntions,
+  editFunction,
 } = require('../controllers/func');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
 
 const router = express.Router();
 
-router.get(
-  '/pagedlist',
-  PermissionCheck({
-    permission: ['function_view'],
-    role: ['role_website_admin'],
-  }),
+router.get('/pagedlist', PermissionCheck({}), (req, res) => {
+  getFunctionPagedList({ req, res });
+});
+router.post(
+  '/add',
+  PermissionCheck({ permission: ['function_edit'] }),
   (req, res) => {
-    getFunctionPagedList({ req, res });
+    addFunction({ req, res });
   },
 );
 router.post(
-  '/save',
+  '/edit',
   PermissionCheck({ permission: ['function_edit'] }),
   (req, res) => {
-    postSaveFunction({ req, res });
+    editFunction({ req, res });
   },
 );
 router.get(
@@ -33,11 +34,7 @@ router.get(
     delFuntion({ req, res });
   },
 );
-router.get(
-  '/batchdel',
-  PermissionCheck({ permission: ['function_edit'] }),
-  (req, res) => {
-    delFuntions({ req, res });
-  },
-);
+router.get('/batchdel', PermissionCheck({ permission: [''] }), (req, res) => {
+  delFuntions({ req, res });
+});
 module.exports = router;

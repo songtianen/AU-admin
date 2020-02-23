@@ -90,6 +90,7 @@ export default {
             i.selectable = true;
             if (i.moduleId) {
               i.selectable = false;
+              i.title = i.name;
             }
             if (i.children) {
               changeList(i.children);

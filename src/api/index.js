@@ -109,6 +109,8 @@ export function editUserInfo(data) {
 }
 
 // menu
+
+// 获取有权限的菜单
 export function getAccessMenu() {
   return request({
     url: '/menu/getaccessmenu',
@@ -116,7 +118,7 @@ export function getAccessMenu() {
     // loading: 'spin',
   });
 }
-
+// 获取非树结构菜单
 export function getAllMenu(query) {
   return request({
     url: '/menu',
@@ -223,9 +225,17 @@ export function delFunctions(ids) {
   });
 }
 
-export function saveFunction(data) {
+export function addFunction(data) {
   return request({
-    url: '/function/save',
+    url: '/function/add',
+    method: 'post',
+    data,
+    loading: 'message',
+  });
+}
+export function editFunction(data) {
+  return request({
+    url: '/function/edit',
     method: 'post',
     data,
     loading: 'message',

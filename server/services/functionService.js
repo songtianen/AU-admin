@@ -1,5 +1,6 @@
 const { FunctionModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
+const dbSchema = require('../db/dbSchema');
 
 const _ = require('lodash');
 // const { businessError, success } = require('../lib/responseTemplate');
@@ -11,18 +12,15 @@ const findFunctionList = (selector = {}) => {
 
 module.exports = {
   findFunctionList,
-  functionPagedList: (
-    doc,
-    req,
-    res,
+  functionPagedList: async (
     pageIndex,
     pageSize,
     sortBy,
     descending,
     filter,
   ) => {
-    // console.log('前端数据filter', filter);
-    let resultList = doc;
+    let resultList = await FunctionModel.find({});
+    resultList = JSON.parse(JSON.stringify(resultList));
     if (filter.module) {
       resultList = _.filter(resultList, (o) => {
         return o.module.indexOf(filter.module) > -1;
@@ -63,7 +61,56 @@ module.exports = {
     const de = await FunctionModel.deleteOne({ id: id });
     return de;
   },
-  saveFunction: async (func) => {
+  addFunction: async (data) => {
+    if (data) {
+      if (data.name) {
+        const info = await FunctionModel.findOne({ name: data.name });
+        if (info) {
+          return {
+            success: false,
+            msg: `${info.name}已存在`,
+          };
+        }
+      }
+      if (data.code) {
+        const info = await FunctionModel.findOne({ name: data.code });
+        if (info) {
+          return {
+            success: false,
+            msg: `${info.code}已存在`,
+          };
+        }
+      }
+      await FunctionModel.create({
+        ...dbSchema.Function,
+        ...data,
+        id: uuidv4(),
+      });
+      return {
+        success: true,
+        msg: '数据库保存成功',
+      };
+    }
+
+    return {
+      success: false,
+      msg: '数据库保存失败',
+    };
+  },
+  delFuntions: async (ids) => {
+    if (ids) {
+      await FunctionModel.deleteMany({ id: ids });
+      return {
+        success: true,
+        msg: '删除成功！',
+      };
+    }
+    return {
+      success: false,
+      msg: '参数错误',
+    };
+  },
+  editFunction: async (func) => {
     // 查询一条
     const funcCode = await FunctionModel.findOne({ code: func.code });
 
@@ -73,13 +120,10 @@ module.exports = {
         msg: '功能编码已经存在',
       };
     }
-    // console.log('async 测试funcCode', funcCode);
     const funcName = await FunctionModel.findOne({
       moduleId: func.moduleId,
       name: func.name,
     });
-    // console.log('async 测试funcName', funcName);
-
     if (funcName && funcName.id !== func.id) {
       return {
         success: false,
@@ -98,19 +142,6 @@ module.exports = {
           msg: '数据更新成功！',
         };
       }
-    } else {
-      const insertFunc = {
-        ...func,
-        id: uuidv4(),
-      };
-      const dbFunc = new FunctionModel(insertFunc);
-      await dbFunc.save((er) => {
-        // console.log('保存错误', er);
-      });
-      return {
-        success: true,
-        msg: '数据保存成功！',
-      };
     }
   },
 };

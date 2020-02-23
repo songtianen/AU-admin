@@ -1,18 +1,16 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { notification, Table, Divider, Tag } from 'antd';
 import {
   getFunctionPagedList,
   delFunctions,
-  saveFunction,
-  // getAllMenu,
+  addFunction,
+  editFunction,
+  getAllMenu,
 } from '../../../api';
 import SearchForm from '../../../schema/SearchForm/SearchForm';
 import CommonModal from '../Common/CommonModal';
 import AddRemoveComponent from '../Common/AddRemoveConponent';
 import schema from '../../../schema/Function';
-import formRemoteDataUtil from '../../../schema/Form/FormRemoteDataUtil';
-import util from '../../../util/util';
 
 class Function extends React.PureComponent {
   // style = { display: 'none' };
@@ -23,8 +21,6 @@ class Function extends React.PureComponent {
       name: '',
       code: '',
     },
-    // eslint-disable-next-line react/no-unused-state
-    expand: true,
     selectedRowKeys: [],
     pagedList: [],
     // 分页器 配置
@@ -40,15 +36,17 @@ class Function extends React.PureComponent {
       order: '',
     },
     loading: false,
-    editModalVisible: false,
+    commonModalVisible: false,
+    isModalEdit: false,
   };
 
   columns = [
     {
       title: '模块名称',
       dataIndex: 'module',
-      render: (text) => {
-        return <Tag color='green'>{text}</Tag>;
+      render: (text, record) => {
+        console.log('record', record);
+        return <Tag color='green'>{this.getMoudleName(record.moduleId)}</Tag>;
       },
       sorter: true,
     },
@@ -84,14 +82,33 @@ class Function extends React.PureComponent {
 
   editFormData = {};
 
+  menuList = '';
+
+  getMoudleName = (id) => {
+    let menuList = this.menuList;
+    const findName = (data, _id) => {
+      for (let i of data) {
+        if (i.id === _id) {
+          return i.title;
+        }
+      }
+      return '';
+    };
+    return findName(menuList, id);
+  };
+
   // 请求 列表
   fetch = async (query = {}) => {
     this.setState({ loading: true });
-    let dataRes = await getFunctionPagedList(query);
+    let [dataRes, menu] = await Promise.all([
+      getFunctionPagedList(query),
+      getAllMenu(),
+    ]);
     // console.log('getFunctionPagedList', dataRes);
     let data = dataRes.data;
     const pagination = { ...this.state.pagination };
     pagination.total = data.totalCount;
+    this.menuList = menu.data.rows;
     this.setState({
       loading: false,
       pagedList: data.rows,
@@ -166,13 +183,10 @@ class Function extends React.PureComponent {
 
   // button 按钮删除 气泡确认 确定删除
   batchDelFunction = async () => {
+    const { selectedRowKeys } = this.state;
     try {
       await delFunctions({
-        ids: JSON.stringify(
-          this.state.selectedRowKeys.map((s) => {
-            return s;
-          }),
-        ),
+        ids: selectedRowKeys,
       });
       this.setState({
         selectedRowKeys: [],
@@ -216,7 +230,7 @@ class Function extends React.PureComponent {
     };
     // 模态框显示
     this.setState({
-      editModalVisible: true,
+      commonModalVisible: true,
     });
   };
 
@@ -231,71 +245,72 @@ class Function extends React.PureComponent {
         name: record.name,
         code: record.code,
         description: record.description,
-        moduleId: record.name,
+        moduleId: record.moduleId,
+        id: record.id,
       },
     );
     this.editFormData = { ...obj };
     this.setState({
-      editModalVisible: true,
+      commonModalVisible: true,
+      isModalEdit: true,
     });
   };
 
-  // Modal 处理数据 ：此方法传入子组件 commonForm 获取表单数据data
-  modalSaveFunctionData = async (data) => {
-    // console.log('saveFunction-data', data);
+  // Modal
+  modalSubmit = async (data) => {
     let formData = { ...this.editFormData, ...data };
-    let menuList = formRemoteDataUtil.getData(
-      `${schema.editSchema['$id']}_moduleId`,
-    );
-    formData.moduleId = formData.moduleId[formData.moduleId.length - 1];
-    let menu = util.getTreeEleByPropertyValue(
-      formData.moduleId,
-      'id',
-      menuList,
-    );
-    formData.module = menu.title;
-    try {
-      await saveFunction(formData);
-
-      this.setState({
-        editModalVisible: false,
-      });
-      notification.success({
-        placement: 'bottomLeft bottomRight',
-        message: '保存成功',
-      });
-    } catch (e) {
-      notification.error({
-        message: e,
-      });
+    if (!this.state.isModalEdit) {
+      // 编辑接口
+      try {
+        await addFunction(formData);
+        this.setState({
+          commonModalVisible: false,
+        });
+        notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: '保存成功',
+        });
+      } catch (e) {
+        notification.error({
+          message: e.msg,
+        });
+      }
+    } else {
+      // 新增接口
+      try {
+        await editFunction(formData);
+        this.setState({
+          commonModalVisible: false,
+          isModalEdit: false,
+        });
+        notification.success({
+          placement: 'bottomLeft bottomRight',
+          message: '保存成功',
+        });
+      } catch (e) {
+        notification.error({
+          message: e.msg,
+        });
+      }
     }
     this.refresh();
   };
 
-  // Modal Onok 确认保存 调用子组件handleSubmit，子组件handleSubmit（）调用父组件的saveFunction（），子组件校验表单 并传回 表单数据
-  editModalOnOk = () => {
-    // 不直接调用saveFunction，是因为form组件内部会先校验表单，通过才会调用通过props传进去的saveFunction
-    this.editFunctionForm.commonFormhandleSubmit();
-  };
-
   // Modal Cancel
-  editModalOnCancel = () => {
+  modalOnCancel = () => {
     this.setState({
-      editModalVisible: false,
+      commonModalVisible: false,
+      isModalEdit: false,
     });
   };
 
   componentDidMount() {
-    this.fetch({
-      pageIndex: this.state.pagination.current,
-      pageSize: this.state.pagination.pageSize,
-      filter: this.state.filter,
-    });
+    console.log('Function Did Mount', this.props);
+    this.refresh();
   }
 
   render() {
     console.log('render:Function');
-    // console.log('Function editFormData', this.editFormData);
     const { selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -333,24 +348,18 @@ class Function extends React.PureComponent {
           bordered
         />
         <CommonModal
-          visible={this.state.editModalVisible}
+          visible={this.state.commonModalVisible}
           title={this.editFormData.id ? '编辑' : '新增'}
-          onCancel={this.editModalOnCancel}
+          onCancel={this.modalOnCancel}
           destroyOnClose
           schema={schema.editSchema}
           uiSchema={schema.editUiSchema}
           formData={this.editFormData}
-          handFormSubmit={this.modalSaveFunctionData}
+          handFormSubmit={this.modalSubmit}
         />
       </div>
     );
   }
 }
-const mapStateToPorps = (state) => {
-  console.log('app state', state);
-  const { accessMenu } = state.app.accessMenu;
-  return {
-    accessMenu,
-  };
-};
-export default connect(mapStateToPorps)(Function);
+
+export default Function;

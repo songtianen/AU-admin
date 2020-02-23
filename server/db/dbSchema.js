@@ -18,4 +18,12 @@ module.exports = {
     desc: '',
     title: '',
   },
+  Function: {
+    name: '',
+    code: '',
+    description: '',
+    moduleId: '',
+    module: '',
+    id: '',
+  },
 };

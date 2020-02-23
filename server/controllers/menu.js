@@ -4,6 +4,7 @@ const menuService = require('../services/menuService');
 const { getRoleFunctions } = require('../services/roleService');
 const { businessError, success } = require('../lib/responseTemplate');
 
+// 获取所有菜单 带权限
 const getAccessMenuList = ({ req, res }) => {
   // console.log('获取菜单', req.user);
   getUserInfoById(req.user.userId).then((userInfo) => {
@@ -14,7 +15,7 @@ const getAccessMenuList = ({ req, res }) => {
   });
 };
 
-// 获取所有菜单
+// 获取所有菜单:非树结构
 const getAllMenuWithPage = ({ req, res }) => {
   // console.log('获取菜单列表', req.query);
   let pageIndex = req.query.pageIndex || '';
