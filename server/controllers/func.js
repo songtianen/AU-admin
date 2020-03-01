@@ -62,7 +62,6 @@ const addFunction = ({ req, res }) => {
   functionService
     .addFunction(func)
     .then((result) => {
-      console.log('saveFunction 异步---', result);
       if (!result.success) {
         return businessError({ res, msg: result.msg });
       }

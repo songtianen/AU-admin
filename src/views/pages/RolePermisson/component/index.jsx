@@ -91,6 +91,7 @@ class RolePermission extends React.PureComponent {
       filter: this.state.tableFilter,
     };
     this.fetch(query);
+    console.log('刷新啊');
   };
 
   componentDidMount() {
@@ -131,8 +132,8 @@ class RolePermission extends React.PureComponent {
    * @description 编辑角色权限
    */
   editRolePermission = (record) => {
+    console.log('record', record);
     this.editFormData = { ...record };
-    // console.log('$%%%%%%', this.editFormData);
     this.setState({
       editModalVisible: true,
     });
@@ -152,7 +153,7 @@ class RolePermission extends React.PureComponent {
    */
   saveRolePermission = async (data) => {
     let formData = { ...data };
-    // console.log('角色权限管理，组件提交角色权限', formData);
+    console.log('角色权限管理，组件提交角色权限', formData);
     try {
       await savePermission(formData);
       notification.success({
@@ -167,6 +168,7 @@ class RolePermission extends React.PureComponent {
         message: e,
       });
     }
+    this.refresh();
   };
 
   // table 表格 分页、排序、筛选变化时触发

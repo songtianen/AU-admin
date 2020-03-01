@@ -10,19 +10,6 @@ dbm.once('open', function() {
   console.log('欢迎 mongoose!!');
 });
 
-const productsSchema = new mongoose.Schema({
-  categoryId: { type: Number },
-  id: { type: Number },
-  imageHost: { type: String },
-  mainImage: { type: String },
-  name: { type: String },
-  price: { type: Number },
-  status: { type: Number },
-  subtitle: { type: String },
-});
-
-let ProductsModel = mongoose.model('Products', productsSchema);
-
 const userSchema = new mongoose.Schema({
   isAdmin: { type: String },
   id: String,
@@ -69,25 +56,12 @@ const functionSchema = new mongoose.Schema({
 const roleSchema = new mongoose.Schema({
   name: String,
   code: String,
-  moduleId: Number,
+  moduleId: String,
   description: String,
   id: String,
   permission: [String],
   userId: [String],
   departmentId: String,
-});
-// 角色权限
-const rolePermission = new mongoose.Schema({
-  name: String,
-  code: String,
-  moduleId: Number,
-  roleId: String,
-  id: String,
-  permission: [String],
-});
-// 用户权限列表
-const userPermission = new mongoose.Schema({
-  permission: [String],
 });
 // 部门
 const departmentSchema = new mongoose.Schema({
@@ -108,19 +82,14 @@ const departmentSchema = new mongoose.Schema({
 });
 
 let RoleModel = mongoose.model('rolelist', roleSchema); // 角色列表
-let RolePermission = mongoose.model('role_permission', rolePermission); // 角色权限列表
-let UserPermission = mongoose.model('user_permission', userPermission); // 用户权限列表
 let UserModel = mongoose.model('user', userSchema); // 用户列表
 let AccessMemuModel = mongoose.model('accessMemu', AccessMemu); // 菜单列表
 let FunctionModel = mongoose.model('functionList', functionSchema); // 功能列表
 let DepartmentModel = mongoose.model('department', departmentSchema); // 功能列表
 module.exports = {
   UserModel,
-  ProductsModel,
   AccessMemuModel,
   FunctionModel,
   RoleModel,
-  RolePermission,
-  UserPermission,
   DepartmentModel,
 };

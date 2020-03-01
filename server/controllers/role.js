@@ -103,6 +103,7 @@ module.exports = {
   },
   savePermission: async ({ req, res }) => {
     let { moduleId, roleId, permissions } = req.body;
+    console.log('保存权限', req.body);
     let db = await roleService.savePermission(moduleId, roleId, permissions);
     if (db) {
       return responseTemplate.success({ res, msg: '角色权限保存成功' });
@@ -202,31 +203,3 @@ module.exports = {
       });
   },
 };
-
-// export let savePermission = async (ctx) => {
-//   let data = ctx.request.body;
-//   let functionList = [];
-//   if (data.moduleId == 0) {
-//     functionList = await functionService.getFunctionList();
-//   }
-//   data.permissions = data.permissions.map((s) => {
-//     // react-antd-admin
-//     if (data.moduleId == 0) {
-//       let f = functionList.filter((p) => p.id == s);
-//       let permission = {};
-//       permission.id = s;
-//       permission.moduleId = f.length > 0 ? f[0].moduleId : 0;
-//       return permission;
-//     } else {
-//       // vue-quasar-admin
-//       s = JSON.parse(s);
-//       return s;
-//     }
-//   });
-//   let menuWithChildren = await menuService.getMenuFunctions(data.moduleId);
-//   let menuIds = menuWithChildren.map((s) => {
-//     return s.id;
-//   });
-//   await roleService.savePermission(menuIds, data.roleId, data.permissions);
-//   return responseTemplate.success(ctx, null);
-// };

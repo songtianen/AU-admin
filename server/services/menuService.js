@@ -1,8 +1,7 @@
 const uuidv4 = require('uuid/v4');
-const { AccessMemuModel, FunctionModel } = require('../model/model'); // 引入模型
-const { businessError, success } = require('../lib/responseTemplate');
-const { findFunctionList } = require('./functionService');
+const { AccessMemuModel, FunctionModel, RoleModel } = require('../model/model'); // 引入模型
 const _ = require('lodash');
+const dbSchema = require('../db/dbSchema');
 
 const buildMenu = (parentMenu, menuList) => {
   parentMenu.children = []; // 根菜单children属性
@@ -109,15 +108,10 @@ const buildMenuTreeWithFunction = (menu, funcList) => {
 let menuService = {
   // 获取所有的未经处理菜单
   getAllMenuList,
-  getAllMenuWithPage: async (
-    pageIndex,
-    pageSize,
-    sortBy,
-    descending,
-    filter,
-  ) => {
+  getAllMenu: async (pageIndex, pageSize, sortBy, descending, filter) => {
     let menuLists = await AccessMemuModel.find();
     menuLists = JSON.parse(JSON.stringify(menuLists));
+    let allList = JSON.parse(JSON.stringify(menuLists));
     if (filter.functionCode) {
       menuLists = _.filter(menuLists, (o) => {
         return o.functionCode.indexOf(filter.functionCode) > -1;
@@ -149,6 +143,7 @@ let menuService = {
     return {
       totalCount: totalCount,
       rows: menuLists,
+      allList,
     };
   },
   // 可访问的菜单
@@ -198,39 +193,6 @@ let menuService = {
     }
     return parentMenuList;
   },
-  postSaveMenu: (res, requstData, menu) => {
-    if (!requstData.id) {
-      let insertData = {
-        ...requstData,
-        id: uuidv4(),
-      };
-      AccessMemuModel.create({ ...insertData }, (err, doc) => {
-        if (!err) {
-          return success({ res, data: '', msg: '添加成功' });
-        }
-      });
-    }
-    for (let i = 0; i < menu.length; i++) {
-      if (menu[i].id === requstData.id) {
-        if (requstData.name === menu[i].name) {
-          return businessError({ res, msg: '名称已存在' });
-        }
-        if (requstData.title === menu[i].title) {
-          return businessError({ res, msg: '标题已存在' });
-        }
-        // 如果有 id 相等 就是更新这条数据
-        AccessMemuModel.where({ id: requstData.id }).updateOne(
-          { $set: { ...requstData } },
-          (err, d) => {
-            if (err) {
-              return businessError({ res, msg: '数据库保存错误' });
-            }
-          },
-        );
-      }
-      // 如果id存在（说明用户是在更新这条数据）
-    }
-  },
   getMenuWithChildren: async (menuId) => {
     // console.log(typeof menuId);
     let menuList = await getAllMenuList();
@@ -257,23 +219,56 @@ let menuService = {
     }
     return menuWithChildren;
   },
-  GetMenuFunctions: async (menuId) => {
-    let menuList = await menuService.getMenuWithChildren(menuId);
-    let copy = JSON.parse(JSON.stringify(menuList));
-    let functionList = await findFunctionList();
-    functionList = _.sortBy(functionList, ['name']);
-    for (let menu of copy) {
-      menu.functions = functionList.filter((s) => {
-        // console.log('s.moduleId.toString()', s.moduleId.toString());
-        // console.log('menu.id', menu.id);
-        return s.moduleId.toString() === menu.id;
-      });
-    }
-    return copy;
-  },
   editMenu: async (data) => {
     if (data) {
-      const isUpdate = AccessMemuModel.updateOne(
+      // 查询一条
+      if (data.functionCode) {
+        const menuCode = await AccessMemuModel.findOne({
+          functionCode: data.functionCode,
+        });
+        if (menuCode && menuCode.id !== data.id) {
+          return {
+            success: false,
+            msg: `${data.functionCode}已存在`,
+          };
+        }
+      }
+
+      if (data.name) {
+        const menuName = await AccessMemuModel.findOne({
+          name: data.name,
+        });
+        if (menuName && menuName.id !== data.id) {
+          return {
+            success: false,
+            msg: `${data.name}已存在`,
+          };
+        }
+      }
+      if (data.title) {
+        const menuTitle = await AccessMemuModel.findOne({
+          title: data.title,
+        });
+        if (menuTitle && menuTitle.id !== data.id) {
+          return {
+            success: false,
+            msg: `${data.title}已存在`,
+          };
+        }
+      }
+      if (data.path) {
+        const menuPath = await AccessMemuModel.findOne({
+          path: data.path,
+        });
+        if (menuPath && menuPath.id !== data.id) {
+          return {
+            success: false,
+            msg: `${data.path}已存在`,
+          };
+        }
+      }
+
+      await AccessMemuModel.updateOne(
         {
           id: data.id,
         },
@@ -281,17 +276,60 @@ let menuService = {
           ...data,
         },
       );
-      return isUpdate;
+      return {
+        success: true,
+        msg: `修改成功`,
+      };
     }
-    return new Error({ msg: '数据库修改错误' });
+    return Promise.reject(new Error({ msg: '保存错误，没有参数' }));
   },
   addMenu: async (data) => {
     if (data) {
-      const isCreate = await AccessMemuModel.create({
+      if (data.title) {
+        const info = await AccessMemuModel.findOne({ title: data.title });
+        if (info) {
+          return {
+            success: false,
+            msg: `${info.title}已存在`,
+          };
+        }
+      }
+      if (data.name) {
+        const info = await AccessMemuModel.findOne({ name: data.name });
+        if (info) {
+          return {
+            success: false,
+            msg: `${info.name}已存在`,
+          };
+        }
+      }
+      if (data.functionCode) {
+        const info = await AccessMemuModel.findOne({ functionCode: data.code });
+        if (info) {
+          return {
+            success: false,
+            msg: `${info.code}已存在`,
+          };
+        }
+      }
+      if (data.path) {
+        const info = await AccessMemuModel.findOne({ path: data.path });
+        if (info) {
+          return {
+            success: false,
+            msg: `${info.path}已存在`,
+          };
+        }
+      }
+      await AccessMemuModel.create({
+        ...dbSchema.Menu,
         ...data,
         id: uuidv4(),
       });
-      return isCreate;
+      return {
+        success: true,
+        msg: '数据库保存成功',
+      };
     }
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject({ msg: '没有参数' });
@@ -310,89 +348,32 @@ let menuService = {
   },
   delMenus: async (menuIds) => {
     if (menuIds) {
-      const isdel = AccessMemuModel.deleteMany({ id: menuIds });
-      return isdel;
+      await AccessMemuModel.deleteMany({ id: menuIds });
+      // 删除functionModal中moduleID是menuIds的文档
+      await FunctionModel.deleteMany({ moduleId: menuIds });
+      return {
+        success: true,
+        msg: '删除成功!',
+      };
     } else {
-      // eslint-disable-next-line prefer-promise-reject-errors
-      return Promise.reject({ msg: '服务器错误' });
+      return Promise.reject(new Error({ msg: '服务器错误' }));
     }
   },
-  getAllMenuWithFunction: async () => {
+  getAllMenuWithFunction: async (roleId) => {
     let menu = await AccessMemuModel.find();
     let funcList = await FunctionModel.find();
     menu = JSON.parse(JSON.stringify(menu));
     funcList = JSON.parse(JSON.stringify(funcList));
     const buildMenu = buildMenuTreeWithFunction(menu, funcList);
-    return buildMenu;
-    // let rootMenu = menu.filter((v) => {
-    //   return v.parentId === '0';
-    // });
-    // const build = (listItem, allList) => {
-    //   for (let i = 0; i < listItem.length; i++) {
-    //     listItem[i].children = [];
-    //     let children = allList.filter((item) => {
-    //       return item.parentId === listItem[i].id;
-    //     });
-    //     listItem[i].children.push(...children);
-    //     if (listItem[i].children) {
-    //       build(listItem[i].children, allList);
-    //     }
-    //   }
-    //   return listItem;
-    // };
-    // const menuList = build(rootMenu, menu);
-    // -------
-    // 更新func与menu最后一层的对应关系的id
-    // let a = []; // 找到没有节点的那一层
-    // const findEmpty = (data) => {
-    //   for (let i of data) {
-    //     // console.log('iiiiii', i);
-    //     if (i.children) {
-    //       findEmpty(i.children);
-    //     }
-    //     if (i.children.length === 0) {
-    //       a.push(i);
-    //     }
-    //   }
-    // };
-    // findEmpty(menuList);
-    // // 1，查找function的moduleId是 a的那一项（找到之后更新menu重的id 再查找，更新对应的function中的ID）
-
-    // const updateID = async (menuLists, funcLists) => {
-    //   for (let i of menuLists) {
-    //     for (let j of funcLists) {
-    //       if (j.moduleId === i.id) {
-    //         await AccessMemuModel.updateOne({ id: i.id }, { id: uuidv4() });
-    //         const upMenuItem = await AccessMemuModel.findOne({
-    //           title: i.title,
-    //         });
-    //         await FunctionModel.updateOne(
-    //           { id: j.id },
-    //           { moduleId: upMenuItem.id },
-    //         );
-    //       }
-    //     }
-    //   }
-    // };
-
-    // updateID(a, funcList);
-    // -------
-
-    // const updateAllMenuId = async (data) => {
-    //   for (let i of data) {
-    //     for (let j of data) {
-    //       if (i.id === j.parentId) {
-    //         const idstr = uuidv4();
-    //         await AccessMemuModel.updateOne({ id: i.id }, { id: idstr });
-    //         await AccessMemuModel.updateOne(
-    //           { parentId: j.parentId },
-    //           { parentId: idstr },
-    //         );
-    //       }
-    //     }
-    //   }
-    // };
-    // updateAllMenuId(menu);
+    if (!roleId) {
+      return buildMenu;
+    } else {
+      let roleFunctions = await RoleModel.findOne({ id: roleId });
+      return {
+        menuList: buildMenu,
+        roleFunctions: roleFunctions,
+      };
+    }
   },
 };
 module.exports = menuService;

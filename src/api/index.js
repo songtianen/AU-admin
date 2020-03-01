@@ -135,16 +135,6 @@ export function getAllMenuWithFunction(query) {
     // loading: 'spin',
   });
 }
-
-export function saveMenu(menu) {
-  return request({
-    url: '/menu/savemenu',
-    method: 'post',
-    data: menu,
-    loading: 'message',
-    permission: ['menu_edit'],
-  });
-}
 export function editMenu(menu) {
   return request({
     url: '/menu/editmenu',
@@ -172,16 +162,6 @@ export function delMenus(data) {
     // permission: ['menu_edit'],
   });
 }
-
-export function getMenuFunctions(menuId) {
-  return request({
-    url: '/menu/menufunctions',
-    method: 'get',
-    params: menuId,
-    loading: 'spin',
-  });
-}
-
 export function getIcons() {
   return request({
     url: '/icons',
@@ -191,14 +171,6 @@ export function getIcons() {
 }
 
 // function
-export function getMenuListFunctionCode() {
-  return request({
-    url: '/function/menulistfunctioncode',
-    method: 'get',
-    loading: 'spin',
-  });
-}
-
 export function getFunctionPagedList(query) {
   return request({
     url: '/function/pagedlist',

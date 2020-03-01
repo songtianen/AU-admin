@@ -1,14 +1,4 @@
 export default {
-  module: {
-    'ui:widget': 'input',
-    'ui:options': {
-      size: 'small',
-      type: 'text',
-      placeholder: '模块模糊查询',
-    }, // 组件属性配置
-    'ui:title': '模块名称', // 覆盖schema 中定义的title
-    'ui:description': '',
-  },
   name: {
     'ui:widget': 'input',
     'ui:options': {
@@ -26,7 +16,7 @@ export default {
       type: 'text',
       placeholder: '编码模糊查询',
     },
-    'ui:title': '模块编码',
+    'ui:title': ' 功能编码',
     'ui:description': '',
   },
 };

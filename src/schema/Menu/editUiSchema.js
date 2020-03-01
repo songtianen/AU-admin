@@ -103,13 +103,13 @@ export default {
   leftMenu: {
     'ui:widget': 'radio',
     'ui:options': {
-      initialValue: true,
+      // initialValue: true,
       options: [
-        { label: '是', value: true },
-        { label: '否', value: false },
+        { label: '是', value: '1' },
+        { label: '否', value: '0' },
       ],
     },
-    'ui:rules': [{ required: true, message: '请输入角色编码' }], // 校验规则
+    'ui:rules': [{ required: true, message: '请选择' }], // 校验规则
     'ui:title': '左侧',
     'ui:description': '',
     'ui:formItemConfig': {
@@ -122,13 +122,13 @@ export default {
   isLock: {
     'ui:widget': 'radio',
     'ui:options': {
-      initialValue: true,
+      // initialValue: false,
       options: [
-        { label: '是', value: true },
-        { label: '否', value: false },
+        { label: '是', value: '1' },
+        { label: '否', value: '0' },
       ],
     },
-    'ui:rules': [{ required: true, message: '请输入角色编码' }], // 校验规则
+    'ui:rules': [{ required: true, message: '请选择' }], // 校验规则
     'ui:title': '锁定',
     'ui:description': '',
     'ui:formItemConfig': {

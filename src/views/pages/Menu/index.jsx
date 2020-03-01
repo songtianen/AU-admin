@@ -1,6 +1,6 @@
 import React from 'react';
 // import { connect } from 'react-redux';
-import { Table, Divider, notification, Badge } from 'antd';
+import { Table, Divider, notification, Badge, Tag } from 'antd';
 import { getAllMenu, editMenu, delMenus, addMenu } from '../../../api';
 
 import SearchForm from '../../../schema/SearchForm/SearchForm';
@@ -18,6 +18,7 @@ class Menu extends React.PureComponent {
     searchFormExpand: true,
     tableSelectedRowKeys: [], // table 选择的数据
     pagedList: [], // table 展示的数据
+    allList: [],
     // table 分页器
     pagination: {
       current: 1,
@@ -59,6 +60,10 @@ class Menu extends React.PureComponent {
     {
       title: '父菜单',
       dataIndex: 'parentId',
+      render: (text) => {
+        return <Tag color='green'>{this.getParentName(text)}</Tag>;
+      },
+      width: 140,
       sorter: true,
     },
     {
@@ -68,7 +73,6 @@ class Menu extends React.PureComponent {
     {
       title: '左侧菜单',
       dataIndex: 'leftMenu',
-      sorter: true,
       render: (text) => {
         return text ? (
           <div style={{ textAlign: 'center' }}>
@@ -84,7 +88,6 @@ class Menu extends React.PureComponent {
     {
       title: '是否锁定',
       dataIndex: 'isLock',
-      sorter: true,
       render: (text) => {
         return text ? (
           <div style={{ textAlign: 'center' }}>
@@ -126,6 +129,16 @@ class Menu extends React.PureComponent {
   // 模态框 数据组
   editFormData = {};
 
+  getParentName = (id) => {
+    let pagedList = this.state.allList;
+    for (let i of pagedList) {
+      if (i.id === id) {
+        return i.title;
+      }
+    }
+    return '';
+  };
+
   fetch = async (query = {}) => {
     this.setState({ loading: true });
     let ResData = await getAllMenu(query);
@@ -135,6 +148,7 @@ class Menu extends React.PureComponent {
     this.setState({
       loading: false,
       pagedList: data.rows,
+      allList: data.allList,
       pagination,
     });
   };
@@ -195,10 +209,6 @@ class Menu extends React.PureComponent {
 
   // button Popconfirm 删除
   batchDelRole = async () => {
-    console.log(
-      'this.state.tableSelectedRowKeys',
-      this.state.tableSelectedRowKeys,
-    );
     try {
       await delMenus({
         ids: this.state.tableSelectedRowKeys,
@@ -235,8 +245,7 @@ class Menu extends React.PureComponent {
   // modal
   modalSubmit = async (data) => {
     if (this.state.isEditModal) {
-      let formData = { ...this.editFormData, ...data };
-
+      let formData = { ...data, id: this.editFormData.id };
       try {
         await editMenu(formData);
         this.setState({
@@ -271,15 +280,16 @@ class Menu extends React.PureComponent {
     this.refresh();
   };
 
-  // table edit Popconfirm
+  // table编辑
   editRole = (record) => {
     let obj = Object.assign(
       {},
       {
         ...record,
+        isLock: record.isLock ? '1' : '0',
+        leftMenu: record.leftMenu ? '1' : '0',
       },
     );
-    // console.log('fuck-0000', record);
     this.editFormData = { ...obj };
     this.setState({
       editModalVisible: true,

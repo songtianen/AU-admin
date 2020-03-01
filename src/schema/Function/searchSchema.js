@@ -5,10 +5,6 @@ export default {
   type: 'object',
   required: [],
   properties: {
-    module: {
-      type: 'string',
-      title: '模块名称',
-    },
     name: {
       type: 'string',
       title: '功能名称',

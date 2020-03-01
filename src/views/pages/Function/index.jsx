@@ -17,7 +17,6 @@ class Function extends React.PureComponent {
 
   state = {
     filter: {
-      module: '',
       name: '',
       code: '',
     },
@@ -216,8 +215,10 @@ class Function extends React.PureComponent {
             i.value = i.id;
             i.key = i._id;
             i.selectable = true;
+            i.disabled = false;
             if (i.moduleId) {
               i.selectable = false;
+              i.disabled = true;
             }
             if (i.children) {
               changeList(i.children);
@@ -305,7 +306,7 @@ class Function extends React.PureComponent {
   };
 
   componentDidMount() {
-    console.log('Function Did Mount', this.props);
+    console.log('Function Did Mount');
     this.refresh();
   }
 

@@ -1,6 +1,7 @@
 const { DepartmentModel, RoleModel } = require('../model/model'); // 引入模型
 const _ = require('lodash');
 const uuidv4 = require('uuid/v4');
+const dbSchema = require('../db/dbSchema');
 
 const buildDepartList = (deparmentList) => {
   for (let departmenu = 0; departmenu < deparmentList.length; departmenu++) {
@@ -120,21 +121,10 @@ const getAllDepartmentTree = async (selector = {}) => {
 };
 const addDepartment = async ({ data }) => {
   let departmentSchmea = {
-    icon: '',
-    id: uuidv4(),
-    code: '',
-    leftDepartment: false,
-    isLock: false,
-    name: '',
-    parentId: '',
-    parentName: '',
-    path: '',
-    sort: '',
-    title: data.name,
-    userId: [],
-    roleId: [],
-    level: '',
+    ...dbSchema.Menu,
     ...data,
+    id: uuidv4(),
+    title: data.name,
   };
   const department = await DepartmentModel.create(departmentSchmea);
   return department;

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Tree } from 'antd';
-import { getMenuFunctions } from '../../../../api';
+import { getAllMenuWithFunction } from '../../../../api';
 
 const { TreeNode } = Tree;
 
@@ -41,39 +41,28 @@ class EditModal extends React.PureComponent {
   };
 
   buildMenuListAndFunctions = (menuList) => {
-    let fn = (list) => {
-      for (let menu of list) {
-        let children = menuList.filter((s) => s.parentId === menu.id);
-        let permissionChildren = menu.functions.map((s) => {
-          s.isPermissionChild = true;
-          return s;
-        });
-        if (children && children.length > 0) {
-          fn(children);
+    const changeList = (list) => {
+      for (let i of list) {
+        i.key = i.id;
+        i.selectable = false;
+        if (i.moduleId) {
+          i.selectable = true;
+          i.isPermissionChild = true;
+          i.title = i.name;
         }
-        menu.children = [...children, ...permissionChildren];
+        if (i.children) {
+          changeList(i.children);
+        }
       }
+      return list;
     };
-    // 顶级菜单
-    let topMenus = menuList.filter((s) => s.parentId === '0');
-    for (let menu of topMenus) {
-      // 找出menuList中的 子菜单；全部菜单（menuList）中parentId = 顶级菜单的
-      let children = menuList.filter((s) => s.parentId === menu.id);
-      let permissionChildren = menu.functions.map((s) => {
-        s.isPermissionChild = true;
-        return s;
-      });
-      // console.log('permissionChildren', permissionChildren);
-      if (children && children.length > 0) {
-        fn(children);
-      }
-      menu.children = [...children, ...permissionChildren];
-    }
-    return topMenus;
+    return changeList(menuList);
   };
 
   // eslint-disable-next-line no-unused-vars
   onCheck = (checkedKeys, info) => {
+    console.log('checkedKeys', checkedKeys);
+
     this.checkedKeys = checkedKeys.filter((s) => s.indexOf('menu') < 0);
   };
 
@@ -82,15 +71,13 @@ class EditModal extends React.PureComponent {
       return;
     }
     let roleId = nextProps.formData.id;
-    getMenuFunctions({
-      menuId: 0,
+    getAllMenuWithFunction({
       roleId,
     }).then((moduleFunctionsRes) => {
-      // console.log('宋', moduleFunctionsRes);
       let menuFunctionList = this.buildMenuListAndFunctions(
-        moduleFunctionsRes.data.menuFunctions,
+        moduleFunctionsRes.data.menuList,
       );
-      let rolePermissions = moduleFunctionsRes.data.roleFunctions;
+      let rolePermissions = moduleFunctionsRes.data.roleFunctions.permission;
       this.defaultCheckKeys = rolePermissions;
       this.checkedKeys = rolePermissions;
       this.setState({
@@ -160,6 +147,7 @@ class EditModal extends React.PureComponent {
         defaultCheckedKeys={this.defaultCheckKeys}
         onCheck={this.onCheck}
         selectable={false}
+        showLine
       >
         {this.renderTreeNode(this.state.menuFunctionList)}
       </Tree>

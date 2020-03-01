@@ -1,5 +1,7 @@
 const { RoleModel, UserModel, DepartmentModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
+const dbSchema = require('../db/dbSchema');
+
 const { commonService } = require('../util/services');
 
 const _ = require('lodash');
@@ -175,31 +177,26 @@ module.exports = {
     };
   },
   addRole: async (role) => {
-    let exist = await RoleModel.findOne({ code: role.code });
-    // console.log('查询数据库save', exist);
-    if (exist && exist.id !== role.id) {
-      return {
-        success: false,
-        msg: '角色编码已经存在',
-      };
+    if (role.name) {
+      const info = await RoleModel.findOne({ name: role.name });
+      if (info) {
+        return {
+          success: false,
+          msg: `${info.name}已存在`,
+        };
+      }
     }
-    let exist1 = await RoleModel.findOne({ name: role.name });
-    // console.log('查询数据库save', exist);
-    if (exist1 && exist1.id !== role.id) {
-      return {
-        success: false,
-        msg: '角色名称已经存在',
-      };
+    if (role.code) {
+      const info = await RoleModel.findOne({ name: role.code });
+      if (info) {
+        return {
+          success: false,
+          msg: `${info.code}已存在`,
+        };
+      }
     }
-
     const created = await RoleModel.create({
-      name: '',
-      code: '',
-      moduleId: 0,
-      description: '',
-      permission: [],
-      userId: [],
-      departmentId: '',
+      ...dbSchema.Menu,
       ...role,
       id: uuidv4(),
     });

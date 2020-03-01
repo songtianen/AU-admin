@@ -1,7 +1,7 @@
 const { getUserInfoById } = require('../services/userService');
 const { checkParametersEmpety } = require('../util/util');
 const menuService = require('../services/menuService');
-const { getRoleFunctions } = require('../services/roleService');
+// const { getRoleFunctions } = require('../services/roleService');
 const { businessError, success } = require('../lib/responseTemplate');
 
 // 获取所有菜单 带权限
@@ -16,16 +16,15 @@ const getAccessMenuList = ({ req, res }) => {
 };
 
 // 获取所有菜单:非树结构
-const getAllMenuWithPage = ({ req, res }) => {
+const getAllMenu = ({ req, res }) => {
   // console.log('获取菜单列表', req.query);
   let pageIndex = req.query.pageIndex || '';
   let pageSize = req.query.pageSize || '';
   let sortBy = req.query.sortBy || '';
   let descending = req.query.descending || '';
   let filter = req.query.filter ? JSON.parse(req.query.filter) : '';
-
   menuService
-    .getAllMenuWithPage(pageIndex, pageSize, sortBy, descending, filter)
+    .getAllMenu(pageIndex, pageSize, sortBy, descending, filter)
     .then((doc) => {
       return success({ res, data: doc });
     })
@@ -33,28 +32,6 @@ const getAllMenuWithPage = ({ req, res }) => {
       businessError({ res, msg: '服务器错误' });
     });
 };
-
-const saveMenu = ({ req, res }) => {
-  const menu = req.body;
-  if (menu.name === '') {
-    return businessError({ res, msg: '名称不能为空!' });
-  }
-  if (menu.title === '') {
-    return businessError({ res, msg: '标题不能为空!' });
-  }
-  if (menu.icon === '') {
-    return businessError({ res, msg: '请选择图标!' });
-  }
-  menuService
-    .getAllMenuList()
-    .then((doc) => {
-      return menuService.postSaveMenu(res, menu, doc);
-    })
-    .catch(() => {
-      businessError({ res, msg: '服务器错误' });
-    });
-};
-
 const addMenu = async ({ req, res }) => {
   let { title, name, functionCode, path } = req.body;
   let menuData = req.body;
@@ -106,14 +83,16 @@ const addMenu = async ({ req, res }) => {
 
 const editMenu = ({ req, res }) => {
   const menu = req.body;
-  const data = Object.assign({}, { ...menu });
-  delete data._id;
-  delete data.__v;
-
+  let data = Object.assign({}, { ...menu });
+  data.isLock === '0' ? (data.isLock = false) : (data.isLock = true);
+  data.leftMenu === '0' ? (data.leftMenu = false) : (data.leftMenu = true);
   menuService
     .editMenu(data)
     .then((doc) => {
-      return success({ res, data: doc });
+      if (!doc.success) {
+        return businessError({ res, msg: doc.msg });
+      }
+      return success({ res, msg: doc.msg });
     })
     .catch((e) => {
       businessError({ res, msg: e });
@@ -126,35 +105,23 @@ const delMenus = ({ req, res }) => {
   menuService
     .delMenus(ids)
     .then((doc) => {
-      return success({ res, data: doc });
+      if (!doc.success) {
+        return businessError({ res, msg: doc.msg });
+      }
+      return success({ res, msg: doc.msg });
     })
     .catch((e) => {
       businessError({ res, msg: e.msg });
     });
 };
 
-// 角色权限管理
-const getMenufunctions = async ({ req, res }) => {
-  let menuId = req.query.menuId;
-  let roleId = req.query.roleId;
-  let [menuFunctions, roleFunctions] = await Promise.all([
-    menuService.GetMenuFunctions(menuId),
-    getRoleFunctions(roleId),
-  ]);
-  // console.log('getRolefunctions', roleFunctions);
-  return success({
-    res,
-    data: {
-      menuFunctions: menuFunctions,
-      roleFunctions: roleFunctions,
-    },
-  });
-};
 // 获取菜单数与功能树
 const getAllMenuWithFunction = async ({ req, res }) => {
-  console.log('qingqiu---');
+  const { roleId } = req.query;
+  // 传入roleID，返回role下的permission
+  console.log('roleId', roleId);
   menuService
-    .getAllMenuWithFunction()
+    .getAllMenuWithFunction(roleId)
     .then((doc) => {
       return success({ res, data: doc });
     })
@@ -164,9 +131,7 @@ const getAllMenuWithFunction = async ({ req, res }) => {
 };
 module.exports = {
   getAccessMenuList,
-  saveMenu,
-  getMenufunctions,
-  getAllMenuWithPage,
+  getAllMenu,
   editMenu,
   addMenu,
   delMenus,
