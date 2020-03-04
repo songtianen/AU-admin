@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+// import { withRouter } from 'react-router-dom';
+
 import {
   Row,
   Col,
@@ -9,21 +11,19 @@ import {
   Button,
   Card,
   Checkbox,
-  notification,
+  // notification,
 } from 'antd';
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
-import { getToken } from '../../../util/token';
-import { login, clearRegisterError } from './redux/actions';
+// import { getToken } from '../../../util/token';
+import { login } from './redux/actions';
 
 const FormItem = Form.Item;
 const { Meta } = Card;
 
-class Login extends React.PureComponent {
+class Login extends React.Component {
   state = {
     loading: false,
-    username: '#$@!#%',
-    password: '#$@!#%',
   };
 
   startLogin = () => {
@@ -39,164 +39,24 @@ class Login extends React.PureComponent {
     history.push('/register');
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = () => {
+    console.log('提交表单');
     const { dispatch } = this.props;
-    dispatch(
-      clearRegisterError({
-        error: false,
-        data: {},
-        msg: '',
-      }),
-    );
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        let vals = { ...values };
-        const keys = Object.keys(vals);
-        keys.forEach((item) => {
-          let a = vals[item];
-          this.setState({
-            [item]: a,
-          });
-        });
-
-        const username = values.username;
-        const password = values.password;
-        dispatch(login({ username, password }));
-        this.startLogin();
-      }
-      if (err) {
-        const username = values.username;
-        const password = values.password;
-        if (!username || !password) {
-          notification.error({
-            message: '请输入用户名或密码',
-          });
-        }
-        this.endLogin();
-      }
-    });
+    const { getFieldsValue } = this.props.form;
+    const values = getFieldsValue();
+    const { username, password } = values;
+    dispatch(login({ username, password }));
+    this.startLogin();
+    const isLogin = this.props.isLogin;
+    console.log('isLogin', isLogin);
+    if (isLogin) {
+      this.props.history.push('/');
+    }
+    this.endLogin();
   };
-
-  componentWillMount() {
-    const { history } = this.props;
-    let token = getToken();
-    if (token) {
-      history.push('/');
-    }
-  }
-
-  // 根据后端返回error数据提示
-  validateInfo = ({ error, data, msg }, key) => {
-    const { form } = this.props;
-    const FieldValue = form.getFieldValue(key);
-    const isTouched = form.isFieldTouched(key);
-    if (isTouched && (!FieldValue || !FieldValue.trim())) {
-      return {
-        error: 'error',
-        msg: '不能输入空格',
-      };
-    }
-
-    if (error && data.info === key) {
-      if (this.state[key] !== FieldValue) {
-        return '';
-      }
-      return {
-        error: 'error',
-        msg,
-      };
-    }
-    return '';
-  };
-
-  // 请求loading的显示与关闭
-  componentDidUpdate(prevProps, prevState) {
-    // 典型用法（不要忘记比较 props）：
-    if (
-      this.props.error !== prevProps.error &&
-      this.state.loading === prevState.loading
-    ) {
-      this.endLogin();
-    }
-  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { error, data, msg } = this.props;
-    const userNameValidateStatus = this.validateInfo(
-      {
-        error,
-        data,
-        msg,
-      },
-      'password',
-    );
-    // const phoneValidateStatus = this.validateInfo(backEndInfo, 'phone');
-    const form = (
-      <Form onSubmit={this.handleSubmit} className='login-form'>
-        <FormItem hasFeedback>
-          {getFieldDecorator('username', {
-            rules: [
-              {
-                required: true,
-                message: '请输入您的用户名!',
-              },
-            ],
-          })(
-            <Input
-              prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
-              placeholder='Username'
-            />,
-          )}
-        </FormItem>
-        <FormItem
-          validateStatus={
-            userNameValidateStatus ? userNameValidateStatus.error : ''
-          }
-          help={userNameValidateStatus ? userNameValidateStatus.msg : ''}
-          hasFeedback
-        >
-          {getFieldDecorator('password', {
-            initialValue: '',
-            rules: [{ required: true, message: '请输入密码!' }],
-          })(
-            <Input
-              prefix={<Icon type='lock' style={{ color: 'rgba(0,0,0,.25)' }} />}
-              type='password'
-              placeholder='Password'
-            />,
-          )}
-        </FormItem>
-        <FormItem>
-          <a className='login-form-forgot' href=''>
-            忘记密码？
-          </a>
-          <Button
-            type='primary'
-            loading={this.state.loading}
-            htmlType='submit'
-            style={{ width: '100%' }}
-          >
-            登录
-          </Button>
-        </FormItem>
-        <FormItem>
-          {getFieldDecorator('remember', {
-            valuePropName: 'checked',
-            initialValue: true,
-          })(<Checkbox>记住我</Checkbox>)}
-          <Button
-            type='primary'
-            onClick={this.gotoRegister}
-            style={{ float: 'right' }}
-          >
-            注册
-          </Button>
-        </FormItem>
-      </Form>
-    );
-
     return (
       <div className='login-container'>
         <canvas id='noise-canvas' />
@@ -218,7 +78,75 @@ class Login extends React.PureComponent {
                     alt='logo'
                     src={logo}
                   />
-                  {form}
+                  <Form className='login-form'>
+                    <FormItem hasFeedback>
+                      {getFieldDecorator('username', {
+                        rules: [
+                          {
+                            required: true,
+                            message: '请输入您的用户名!',
+                          },
+                          { whitespace: true, message: '不能输入空格!' },
+                        ],
+                      })(
+                        <Input
+                          prefix={
+                            <Icon
+                              type='user'
+                              style={{ color: 'rgba(0,0,0,.25)' }}
+                            />
+                          }
+                          placeholder='Username'
+                        />,
+                      )}
+                    </FormItem>
+                    <FormItem hasFeedback>
+                      {getFieldDecorator('password', {
+                        initialValue: '',
+                        rules: [
+                          { required: true, message: '请输入密码!' },
+                          { whitespace: true, message: '不能输入空格!' },
+                        ],
+                      })(
+                        <Input
+                          prefix={
+                            <Icon
+                              type='lock'
+                              style={{ color: 'rgba(0,0,0,.25)' }}
+                            />
+                          }
+                          type='password'
+                          placeholder='Password'
+                        />,
+                      )}
+                    </FormItem>
+                    <FormItem>
+                      <a className='login-form-forgot' href=''>
+                        忘记密码？
+                      </a>
+                      <Button
+                        type='primary'
+                        loading={this.state.loading}
+                        onClick={this.handleSubmit}
+                        style={{ width: '100%' }}
+                      >
+                        登录
+                      </Button>
+                    </FormItem>
+                    <FormItem>
+                      {getFieldDecorator('remember', {
+                        valuePropName: 'checked',
+                        initialValue: true,
+                      })(<Checkbox>记住我</Checkbox>)}
+                      <Button
+                        type='primary'
+                        onClick={this.gotoRegister}
+                        style={{ float: 'right' }}
+                      >
+                        注册
+                      </Button>
+                    </FormItem>
+                  </Form>
                 </div>
               }
             >
@@ -235,16 +163,23 @@ class Login extends React.PureComponent {
             </Card>
           </Col>
         </Row>
+        <Button
+          type='primary'
+          loading={this.state.loading}
+          onClick={this.handleSubmit}
+          style={{ width: '100%' }}
+        >
+          登录
+        </Button>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
+  console.log('Login-state--', state);
   return {
-    error: state.login.error,
-    msg: state.login.msg,
-    data: state.login.data,
+    isLogin: state.login.isLogin,
   };
 };
 // const mapDispatchToProps = (dispatch) => {
@@ -262,9 +197,9 @@ Login.propTypes = {
   history: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  error: PropTypes.bool.isRequired,
-  msg: PropTypes.string.isRequired,
-  data: PropTypes.object.isRequired,
+  isLogin: PropTypes.bool.isRequired,
+  // token: PropTypes.string.isRequired,
+  // data: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(Form.create()(Login));
+export default connect(mapStateToProps)(Form.create({})(Login));

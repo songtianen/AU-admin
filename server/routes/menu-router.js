@@ -1,7 +1,7 @@
 const express = require('express');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
 const {
-  getAccessMenuList,
+  getAccessMenu,
   getAllMenu,
   editMenu,
   addMenu,
@@ -11,8 +11,9 @@ const {
 
 const router = express.Router();
 
+// 获取相应权限的菜单
 router.get('/getaccessmenu', (req, res) => {
-  getAccessMenuList({ req, res });
+  getAccessMenu({ req, res });
 });
 router.get('/getAllMenuWithFunction', (req, res) => {
   getAllMenuWithFunction({ req, res });

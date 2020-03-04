@@ -11,6 +11,7 @@ export default function(state, action) {
       error: false,
       data: {},
       msg: '',
+      isLogin: false,
     };
   }
   switch (action.type) {
@@ -25,12 +26,14 @@ export default function(state, action) {
         ...state,
         token: action.payload.data.accessToken,
         ...action.payload,
+        isLogin: true,
       };
     case actionTypes.REGISTER_SUCCESS:
       return {
         ...state,
         token: action.payload.data.accessToken,
         ...action.payload,
+        isLogin: true,
       };
     case actionTypes.LOGIN_ERROR:
       // 登出

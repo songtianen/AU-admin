@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const uuidv4 = require('uuid/v4');
 const { AccessMemuModel, FunctionModel, RoleModel } = require('../model/model'); // 引入模型
 const _ = require('lodash');
@@ -147,38 +148,41 @@ let menuService = {
     };
   },
   // 可访问的菜单
-  AccessMenuList: (req, userInfo, doc) => {
-    let user = req.user;
-    // let menuList = doc && doc.length > 0 ? doc : dbConfig.menu;
-    let menuList = doc;
-    // 总的菜单列表
-    menuList = _.sortBy(menuList, ['sort']); // 所有菜单
-    // console.log('排序后的', menuList)
-    menuList = copyMenu(menuList);
-    // 找到父级（跟菜单列表）菜单列表（数组）
-    let parentMenuList = menuList.filter((item) => {
-      return item.parentId === '0' && !item.isLock;
-    });
-
-    // 是否是管理员
-    let isAdmin = user.isAdmin;
-    // 管理员权限
-    let userPermission = userInfo.userPermission;
-    // 如若是管理员构建管理员菜单（全部菜单）
-    if (isAdmin) {
-      // eslint-disable-next-line no-unused-vars
-      for (let menu of parentMenuList) {
-        buildMenu(menu, menuList);
-      }
-      // console.log('有children的 菜单', menuList)
-    } else {
-      // 如果不是管理员就构建相应的菜单列表
-      for (let menu of parentMenuList) {
-        buildAccessMenu(menu, menuList, userPermission);
-      }
-    }
-    checkAccssMenu(parentMenuList, menuList); // 根菜单，与总菜单
-    return parentMenuList;
+  AccessMenu: (req, userInfo, doc) => {
+    // let user = req.user;
+    // // let menuList = doc && doc.length > 0 ? doc : dbConfig.menu;
+    // let menuList = doc;
+    // // 总的菜单列表
+    // menuList = _.sortBy(menuList, ['sort']); // 所有菜单
+    // // console.log('排序后的', menuList)
+    // menuList = copyMenu(menuList);
+    // // 找到父级（跟菜单列表）菜单列表（数组）
+    // let parentMenuList = menuList.filter((item) => {
+    //   return item.parentId === '0' && !item.isLock;
+    // });
+    // // 是否是管理员
+    // let isAdmin = user.isAdmin;
+    // // 管理员权限
+    // let userPermission = userInfo.userPermission;
+    // // 如若是管理员构建管理员菜单（全部菜单）
+    // if (isAdmin) {
+    //   // eslint-disable-next-line no-unused-vars
+    //   for (let menu of parentMenuList) {
+    //     buildMenu(menu, menuList);
+    //   }
+    //   // console.log('有children的 菜单', menuList)
+    // } else {
+    //   // 如果不是管理员就构建相应的菜单列表
+    //   for (let menu of parentMenuList) {
+    //     buildAccessMenu(menu, menuList, userPermission);
+    //   }
+    // }
+    // checkAccssMenu(parentMenuList, menuList); // 根菜单，与总菜单
+    // return parentMenuList;
+    return {
+      success: false,
+      msg: 'shibai',
+    };
   },
   MenuList: (doc) => {
     let menuList = doc;

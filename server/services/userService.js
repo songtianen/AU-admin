@@ -137,7 +137,7 @@ const postRegister = async ({ req, res }) => {
   }
 };
 // 添加
-const postSaveUser = async ({ userInfo }) => {
+const addUser = async ({ userInfo }) => {
   const info = await UserModel.create({
     ...dbSchema.User,
     ...userInfo,
@@ -157,51 +157,6 @@ const postSaveUser = async ({ userInfo }) => {
   }
   return Promise.reject(new Error({ msg: '后端出错' }));
 };
-// 编辑
-const editUserInfo = async (userInfo) => {
-  if (userInfo) {
-    await UserModel.findOne({ id: userInfo.id }).then(async (res) => {
-      let userLength = userInfo.userRole.length;
-      let roleLength = res.userRole.length;
-      const arr = userInfo.userRole.concat(res.userRole).filter((v, i, arr) => {
-        return arr.indexOf(v) === arr.lastIndexOf(v);
-      });
-      await UserModel.updateOne({ id: userInfo.id }, { ...userInfo });
-      if (userLength - roleLength > 0) {
-        await RoleModel.updateMany(
-          { id: arr },
-          {
-            $addToSet: {
-              userId: res.id,
-            },
-          },
-        );
-      }
-      if (userLength - roleLength < 0) {
-        await RoleModel.updateMany(
-          { id: arr },
-          {
-            $pullAll: {
-              userId: [res.id],
-            },
-          },
-        );
-      }
-      if (userLength - roleLength === 0) {
-        await RoleModel.updateMany(
-          { id: userInfo.userRole },
-          {
-            $addToSet: {
-              userId: res.id,
-            },
-          },
-        );
-      }
-    });
-    return true;
-  }
-  return Promise.reject(new Error({ msg: '没有参数' }));
-};
 const postDelUser = async (ids) => {
   const deleteUser = UserModel.deleteMany({ id: ids });
   // 删除职位中的UserId
@@ -216,14 +171,96 @@ const postDelUser = async (ids) => {
   const a = await Promise.all([deleteUser, updateRole]);
   return a;
 };
+const editUser = async (userInfo) => {
+  if (userInfo) {
+    const user = await UserModel.findOne({ userName: userInfo.userName });
+    if (user && user.id !== userInfo.id) {
+      return {
+        success: false,
+        msg: `${userInfo.userName}已存在`,
+      };
+    }
+    // 要更新的user中的userRole
+    let userLength = userInfo.userRole.length;
+    // 以前的user中的userRole
+    let roleLength = user.userRole.length;
+    // 找出两个数组不同的元素
+    const arr = userInfo.userRole.concat(user.userRole).filter((v, i, arr) => {
+      return arr.indexOf(v) === arr.lastIndexOf(v);
+    });
+    if (userLength - roleLength > 0) {
+      await RoleModel.updateMany(
+        { id: arr },
+        {
+          $addToSet: {
+            userId: user.id,
+          },
+        },
+      );
+    }
+    if (userLength - roleLength < 0) {
+      await RoleModel.updateMany(
+        { id: arr },
+        {
+          $pullAll: {
+            userId: [user.id],
+          },
+        },
+      );
+    }
+    if (userLength - roleLength === 0) {
+      await RoleModel.updateMany(
+        { id: userInfo.userRole },
+        {
+          $addToSet: {
+            userId: user.id,
+          },
+        },
+      );
+    }
+    await UserModel.updateOne(
+      { id: userInfo.id },
+      { ...userInfo, pwd: md5PWD(userInfo.pwd) },
+    );
+    return {
+      success: true,
+      msg: '更新成功了！',
+    };
+  }
+  return Promise.reject(new Error({ msg: '没有参数' }));
+};
+const loginUser = async (userInfo) => {
+  if (userInfo) {
+    const user = await UserModel.find({
+      // 判断密码是否正确
+      userName: userInfo.username,
+      pwd: md5PWD(userInfo.password),
+    });
+    console.log('login-user', user);
+    if (user && user.length > 0) {
+      return {
+        success: true,
+        msg: '登陆成功',
+        user,
+      };
+    }
+    if (user.length === 0) {
+      return {
+        success: false,
+        msg: '登陆失败,用户名或密码错误',
+      };
+    }
+  }
+  return Promise.reject(new Error({ msg: '没有参数' }));
+};
 
 module.exports = {
   getUserInfoById,
   getUserInfoUsername,
-  // postEditRoleuser,
   getAllUser,
   postRegister,
-  postSaveUser,
+  addUser,
   postDelUser,
-  editUserInfo,
+  editUser,
+  loginUser,
 };

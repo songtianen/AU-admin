@@ -43,10 +43,6 @@ function* fetchUserInfo(action) {
   }
 }
 
-function* watchFetchUserInfo() {
-  yield takeEvery(actionTypes.DO_GET_USERINFO, fetchUserInfo);
-}
-
 function* fetchAccessMemu(action) {
   try {
     const accessMenu = yield call(getAccessMenu, action.payload);
@@ -86,10 +82,6 @@ function* fetchAccessMemu(action) {
   }
 }
 
-function* watchGetAccessMemu() {
-  yield takeEvery(actionTypes.DO_UPDATE_ACCESSMENU, fetchAccessMemu);
-}
-
 function* updateModule(action) {
   console.log('请求菜单-updateModule', action);
 
@@ -97,6 +89,12 @@ function* updateModule(action) {
     type: actionTypes.UPDATE_ACCESSMENU_SUCCESS,
     payload: action.payload,
   });
+}
+function* watchGetAccessMemu() {
+  yield takeEvery(actionTypes.DO_UPDATE_ACCESSMENU, fetchAccessMemu);
+}
+function* watchFetchUserInfo() {
+  yield takeEvery(actionTypes.DO_GET_USERINFO, fetchUserInfo);
 }
 function* watchUpdateModule() {
   yield takeEvery(actionTypes.DO_UPDATE_MODULE, updateModule);

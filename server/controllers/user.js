@@ -2,6 +2,9 @@ const { businessError, success } = require('../lib/responseTemplate');
 const { UserModel } = require('../model/model');
 const userSservice = require('../services/userService');
 const { md5PWD } = require('../util/md5');
+const jwt = require('jsonwebtoken');
+const { secretKey } = require('../util/md5');
+
 const { checkParametersEmpety } = require('../util/util');
 
 let postRegister = async ({ req, res }) => {
@@ -51,7 +54,7 @@ const getAllUser = async ({ req, res }) => {
   return success({ res, data: allUser });
 };
 
-let postSaveUser = async ({ req, res }) => {
+let addUser = async ({ req, res }) => {
   let userInfo = req.body;
   const isEmpty = await checkParametersEmpety(userInfo);
   if (isEmpty.msg || isEmpty.keys.length) {
@@ -66,7 +69,7 @@ let postSaveUser = async ({ req, res }) => {
   if (user) {
     return businessError({ res, msg: '用户名已注册!', data: 'username' });
   } else {
-    const user = await userSservice.postSaveUser({ userInfo });
+    const user = await userSservice.addUser({ userInfo });
     if (user) {
       return success({ res, msg: '用户保存成功' });
     }
@@ -86,22 +89,60 @@ let postDelUser = async ({ req, res }) => {
       businessError({ res, msg: e });
     });
 };
-let editUserInfo = async ({ req, res }) => {
+let editUser = async ({ req, res }) => {
   const userInfo = req.body;
-  const isUpdate = await userSservice.editUserInfo(userInfo);
-  if (isUpdate) {
-    console.log('res', res);
-    return success({ res, msg: '用户信息更新成功！' });
-  }
-  return businessError({ res, msg: '服务端错误' });
+  await userSservice
+    .editUser(userInfo)
+    .then((doc) => {
+      if (!doc.success) {
+        return businessError({ res, msg: doc.msg });
+      }
+      if (doc.success) {
+        return success({ res, msg: doc.msg });
+      }
+    })
+    .catch((e) => {
+      return businessError({ res, msg: e.msg });
+    });
+};
+let loginUser = async ({ req, res }) => {
+  const userInfo = req.body;
+
+  await userSservice
+    .loginUser(userInfo)
+    .then((doc) => {
+      console.log('登陆请求', doc);
+      if (doc.success) {
+        const tokenObj = {
+          username: doc.user.userName,
+          isAdmin: doc.user.isAdmin,
+          userId: doc.user.id,
+        };
+        // 用户登录成功过后生成token返给前端
+        let token = jwt.sign(tokenObj, secretKey, {
+          expiresIn: '24h', // 授权时效24小时
+        });
+        return success({
+          res,
+          msg: doc.msg,
+          data: { accessToken: token },
+        });
+      }
+      if (!doc.success) {
+        return businessError({ res, msg: doc.msg });
+      }
+    })
+    .catch((e) => {
+      return businessError({ res, msg: e.msg });
+    });
 };
 
 module.exports = {
   getUserInfo,
   getAllUser,
-  // postEditRoleuser,
   postRegister,
-  postSaveUser,
+  addUser,
   postDelUser,
-  editUserInfo,
+  editUser,
+  loginUser,
 };

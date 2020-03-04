@@ -1,63 +1,25 @@
-/* eslint-disable handle-callback-err */
 const express = require('express');
-const jwt = require('jsonwebtoken');
-const { UserModel } = require('../model/model'); // 引入模型
-const { md5PWD, secretKey } = require('../util/md5');
-const { businessError, success } = require('../lib/responseTemplate');
+// const jwt = require('jsonwebtoken');
+// const { UserModel } = require('../model/model'); // 引入模型
+// const { md5PWD, secretKey } = require('../util/md5');
+const { success } = require('../lib/responseTemplate');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
 const { checkRegister } = require('../middleware/CheckUserRegister');
-const { postRegister, postSaveUser } = require('../controllers/user');
-
 const {
   getUserInfo,
-  // postEditRoleuser,
   getAllUser,
   postDelUser,
-  editUserInfo,
+  addUser,
+  editUser,
+  loginUser,
+  postRegister,
 } = require('../controllers/user');
 
-const User = UserModel;
+// const User = UserModel;
 const router = express.Router();
 
-// 获取用户列表
-
-// 用户登录接口
 router.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  // User.create({ userName: req.body.username, pwd: md5PWD(req.body.password) })
-  // User.update({ userName: username }, { $set: { userRole: [ 'role_test', 'role_website_admin' ] } }, function(err, doc) {
-  //   console.log('更新数据库测试', doc)
-  // })
-  // User.update({ userName: username }, { $set: { isAdmin: true } }, function (err, doc) {
-  //   console.log('更新数据库测试', doc)
-  // })
-  User.findOne(
-    {
-      // 判断密码是否正确
-      userName: username,
-      pwd: md5PWD(password),
-    },
-    (err, user) => {
-      if (user !== null) {
-        const tokenObj = {
-          username: user.userName,
-          isAdmin: user.isAdmin,
-          userId: user.id,
-        };
-        // 用户登录成功过后生成token返给前端
-        let token = jwt.sign(tokenObj, secretKey, {
-          expiresIn: '24h', // 授权时效24小时
-        });
-        success({ res, data: { accessToken: token } });
-      } else {
-        businessError({
-          res,
-          msg: '用户名或密码错误',
-          data: { info: 'password' },
-        });
-      }
-    },
-  );
+  loginUser({ req, res });
 });
 // 注册
 router.post('/register', checkRegister(), (req, res) => {
@@ -68,8 +30,6 @@ router.post('/logout', (req, res) => {
   // console.log('推出登陆');
   return success({ res, data: { logout: true } });
 });
-
-// 用户注册接口
 
 router.get('/info', (req, res) => {
   // console.log('getuserinfo user=====', req.user);
@@ -85,12 +45,21 @@ router.get(
   },
 );
 router.post(
-  '/saveuser',
+  '/adduser',
   PermissionCheck({
     permission: ['role_user_edit', 'user_role_edit'],
   }),
   (req, res) => {
-    postSaveUser({ req, res });
+    addUser({ req, res });
+  },
+);
+router.post(
+  '/edituser',
+  PermissionCheck({
+    permission: ['role_user_edit', 'user_role_edit'],
+  }),
+  (req, res) => {
+    editUser({ req, res });
   },
 );
 router.post(
@@ -100,15 +69,6 @@ router.post(
   }),
   (req, res) => {
     postDelUser({ req, res });
-  },
-);
-router.post(
-  '/edituserinfo',
-  PermissionCheck({
-    permission: ['role_user_edit', 'user_role_edit'],
-  }),
-  (req, res) => {
-    editUserInfo({ req, res });
   },
 );
 

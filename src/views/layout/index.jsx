@@ -13,7 +13,7 @@ import './layout.less';
 const { Content } = Layout;
 const { MySider } = Sider;
 
-const { getUserInfo, updateAccessMenu } = reduxApp.actions;
+const { updateAccessMenu } = reduxApp.actions;
 class MyLayout extends React.PureComponent {
   state = {
     collapsed: false,
@@ -24,7 +24,6 @@ class MyLayout extends React.PureComponent {
   };
 
   componentDidMount() {
-    console.log('this.props--', this.props);
     this.initAppData(); // 数据初始化完后再触发一次render
     this.getClientWidth(); // 判断屏幕尺寸再触发一次render(不需要可去掉)
     window.onresize = () => {
@@ -101,7 +100,7 @@ class MyLayout extends React.PureComponent {
 
     // eslint-disable-next-line no-shadow
     const { dispatch } = this.props;
-    dispatch(getUserInfo());
+    // dispatch(getUserInfo());
     dispatch(updateAccessMenu());
 
     // 初始化子组件

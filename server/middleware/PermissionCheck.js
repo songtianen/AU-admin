@@ -3,7 +3,7 @@ const { businessError } = require('../lib/responseTemplate');
 
 const PermissionCheck = ({ permission = [], role = [] }) => {
   return (req, res, next) => {
-    // console.log('PermissionCheck--s--', req.user);
+    console.log('PermissionCheck--s--', req.user);
     getUserInfoById(req.user.userId).then((result) => {
       const { isAdmin, userRole, userPermission } = result;
       // const { userRole, userPermission } = result;

@@ -2,14 +2,10 @@ import qs from 'qs';
 import request from '../util/request';
 
 export function loginByUsername(data) {
-  // const data = {
-  //   username,
-  //   password,
-  // };
   return request({
     url: '/user/login',
     method: 'post',
-    data: qs.stringify(data),
+    data,
     // loading: 'spin',
   });
 }
@@ -82,26 +78,17 @@ export function delUsers(ids) {
   });
 }
 
-export function saveUser(data) {
+export function addUser(data) {
   return request({
-    url: '/user/saveuser',
+    url: '/user/adduser',
     method: 'post',
     data,
     loading: 'message',
   });
 }
-
-// export function editRoleUser(data) {
-//   return request({
-//     url: '/user/editroleuser',
-//     method: 'post',
-//     data,
-//     loading: 'message',
-//   });
-// }
-export function editUserInfo(data) {
+export function editUser(data) {
   return request({
-    url: '/user/edituserinfo',
+    url: '/user/edituser',
     method: 'post',
     data,
     loading: 'message',

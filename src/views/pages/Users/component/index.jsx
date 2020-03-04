@@ -2,9 +2,9 @@ import React from 'react';
 import { Table, Divider, notification, Tag } from 'antd';
 import {
   getAllUser,
-  saveUser,
+  editUser,
   delUsers,
-  editUserInfo,
+  addUser,
   getRolePagedList,
   getAllDepartment,
 } from '../../../../api';
@@ -313,7 +313,7 @@ class UserRole extends React.PureComponent {
     // 请求 添加用户接口
     if (this.state.isAddUser) {
       try {
-        await saveUser({ ...data });
+        await addUser({ ...data });
         this.setState({
           isAddUser: false,
           editCommonModalVisible: false,
@@ -330,17 +330,17 @@ class UserRole extends React.PureComponent {
     } else {
       try {
         const id = this.editFormData.id;
-        const result = await editUserInfo({ id, ...data });
+        await editUser({ id, ...data });
         this.setState({
           editCommonModalVisible: false,
         });
         notification.success({
           placement: 'bottomLeft bottomRight',
-          message: result.msg,
+          message: '用户信息更新成功',
         });
       } catch (error) {
         notification.error({
-          message: error,
+          message: error.msg,
         });
       }
     }

@@ -1,21 +1,31 @@
 import { takeEvery, call, put } from 'redux-saga/effects';
-import { createBrowserHistory } from 'history';
+// import { createBrowserHistory } from 'history';
 import { notification } from 'antd';
 import { loginByUsername, loginRegister } from '../../../../api';
-import { setToken } from '../../../../util/token';
+import { setToken, getToken } from '../../../../util/token';
 import { actionTypes } from './actions';
 
-let history = createBrowserHistory({
-  forceRefresh: true,
-});
+// let history = createBrowserHistory({
+//   forceRefresh: false,
+// });
 
 function* fetchUser(action) {
   try {
     const userInfo = yield call(loginByUsername, action.payload);
+    console.log('登陆', userInfo);
     if (userInfo.statusCode === 200 && userInfo.data.accessToken) {
+      let setTokens = new Promise((resolve) => {
+        setToken(userInfo.data.accessToken);
+        const token = getToken();
+        return resolve(token);
+      });
+
       yield put({ type: actionTypes.LOGIN_SUCCESS, payload: userInfo });
-      setToken(userInfo.data.accessToken);
-      history.push('/');
+      setTokens.then((doc) => {
+        // history.push('/');
+
+        console.log('setToken', doc);
+      });
     }
     if (userInfo.statusCode === 500) {
       yield put({ type: actionTypes.LOGIN_ERROR, payload: userInfo });
@@ -33,7 +43,7 @@ function* register(action) {
     if (userInfo.statusCode === 200 && userInfo.data.accessToken) {
       yield put({ type: actionTypes.REGISTER_SUCCESS, payload: userInfo });
       setToken(userInfo.data.accessToken);
-      history.push('/');
+      // history.push('/');
     }
     if (userInfo.statusCode === 500) {
       yield put({ type: actionTypes.LOGIN_ERROR, payload: userInfo });

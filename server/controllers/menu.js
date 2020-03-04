@@ -5,14 +5,22 @@ const menuService = require('../services/menuService');
 const { businessError, success } = require('../lib/responseTemplate');
 
 // 获取所有菜单 带权限
-const getAccessMenuList = ({ req, res }) => {
-  // console.log('获取菜单', req.user);
+const getAccessMenu = async ({ req, res }) => {
+  console.log('获取菜单', req.user);
   getUserInfoById(req.user.userId).then((userInfo) => {
     menuService.getAllMenuList().then((doc) => {
-      let menuList = menuService.AccessMenuList(req, userInfo, doc);
+      let menuList = menuService.AccessMenu(req, userInfo, doc);
       return success({ res, data: menuList });
     });
   });
+  // await menuService.AccessMenu().then((doc) => {
+  //   if (doc.success) {
+  //     success({ res, msg: doc.mag, data: '' });
+  //   }
+  //   if (!doc.success) {
+  //     return businessError({ res, msg: doc.msg });
+  //   }
+  // });
 };
 
 // 获取所有菜单:非树结构
@@ -130,7 +138,7 @@ const getAllMenuWithFunction = async ({ req, res }) => {
     });
 };
 module.exports = {
-  getAccessMenuList,
+  getAccessMenu,
   getAllMenu,
   editMenu,
   addMenu,
