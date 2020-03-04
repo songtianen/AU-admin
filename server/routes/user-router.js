@@ -26,9 +26,9 @@ router.post('/register', checkRegister(), (req, res) => {
   postRegister({ req, res });
   // success({ res, data: { accessToken: 'song' } });
 });
-router.post('/logout', (req, res) => {
+router.get('/logout', (req, res) => {
   // console.log('推出登陆');
-  return success({ res, data: { logout: true } });
+  return success({ res, data: { isLogout: true } });
 });
 
 router.get('/info', (req, res) => {

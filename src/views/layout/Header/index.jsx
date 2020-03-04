@@ -9,7 +9,7 @@ import { logout } from '../../../api';
 import { removeToken } from '../../../util/token';
 import FullScreen from './FullScreen';
 import SearchInput from './SearchInput';
-
+import { actionTypes } from '../../pages/Login/redux/actions';
 import './index.less';
 
 const { updateModule } = appActions.actions;
@@ -38,17 +38,25 @@ class MyHeader extends React.PureComponent {
   menuClick = (e) => {
     // console.log('navTab toggle', e);
     // eslint-disable-next-line no-unused-expressions
-    e.key === 'logout' && this.logout();
+    // e.key === 'logout' && this.logout();
     // eslint-disable-next-line no-unused-expressions
     e.key === 'navTab' && this.props.toggleNavTab && this.props.toggleNavTab();
   };
 
   logout = async () => {
-    // try {
-    // } catch (e) {}
-    await removeToken();
-    await this.props.history.push('/login');
-    await logout();
+    const { dispatch } = this.props;
+    const out = await logout();
+    removeToken();
+    if (out.data.isLogout) {
+      dispatch({
+        type: actionTypes.LOGOUT_SUCCESS,
+        payload: {
+          isLogin: false,
+          isLogout: true,
+        },
+      });
+      this.props.history.push('/login');
+    }
   };
 
   render() {
@@ -90,6 +98,7 @@ class MyHeader extends React.PureComponent {
           </Col>
           {/* ModuleMenu */}
           <Col xs={14} sm={18} md={8} lg={7} xl={7}>
+            123
             <ModuleMenu
               style={{ border: 'none' }}
               moduleList={this.props.moduleList}

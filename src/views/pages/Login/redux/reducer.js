@@ -5,12 +5,6 @@ import { actionTypes } from './actions';
 export default function(state, action) {
   if (!state) {
     state = {
-      token: '',
-      statusCode: '',
-      permission: [],
-      error: false,
-      data: {},
-      msg: '',
       isLogin: false,
     };
   }
@@ -24,9 +18,7 @@ export default function(state, action) {
       // 获取用户信息
       return {
         ...state,
-        token: action.payload.data.accessToken,
-        ...action.payload,
-        isLogin: true,
+        ...action.payload.data,
       };
     case actionTypes.REGISTER_SUCCESS:
       return {
@@ -45,10 +37,8 @@ export default function(state, action) {
     case actionTypes.LOGOUT_SUCCESS:
       // 登出
       return {
-        token: state.token,
-        name: '',
-        avatar: '',
-        permission: [],
+        ...state,
+        ...action.payload,
       };
     default:
       return state;

@@ -16,7 +16,7 @@ import {
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
 // import { getToken } from '../../../util/token';
-import { login } from './redux/actions';
+import { login, logout } from './redux/actions';
 
 const FormItem = Form.Item;
 const { Meta } = Card;
@@ -47,16 +47,51 @@ class Login extends React.Component {
     const { username, password } = values;
     dispatch(login({ username, password }));
     this.startLogin();
-    const isLogin = this.props.isLogin;
-    console.log('isLogin', isLogin);
-    if (isLogin) {
-      this.props.history.push('/');
-    }
     this.endLogin();
   };
 
+  logoutUser = () => {
+    const { dispatch } = this.props;
+
+    dispatch(logout({}));
+  };
+
+  componentWillMount() {
+    console.log('componentWillMount');
+  }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isLogin) {
+      this.props.history.push('/');
+    }
+    console.log('componentWillReceiveProps');
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+    this.endLogin();
+  }
+  // eslint-disable-next-line lines-between-class-members
+  shouldComponentUpdate() {
+    console.log('shouldComponentUpdate');
+    return true;
+  }
+
+  componentWillUpdate() {
+    console.log('UNSAFE_componentWillUpdate');
+  }
+
+  componentDidUpdate() {
+    console.log('componentDidUpdate');
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
+    console.log('render-Login');
     return (
       <div className='login-container'>
         <canvas id='noise-canvas' />
@@ -166,7 +201,7 @@ class Login extends React.Component {
         <Button
           type='primary'
           loading={this.state.loading}
-          onClick={this.handleSubmit}
+          onClick={this.logoutUser}
           style={{ width: '100%' }}
         >
           登录
@@ -197,6 +232,7 @@ Login.propTypes = {
   history: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
   isLogin: PropTypes.bool.isRequired,
   // token: PropTypes.string.isRequired,
   // data: PropTypes.object.isRequired,

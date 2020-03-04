@@ -231,20 +231,20 @@ const editUser = async (userInfo) => {
 };
 const loginUser = async (userInfo) => {
   if (userInfo) {
-    const user = await UserModel.find({
+    const user = await UserModel.findOne({
       // 判断密码是否正确
       userName: userInfo.username,
       pwd: md5PWD(userInfo.password),
     });
     console.log('login-user', user);
-    if (user && user.length > 0) {
+    if (user && user.userName) {
       return {
         success: true,
         msg: '登陆成功',
         user,
       };
     }
-    if (user.length === 0) {
+    if (!user || user.userName === undefined) {
       return {
         success: false,
         msg: '登陆失败,用户名或密码错误',

@@ -125,7 +125,7 @@ let loginUser = async ({ req, res }) => {
         return success({
           res,
           msg: doc.msg,
-          data: { accessToken: token },
+          data: { accessToken: token, isLogin: true, user: doc.user },
         });
       }
       if (!doc.success) {

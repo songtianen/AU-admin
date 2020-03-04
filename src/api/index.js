@@ -19,10 +19,11 @@ export function loginRegister(params) {
   });
 }
 
-export function logout() {
+export function logout(query) {
   return request({
     url: '/user/logout',
-    method: 'post',
+    method: 'get',
+    params: query,
     loading: 'spin',
   });
 }

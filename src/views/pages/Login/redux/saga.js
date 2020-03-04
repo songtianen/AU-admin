@@ -12,7 +12,7 @@ import { actionTypes } from './actions';
 function* fetchUser(action) {
   try {
     const userInfo = yield call(loginByUsername, action.payload);
-    console.log('登陆', userInfo);
+    // console.log('登陆', userInfo);
     if (userInfo.statusCode === 200 && userInfo.data.accessToken) {
       let setTokens = new Promise((resolve) => {
         setToken(userInfo.data.accessToken);

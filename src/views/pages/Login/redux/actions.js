@@ -7,6 +7,7 @@ export const actionTypes = {
   LOGIN_SUCCESS: 'login/LOGIN_SUCCESS',
   LOGIN_ERROR: 'login/LOGIN_ERROR',
   LOGOUT_SUCCESS: 'login/LOGOUT_SUCCESS',
+  DO_LOGOUT: 'login/DO_LOGOUT',
 };
 
 export const constants = {
@@ -24,6 +25,6 @@ export const clearRegisterError = (data) => {
   return { type: actionTypes.DO_REGISTER_CLEARERROR, payload: data };
 };
 
-export const logout = () => {
-  return { type: actionTypes.LOGOUT_SUCCESS };
+export const logout = (data) => {
+  return { type: actionTypes.DO_LOGOUT, payload: data };
 };
