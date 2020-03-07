@@ -111,7 +111,7 @@ let loginUser = async ({ req, res }) => {
   await userSservice
     .loginUser(userInfo)
     .then((doc) => {
-      console.log('登陆请求', doc);
+      // console.log('登陆请求', doc);
       if (doc.success) {
         const tokenObj = {
           username: doc.user.userName,

@@ -7,13 +7,13 @@ import Footer from './Footer';
 import Sider from './Sider';
 import MyNavTabs from './Content/index';
 import { getToken } from '../../util/token';
-// import reduxApp from '../../redux/redux_app';
+import reduxApp from '../../redux/redux_app';
 import './layout.less';
 
 const { Content } = Layout;
 const { MySider } = Sider;
 
-// const { updateAccessMenu } = reduxApp.actions;
+const { updateAccessMenu, getUserInfo } = reduxApp.actions;
 class MyLayout extends React.PureComponent {
   state = {
     collapsed: false,
@@ -99,9 +99,9 @@ class MyLayout extends React.PureComponent {
     // ]);
 
     // eslint-disable-next-line no-shadow
-    // const { dispatch } = this.props;
-    // dispatch(getUserInfo());
-    // dispatch(updateAccessMenu());
+    const { dispatch } = this.props;
+    dispatch(getUserInfo());
+    dispatch(updateAccessMenu());
 
     // 初始化子组件
     this.initChildData(this.props);
@@ -181,13 +181,8 @@ const mapStateToPorps = (state) => {
 //   };
 // };
 MyLayout.propTypes = {
-  // dispatch: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  // infoRes: PropTypes.object.isRequired,
-  // menuRes: PropTypes.object.isRequired,
-
-  // getUserInfo: PropTypes.func.isRequired,
-  // updateAccessMenu: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
 };
 

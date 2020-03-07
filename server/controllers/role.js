@@ -103,7 +103,7 @@ module.exports = {
   },
   savePermission: async ({ req, res }) => {
     let { moduleId, roleId, permissions } = req.body;
-    console.log('保存权限', req.body);
+    // console.log('保存权限', permissions.length);
     let db = await roleService.savePermission(moduleId, roleId, permissions);
     if (db) {
       return responseTemplate.success({ res, msg: '角色权限保存成功' });

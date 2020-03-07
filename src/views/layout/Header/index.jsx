@@ -98,7 +98,6 @@ class MyHeader extends React.PureComponent {
           </Col>
           {/* ModuleMenu */}
           <Col xs={14} sm={18} md={8} lg={7} xl={7}>
-            123
             <ModuleMenu
               style={{ border: 'none' }}
               moduleList={this.props.moduleList}

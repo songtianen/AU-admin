@@ -4,26 +4,20 @@ const menuService = require('../services/menuService');
 // const { getRoleFunctions } = require('../services/roleService');
 const { businessError, success } = require('../lib/responseTemplate');
 
-// 获取所有菜单 带权限
+// 获取UserId中所有菜单 带权限
 const getAccessMenu = async ({ req, res }) => {
-  console.log('获取菜单', req.user);
-  getUserInfoById(req.user.userId).then((userInfo) => {
-    menuService.getAllMenuList().then((doc) => {
-      let menuList = menuService.AccessMenu(req, userInfo, doc);
-      return success({ res, data: menuList });
-    });
-  });
-  // await menuService.AccessMenu().then((doc) => {
-  //   if (doc.success) {
-  //     success({ res, msg: doc.mag, data: '' });
-  //   }
-  //   if (!doc.success) {
-  //     return businessError({ res, msg: doc.msg });
-  //   }
-  // });
+  if (req.user && req.user.userId) {
+    const userInfo = await getUserInfoById(req.user.userId);
+    console.log('查询userInfo', userInfo);
+    const menuList = await menuService.AccessMenu(userInfo);
+    if (menuList.success) {
+      return success({ res, data: menuList.menuTree });
+    }
+  }
+  return businessError({ res, msg: '数据库错误' });
 };
 
-// 获取所有菜单:非树结构
+// 获取哪些页面的菜单:非树结构
 const getAllMenu = ({ req, res }) => {
   // console.log('获取菜单列表', req.query);
   let pageIndex = req.query.pageIndex || '';

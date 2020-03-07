@@ -3,34 +3,89 @@ const uuidv4 = require('uuid/v4');
 const { AccessMemuModel, FunctionModel, RoleModel } = require('../model/model'); // 引入模型
 const _ = require('lodash');
 const dbSchema = require('../db/dbSchema');
+const { findUserPermission } = require('./userService');
 
-const buildMenu = (parentMenu, menuList) => {
-  parentMenu.children = []; // 根菜单children属性
-  let children = menuList.filter((item) => {
-    // 在所有菜单中找出-菜单中父id 与 根菜单中相等的id
-    return item.parentId === parentMenu.id;
+// const buildMenu = (parentMenu, menuList) => {
+//   parentMenu.children = []; // 根菜单children属性
+//   let children = menuList.filter((item) => {
+//     // 在所有菜单中找出-菜单中父id 与 根菜单中相等的id
+//     return item.parentId === parentMenu.id;
+//   });
+//   // 如果
+//   for (let menu of children) {
+//     // 递归调用
+//     buildMenu(menu, menuList);
+//   }
+//   parentMenu.children.push(...children);
+// };
+const buildMenu = (menus) => {
+  let rootMenu = menus.filter((v) => {
+    return v.parentId === '0' && !v.isLock;
   });
-  // 如果
-  for (let menu of children) {
-    // 递归调用
-    buildMenu(menu, menuList);
-  }
-  parentMenu.children.push(...children);
+  const build = (listItem, allList) => {
+    for (let i = 0; i < listItem.length; i++) {
+      listItem[i].children = [];
+      let children = allList.filter((item) => {
+        return item.parentId === listItem[i].id;
+      });
+      listItem[i].children.push(...children);
+      if (listItem[i].children) {
+        build(listItem[i].children, allList);
+      }
+    }
+    return listItem;
+  };
+  return build(rootMenu, menus);
 };
 // 构建有相应权限的菜单
-const buildAccessMenu = (parentMenu, menuList, userPermission) => {
-  parentMenu.children = [];
-  let children = menuList.filter((item) => {
-    return (
-      item.parentId === parentMenu.id &&
-      (!item.functionCode || userPermission.indexOf(item.functionCode) > -1)
-    );
-  });
-  // 父级没有权限访问，子级也不能访问
-  for (let menu of children) {
-    buildAccessMenu(menu, menuList, userPermission);
+// const buildAccessMenu = (parentMenu, menuList, userPermission) => {
+//   parentMenu.children = [];
+//   let children = menuList.filter((item) => {
+//     return (
+//       item.parentId === parentMenu.id &&
+//       (!item.functionCode || userPermission.indexOf(item.functionCode) > -1)
+//     );
+//   });
+//   // 父级没有权限访问，子级也不能访问
+//   for (let menu of children) {
+//     buildAccessMenu(menu, menuList, userPermission);
+//   }
+//   parentMenu.children.push(...children);
+// };
+const buildAccessMenu = (menus, userPermissionIds) => {
+  // 找到所有具有权限显示的菜单
+  let permissionMenus = [];
+  for (let i of menus) {
+    for (let j of userPermissionIds) {
+      if (i.id === j) {
+        permissionMenus.push(i);
+      }
+    }
   }
-  parentMenu.children.push(...children);
+  // 构建出菜单树
+  if (permissionMenus && permissionMenus.length) {
+    let rootMenu = permissionMenus.filter((v) => {
+      return v.parentId === '0' && !v.isLock;
+    });
+    const build = (listItem, allList) => {
+      for (let i = 0; i < listItem.length; i++) {
+        listItem[i].children = [];
+        let children = allList.filter((item) => {
+          return item.parentId === listItem[i].id;
+        });
+        listItem[i].children.push(...children);
+        if (listItem[i].children) {
+          build(listItem[i].children, allList);
+        }
+      }
+      return listItem;
+    };
+    if (rootMenu && rootMenu.length) {
+      console.log('最终构建的 权限 menuTree', build(rootMenu, permissionMenus));
+      return build(rootMenu, permissionMenus);
+    }
+    return rootMenu;
+  }
 };
 const checkAccssMenu = (accessMenuList, menuList) => {
   // console.log('checkAccssMenu菜单列表', accessMenuList)
@@ -109,6 +164,7 @@ const buildMenuTreeWithFunction = (menu, funcList) => {
 let menuService = {
   // 获取所有的未经处理菜单
   getAllMenuList,
+  // 获取前端页面菜单
   getAllMenu: async (pageIndex, pageSize, sortBy, descending, filter) => {
     let menuLists = await AccessMemuModel.find();
     menuLists = JSON.parse(JSON.stringify(menuLists));
@@ -148,41 +204,32 @@ let menuService = {
     };
   },
   // 可访问的菜单
-  AccessMenu: (req, userInfo, doc) => {
-    // let user = req.user;
-    // // let menuList = doc && doc.length > 0 ? doc : dbConfig.menu;
-    // let menuList = doc;
-    // // 总的菜单列表
-    // menuList = _.sortBy(menuList, ['sort']); // 所有菜单
-    // // console.log('排序后的', menuList)
-    // menuList = copyMenu(menuList);
-    // // 找到父级（跟菜单列表）菜单列表（数组）
-    // let parentMenuList = menuList.filter((item) => {
-    //   return item.parentId === '0' && !item.isLock;
-    // });
-    // // 是否是管理员
-    // let isAdmin = user.isAdmin;
-    // // 管理员权限
-    // let userPermission = userInfo.userPermission;
-    // // 如若是管理员构建管理员菜单（全部菜单）
-    // if (isAdmin) {
-    //   // eslint-disable-next-line no-unused-vars
-    //   for (let menu of parentMenuList) {
-    //     buildMenu(menu, menuList);
-    //   }
-    //   // console.log('有children的 菜单', menuList)
-    // } else {
-    //   // 如果不是管理员就构建相应的菜单列表
-    //   for (let menu of parentMenuList) {
-    //     buildAccessMenu(menu, menuList, userPermission);
-    //   }
-    // }
-    // checkAccssMenu(parentMenuList, menuList); // 根菜单，与总菜单
-    // return parentMenuList;
+  AccessMenu: async (userInfo) => {
+    let menuList = await AccessMemuModel.find();
+
+    menuList = JSON.parse(JSON.stringify(menuList));
+    // 总的菜单列表
+    menuList = _.sortBy(menuList, ['sort']); // 所有菜单
+    // 用户的角色是否是管理员
+    let isAdmin = userInfo.isAdmin;
+    console.log('userInfo中的isAdmin', isAdmin);
+    // 获取用户的用户角色，角色里有权限
+    let userRole = userInfo.userRole;
+    // 根据角色查找出权限(权限文档数组)
+    // 如若是管理员构建管理员菜单（全部菜单）
+    if (isAdmin) {
+      return {
+        success: true,
+        menuTree: buildMenu(menuList),
+      };
+    }
+    const funtionList = await findUserPermission(userRole);
     return {
-      success: false,
-      msg: 'shibai',
+      success: true,
+      menuTree: buildAccessMenu(menuList, funtionList.menuId),
     };
+
+    // checkAccssMenu(parentMenuList, menuList); // 根菜单，与总菜单
   },
   MenuList: (doc) => {
     let menuList = doc;
@@ -192,10 +239,10 @@ let menuService = {
     let parentMenuList = menuList.filter((item) => {
       return item.parentId === '0'; // isLock? 没有锁定的menu
     });
-    for (let menu of parentMenuList) {
-      buildMenu(menu, menuList);
-    }
-    return parentMenuList;
+    // for (let menu of parentMenuList) {
+    //   buildMenu(menu, menuList);
+    // }
+    return buildMenu(parentMenuList);
   },
   getMenuWithChildren: async (menuId) => {
     // console.log(typeof menuId);

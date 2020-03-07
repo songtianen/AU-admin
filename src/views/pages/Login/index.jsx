@@ -56,38 +56,39 @@ class Login extends React.Component {
     dispatch(logout({}));
   };
 
-  componentWillMount() {
-    console.log('componentWillMount');
-  }
+  // componentWillMount() {
+  //   console.log('componentWillMount');
+  // }
 
-  componentDidMount() {
-    console.log('componentDidMount');
-  }
+  // componentDidMount() {
+  //   console.log('componentDidMount');
+  // }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isLogin) {
+      this.endLogin();
       this.props.history.push('/');
     }
-    console.log('componentWillReceiveProps');
+    // console.log('componentWillReceiveProps');
   }
 
-  componentWillUnmount() {
-    console.log('componentWillUnmount');
-    this.endLogin();
-  }
+  // componentWillUnmount() {
+  //   console.log('componentWillUnmount');
+  //   this.endLogin();
+  // }
   // eslint-disable-next-line lines-between-class-members
-  shouldComponentUpdate() {
-    console.log('shouldComponentUpdate');
-    return true;
-  }
+  // shouldComponentUpdate() {
+  //   console.log('shouldComponentUpdate');
+  //   return true;
+  // }
 
-  componentWillUpdate() {
-    console.log('UNSAFE_componentWillUpdate');
-  }
+  // componentWillUpdate() {
+  //   console.log('UNSAFE_componentWillUpdate');
+  // }
 
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-  }
+  // componentDidUpdate() {
+  //   console.log('componentDidUpdate');
+  // }
 
   render() {
     const { getFieldDecorator } = this.props.form;

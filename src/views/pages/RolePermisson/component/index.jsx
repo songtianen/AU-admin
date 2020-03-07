@@ -54,7 +54,6 @@ class RolePermission extends React.PureComponent {
         return (
           <div>
             <a
-              href='javascript:;'
               onClick={() => {
                 this.editRolePermission(record);
               }}
