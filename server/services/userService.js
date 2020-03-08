@@ -1,7 +1,7 @@
 // const _ = require('lodash')
 const { UserModel, RoleModel, FunctionModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
-const { md5PWD, secretKey } = require('../util/md5');
+const { secretKey, Encrypt } = require('../util/md5');
 const { businessError, success } = require('../lib/responseTemplate');
 const dbSchema = require('../db/dbSchema');
 const jwt = require('jsonwebtoken');
@@ -16,8 +16,8 @@ const findFunctionListItemInfo = (functionList) => {
     code.push(i.code);
   }
   let uniquemenuId = unique(menuId);
-  console.log('查询出来的functionList中的menuId', uniquemenuId);
-  console.log('查询出来的functionList中的code', code);
+  // console.log('查询出来的functionList中的menuId', menuId);
+  // console.log('查询出来的functionList中的code', code);
 
   return {
     menuId: uniquemenuId,
@@ -126,7 +126,7 @@ const postRegister = async ({ req, res }) => {
       email: email,
       isAdmin: phone === '13548106816' ? 'admin' : 'user',
       userName: username,
-      pwd: md5PWD(password),
+      pwd: Encrypt(password),
       phone: phone,
     });
     // console.log('userinfo', info);
@@ -235,7 +235,7 @@ const editUser = async (userInfo) => {
     }
     await UserModel.updateOne(
       { id: userInfo.id },
-      { ...userInfo, pwd: md5PWD(userInfo.pwd) },
+      { ...userInfo, pwd: Encrypt(userInfo.pwd) },
     );
     return {
       success: true,
@@ -249,7 +249,7 @@ const loginUser = async (userInfo) => {
     const user = await UserModel.findOne({
       // 判断密码是否正确
       userName: userInfo.username,
-      pwd: md5PWD(userInfo.password),
+      pwd: Encrypt(userInfo.password),
     });
     // console.log('login-user', user);
     if (user && user.userName) {
@@ -270,27 +270,27 @@ const loginUser = async (userInfo) => {
 };
 const findUserPermission = async (userRole) => {
   if (userRole && userRole.length) {
-    console.log('查询出来的user中的UserRole', userRole);
+    // console.log('查询出来的user中的UserRole', userRole);
     // 根据user中的userRole查询角色Role
     let roleList = await RoleModel.find({ id: userRole });
     roleList = JSON.parse(JSON.stringify(roleList));
-    console.log('查询出来的RoleModel--List', roleList);
+    // console.log('查询出来的RoleModel--List', roleList);
 
     // 找出个个角色中的Promission(FunctionModal的Id)数组，进行合并，然后去重
     let permission = [];
     for (let item of roleList) {
       permission.push(...item.permission);
     }
-    console.log('查询出来的RoleModel--permission', permission);
+    // console.log('查询出来的RoleModel--permission', permission);
 
     if (permission && permission.length) {
       const functionId = unique(permission);
-      console.log('去重复--permission', functionId);
+      // console.log('去重复--permission', functionId);
 
       // 查询 FunctionModel
       let functionList = await FunctionModel.find({ id: functionId });
       functionList = JSON.parse(JSON.stringify(functionList));
-      console.log('查询出来的functionList', functionList);
+      // console.log('查询出来的functionList', functionList);
 
       return findFunctionListItemInfo(functionList);
     }

@@ -1,7 +1,4 @@
 const express = require('express');
-// const jwt = require('jsonwebtoken');
-// const { UserModel } = require('../model/model'); // 引入模型
-// const { md5PWD, secretKey } = require('../util/md5');
 const { success } = require('../lib/responseTemplate');
 const { PermissionCheck } = require('../middleware/PermissionCheck');
 const { checkRegister } = require('../middleware/CheckUserRegister');

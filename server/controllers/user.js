@@ -1,7 +1,7 @@
 const { businessError, success } = require('../lib/responseTemplate');
 const { UserModel } = require('../model/model');
 const userSservice = require('../services/userService');
-const { md5PWD } = require('../util/md5');
+const { Encrypt } = require('../util/md5');
 const jwt = require('jsonwebtoken');
 const { secretKey } = require('../util/md5');
 
@@ -61,7 +61,7 @@ let addUser = async ({ req, res }) => {
     return businessError({ res, msg: isEmpty.msg, data: isEmpty.keys });
   }
   if (userInfo.pwd) {
-    userInfo.pwd = md5PWD(userInfo.pwd);
+    userInfo.pwd = Encrypt(userInfo.pwd);
   }
   const name = userInfo.userName;
 
@@ -107,6 +107,7 @@ let editUser = async ({ req, res }) => {
 };
 let loginUser = async ({ req, res }) => {
   const userInfo = req.body;
+  console.log('登陆请求', userInfo);
 
   await userSservice
     .loginUser(userInfo)

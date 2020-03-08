@@ -35,15 +35,15 @@ module.exports = {
     if (arr.length === 1) {
       return arr;
     }
-    let hash = [];
     for (let i = 0; i < arr.length; i++) {
       for (let j = i + 1; j < arr.length; j++) {
         if (arr[i] === arr[j]) {
-          ++i;
+          arr.splice(j, 1);
+          --i;
+          // --j;
         }
       }
-      hash.push(arr[i]);
     }
-    return hash;
+    return arr;
   },
 };

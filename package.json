@@ -97,7 +97,7 @@
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "create-react-class": "^15.6.3",
-    "crypto-js": "^3.1.9-1",
+    "crypto-js": "^4.0.0",
     "dateformat": "^3.0.3",
     "echarts": "^4.2.1",
     "echarts-for-react": "^2.0.15-beta.0",

@@ -1,6 +1,6 @@
 import { takeEvery, call, put } from 'redux-saga/effects';
 // import { createBrowserHistory } from 'history';
-import { notification } from 'antd';
+
 import { loginByUsername, loginRegister } from '../../../../api';
 import { setToken, getToken } from '../../../../util/token';
 import { actionTypes } from './actions';
@@ -31,9 +31,7 @@ function* fetchUser(action) {
       yield put({ type: actionTypes.LOGIN_ERROR, payload: userInfo });
     }
   } catch (error) {
-    notification.error({
-      message: error,
-    });
+    yield put({ type: actionTypes.LOGIN_ERROR, payload: error });
   }
 }
 
@@ -49,9 +47,7 @@ function* register(action) {
       yield put({ type: actionTypes.LOGIN_ERROR, payload: userInfo });
     }
   } catch (error) {
-    notification.error({
-      message: error,
-    });
+    yield put({ type: actionTypes.LOGIN_ERROR, payload: error });
   }
 }
 

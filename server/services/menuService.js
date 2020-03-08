@@ -4,6 +4,7 @@ const { AccessMemuModel, FunctionModel, RoleModel } = require('../model/model');
 const _ = require('lodash');
 const dbSchema = require('../db/dbSchema');
 const { findUserPermission } = require('./userService');
+const { unique } = require('../util/util');
 
 // const buildMenu = (parentMenu, menuList) => {
 //   parentMenu.children = []; // 根菜单children属性
@@ -53,6 +54,8 @@ const buildMenu = (menus) => {
 //   parentMenu.children.push(...children);
 // };
 const buildAccessMenu = (menus, userPermissionIds) => {
+  console.log('uniqueMenu---', userPermissionIds);
+
   // 找到所有具有权限显示的菜单
   let permissionMenus = [];
   for (let i of menus) {
@@ -62,9 +65,26 @@ const buildAccessMenu = (menus, userPermissionIds) => {
       }
     }
   }
+  let n = [];
+  const findParentMenu = (menu, permissionMenu) => {
+    for (let i = 0; i < menu.length; i++) {
+      for (let j = 0; j < permissionMenu.length; j++) {
+        if (permissionMenu[j].parentId === menu[i].id) {
+          let j = [];
+          j.push(menu[i]);
+          n.push(menu[i]);
+          findParentMenu(menu, j);
+        }
+      }
+    }
+  };
+  findParentMenu(menus, permissionMenus);
+  let uniqueMenu = unique(n);
+
+  let newPermissionMenus = permissionMenus.concat(uniqueMenu);
   // 构建出菜单树
-  if (permissionMenus && permissionMenus.length) {
-    let rootMenu = permissionMenus.filter((v) => {
+  if (newPermissionMenus && newPermissionMenus.length) {
+    let rootMenu = newPermissionMenus.filter((v) => {
       return v.parentId === '0' && !v.isLock;
     });
     const build = (listItem, allList) => {
@@ -81,8 +101,7 @@ const buildAccessMenu = (menus, userPermissionIds) => {
       return listItem;
     };
     if (rootMenu && rootMenu.length) {
-      console.log('最终构建的 权限 menuTree', build(rootMenu, permissionMenus));
-      return build(rootMenu, permissionMenus);
+      return build(rootMenu, newPermissionMenus);
     }
     return rootMenu;
   }
@@ -215,7 +234,6 @@ let menuService = {
     console.log('userInfo中的isAdmin', isAdmin);
     // 获取用户的用户角色，角色里有权限
     let userRole = userInfo.userRole;
-    // 根据角色查找出权限(权限文档数组)
     // 如若是管理员构建管理员菜单（全部菜单）
     if (isAdmin) {
       return {
@@ -239,9 +257,6 @@ let menuService = {
     let parentMenuList = menuList.filter((item) => {
       return item.parentId === '0'; // isLock? 没有锁定的menu
     });
-    // for (let menu of parentMenuList) {
-    //   buildMenu(menu, menuList);
-    // }
     return buildMenu(parentMenuList);
   },
   getMenuWithChildren: async (menuId) => {

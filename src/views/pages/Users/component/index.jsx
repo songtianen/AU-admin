@@ -12,6 +12,8 @@ import SearchForm from '../../../../schema/SearchForm/SearchForm';
 import schema from '../../../../schema/Users';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import CommonModal from '../../Common/CommonModal';
+import { Decrypt } from '../../../../util/encrypt';
+import util from '../../../../util/util';
 
 class UserRole extends React.PureComponent {
   state = {
@@ -71,8 +73,8 @@ class UserRole extends React.PureComponent {
           <span>
             {data.map((i) => {
               return (
-                <Tag color='green' key={i}>
-                  {i}
+                <Tag color='green' key={i.id}>
+                  {i.name}
                 </Tag>
               );
             })}
@@ -132,7 +134,7 @@ class UserRole extends React.PureComponent {
     for (let i = 0; i < roleList.length; i++) {
       for (let j = 0; j < data.length; j++) {
         if (roleList[i].id === data[j]) {
-          if (roleList[i].name) roleArr.push(roleList[i].name);
+          if (roleList[i].name) roleArr.push(roleList[i]);
         }
       }
     }
@@ -167,8 +169,9 @@ class UserRole extends React.PureComponent {
         }
       }
     }
+    let newDdepatmentName = util.unique(depatmentName);
 
-    return depatmentName;
+    return newDdepatmentName;
   };
 
   // SearchForm提交
@@ -228,12 +231,10 @@ class UserRole extends React.PureComponent {
   // button Popconfirm 删除
   batchDelUser = async () => {
     const ids = this.state.tableSelectedRowKeys;
-    // console.log('ids????????', ids);
     try {
       const result = await delUsers({
         ids,
       });
-      console.log('resulr-=====', result);
       this.setState({
         tableSelectedRowKeys: [],
       });
@@ -259,7 +260,11 @@ class UserRole extends React.PureComponent {
 
   // table edit Popconfirm
   editUser = (record) => {
-    this.editFormData = { ...record };
+    const pwd = Decrypt(record.pwd);
+    this.editFormData = { ...record, pwd };
+
+    console.log('Decrypt', this.editFormData);
+
     this.setState({
       editCommonModalVisible: true,
     });
@@ -350,7 +355,7 @@ class UserRole extends React.PureComponent {
 
   render() {
     console.log('UserRole render');
-    const { tableSelectedRowKeys } = this.state;
+    const { tableSelectedRowKeys, isAddUser } = this.state;
     const rowSelection = {
       selectedRowKeys: tableSelectedRowKeys,
       onChange: this.onSelectChange,
@@ -389,7 +394,7 @@ class UserRole extends React.PureComponent {
         />
         <CommonModal
           visible={this.state.editCommonModalVisible}
-          title={'新增用户'}
+          title={isAddUser ? '新增用户' : '编辑用户信息'}
           onCancel={this.editCommonModalOnCancel}
           destroyOnClose
           schema={schema.modalSchema}

@@ -11,7 +11,7 @@ import {
   Button,
   Card,
   Checkbox,
-  // notification,
+  notification,
 } from 'antd';
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
@@ -60,9 +60,15 @@ class Login extends React.Component {
   //   console.log('componentWillMount');
   // }
 
-  // componentDidMount() {
-  //   console.log('componentDidMount');
-  // }
+  componentDidMount() {
+    const { error } = this.props;
+    if (error) {
+      notification.error({
+        message: error,
+      });
+    }
+    console.log('componentDidMount');
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isLogin) {
@@ -136,7 +142,7 @@ class Login extends React.Component {
                         />,
                       )}
                     </FormItem>
-                    <FormItem hasFeedback>
+                    <FormItem>
                       {getFieldDecorator('password', {
                         initialValue: '',
                         rules: [
@@ -144,7 +150,7 @@ class Login extends React.Component {
                           { whitespace: true, message: '不能输入空格!' },
                         ],
                       })(
-                        <Input
+                        <Input.Password
                           prefix={
                             <Icon
                               type='lock'
@@ -216,6 +222,7 @@ const mapStateToProps = (state) => {
   console.log('Login-state--', state);
   return {
     isLogin: state.login.isLogin,
+    error: state.login.error,
   };
 };
 // const mapDispatchToProps = (dispatch) => {
@@ -233,9 +240,8 @@ Login.propTypes = {
   history: PropTypes.object.isRequired,
   form: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/no-unused-prop-types
   isLogin: PropTypes.bool.isRequired,
-  // token: PropTypes.string.isRequired,
+  error: PropTypes.string.isRequired,
   // data: PropTypes.object.isRequired,
 };
 

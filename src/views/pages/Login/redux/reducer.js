@@ -6,6 +6,7 @@ export default function(state, action) {
   if (!state) {
     state = {
       isLogin: false,
+      error: '',
     };
   }
   switch (action.type) {
@@ -32,7 +33,6 @@ export default function(state, action) {
       return {
         ...state,
         ...action.payload,
-        error: true,
       };
     case actionTypes.LOGOUT_SUCCESS:
       // 登出
