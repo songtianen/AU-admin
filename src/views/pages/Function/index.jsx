@@ -189,6 +189,7 @@ class Function extends React.PureComponent {
       });
       this.setState({
         selectedRowKeys: [],
+        isModalEdit: false,
       });
       notification.success({
         placement: 'bottomLeft bottomRight',
@@ -232,6 +233,7 @@ class Function extends React.PureComponent {
     // 模态框显示
     this.setState({
       commonModalVisible: true,
+      isModalEdit: false,
     });
   };
 

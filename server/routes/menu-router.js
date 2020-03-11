@@ -29,10 +29,18 @@ router.post(
     addMenu({ req, res });
   },
 );
-router.post('/editmenu', PermissionCheck({ permission: [] }), (req, res) => {
-  editMenu({ req, res });
-});
-router.post('/delmenus', PermissionCheck({ permission: [] }), (req, res) => {
-  delMenus({ req, res });
-});
+router.post(
+  '/editmenu',
+  PermissionCheck({ permission: ['menu_edit'] }),
+  (req, res) => {
+    editMenu({ req, res });
+  },
+);
+router.post(
+  '/delmenus',
+  PermissionCheck({ permission: ['menu_edit'] }),
+  (req, res) => {
+    delMenus({ req, res });
+  },
+);
 module.exports = router;

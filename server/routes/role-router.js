@@ -19,7 +19,7 @@ const router = express.Router();
 router.get(
   '/pagedlist',
   PermissionCheck({
-    permission: ['role_view', 'role_permission_view', 'role_user_view'],
+    permission: ['role_view'],
   }),
   (req, res) => {
     // controller
@@ -104,22 +104,4 @@ router.get(
     getRoleFromUserId({ req, res });
   },
 );
-// router.get(
-//   '/pagedlist',
-//   PermissionCheck({
-//     permission: ['role_view', 'role_permission_view', 'role_user_view'],
-//   }),
-//   (req, res) => {
-//     // controller
-//   },
-// );
-// router.get(
-//   '/pagedlist',
-//   PermissionCheck({
-//     permission: ['role_view', 'role_permission_view', 'role_user_view'],
-//   }),
-//   (req, res) => {
-//     // controller
-//   },
-// );
 module.exports = router;

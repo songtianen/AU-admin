@@ -10,9 +10,13 @@ const { PermissionCheck } = require('../middleware/PermissionCheck');
 
 const router = express.Router();
 
-router.get('/pagedlist', PermissionCheck({}), (req, res) => {
-  getFunctionPagedList({ req, res });
-});
+router.get(
+  '/pagedlist',
+  PermissionCheck({ permission: ['function_edit'] }),
+  (req, res) => {
+    getFunctionPagedList({ req, res });
+  },
+);
 router.post(
   '/add',
   PermissionCheck({ permission: ['function_edit'] }),
@@ -34,7 +38,11 @@ router.get(
     delFuntion({ req, res });
   },
 );
-router.get('/batchdel', PermissionCheck({ permission: [''] }), (req, res) => {
-  delFuntions({ req, res });
-});
+router.get(
+  '/batchdel',
+  PermissionCheck({ permission: ['function_edit'] }),
+  (req, res) => {
+    delFuntions({ req, res });
+  },
+);
 module.exports = router;

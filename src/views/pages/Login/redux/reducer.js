@@ -15,6 +15,14 @@ export default function(state, action) {
         ...state,
         ...action.payload,
       };
+    case actionTypes.BEFORE_LOGIN:
+      // 获取用户信息
+      console.log('BEFORE_LOGIN', state);
+      return {
+        ...state,
+        isLogin: false,
+        error: '',
+      };
     case actionTypes.LOGIN_SUCCESS:
       // 获取用户信息
       return {
@@ -33,12 +41,14 @@ export default function(state, action) {
       return {
         ...state,
         ...action.payload,
+        error: action.payload.msg,
       };
     case actionTypes.LOGOUT_SUCCESS:
       // 登出
       return {
         ...state,
-        ...action.payload,
+        isLogin: false,
+        error: '',
       };
     default:
       return state;

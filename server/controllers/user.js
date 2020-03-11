@@ -8,7 +8,8 @@ const { secretKey } = require('../util/md5');
 const { checkParametersEmpety } = require('../util/util');
 
 let postRegister = async ({ req, res }) => {
-  userSservice.postRegister({ req, res });
+  console.log('用户注册', req.body);
+  // userSservice.postRegister({ req, res });
 };
 let getUserInfo = ({ req, res }) => {
   // console.log('user-controller', req.user);

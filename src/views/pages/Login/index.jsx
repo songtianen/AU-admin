@@ -2,21 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import { withRouter } from 'react-router-dom';
 
-import {
-  Row,
-  Col,
-  Form,
-  Icon,
-  Input,
-  Button,
-  Card,
-  Checkbox,
-  notification,
-} from 'antd';
+import { Row, Col, Form, Icon, Input, Button, Card, Checkbox } from 'antd';
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
 // import { getToken } from '../../../util/token';
-import { login, logout } from './redux/actions';
+import { login } from './redux/actions';
 
 const FormItem = Form.Item;
 const { Meta } = Card;
@@ -24,6 +14,8 @@ const { Meta } = Card;
 class Login extends React.Component {
   state = {
     loading: false,
+    // usernameError: false,
+    // passwordError: false,
   };
 
   startLogin = () => {
@@ -39,62 +31,37 @@ class Login extends React.Component {
     history.push('/register');
   };
 
-  handleSubmit = () => {
-    console.log('提交表单');
-    const { dispatch } = this.props;
-    const { getFieldsValue } = this.props.form;
-    const values = getFieldsValue();
-    const { username, password } = values;
-    dispatch(login({ username, password }));
-    this.startLogin();
-    this.endLogin();
-  };
-
-  logoutUser = () => {
+  handleSubmit = (e) => {
+    e.preventDefault();
     const { dispatch } = this.props;
 
-    dispatch(logout({}));
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const { username, password } = values;
+        this.startLogin();
+        dispatch(login({ username, password }));
+        console.log('Received values of form: ', values);
+      }
+      if (err) {
+        this.endLogin();
+      }
+    });
   };
-
-  // componentWillMount() {
-  //   console.log('componentWillMount');
-  // }
-
-  componentDidMount() {
-    const { error } = this.props;
-    if (error) {
-      notification.error({
-        message: error,
-      });
-    }
-    console.log('componentDidMount');
-  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isLogin) {
-      this.endLogin();
       this.props.history.push('/');
     }
-    // console.log('componentWillReceiveProps');
+    const { error } = nextProps;
+    if (error) {
+      console.log('componentWillReceiveProps', error);
+      this.endLogin();
+    }
   }
 
-  // componentWillUnmount() {
-  //   console.log('componentWillUnmount');
-  //   this.endLogin();
-  // }
-  // eslint-disable-next-line lines-between-class-members
-  // shouldComponentUpdate() {
-  //   console.log('shouldComponentUpdate');
-  //   return true;
-  // }
-
-  // componentWillUpdate() {
-  //   console.log('UNSAFE_componentWillUpdate');
-  // }
-
-  // componentDidUpdate() {
-  //   console.log('componentDidUpdate');
-  // }
+  componentWillUnmount() {
+    this.endLogin();
+  }
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -120,8 +87,8 @@ class Login extends React.Component {
                     alt='logo'
                     src={logo}
                   />
-                  <Form className='login-form'>
-                    <FormItem hasFeedback>
+                  <Form className='login-form' onSubmit={this.handleSubmit}>
+                    <FormItem>
                       {getFieldDecorator('username', {
                         rules: [
                           {
@@ -168,8 +135,8 @@ class Login extends React.Component {
                       </a>
                       <Button
                         type='primary'
+                        htmlType='submit'
                         loading={this.state.loading}
-                        onClick={this.handleSubmit}
                         style={{ width: '100%' }}
                       >
                         登录
@@ -205,21 +172,13 @@ class Login extends React.Component {
             </Card>
           </Col>
         </Row>
-        <Button
-          type='primary'
-          loading={this.state.loading}
-          onClick={this.logoutUser}
-          style={{ width: '100%' }}
-        >
-          登录
-        </Button>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  console.log('Login-state--', state);
+  // console.log('Login-state--', state);
   return {
     isLogin: state.login.isLogin,
     error: state.login.error,

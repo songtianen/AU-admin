@@ -73,7 +73,7 @@ module.exports = {
         }
       }
       if (data.code) {
-        const info = await FunctionModel.findOne({ name: data.code });
+        const info = await FunctionModel.findOne({ code: data.code });
         if (info) {
           return {
             success: false,

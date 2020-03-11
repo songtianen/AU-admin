@@ -13,38 +13,42 @@ const router = express.Router();
 
 router.get(
   '/getAllDepartmentTree',
-  PermissionCheck({ permission: [''] }),
+  PermissionCheck({ permission: ['department_view'] }),
   (req, res) => {
     getAllDepartmentTree({ req, res });
   },
 );
 router.get(
   '/departmentandrole',
-  PermissionCheck({ permission: [''] }),
+  PermissionCheck({ permission: ['department_view'] }),
   (req, res) => {
     getAllDepartmentAndRole({ req, res });
   },
 );
-router.get('/', PermissionCheck({ permission: [''] }), (req, res) => {
-  getAllDepartment({ req, res });
-});
+router.get(
+  '/',
+  PermissionCheck({ permission: ['department_view'] }),
+  (req, res) => {
+    getAllDepartment({ req, res });
+  },
+);
 router.post(
   '/adddepartment',
-  PermissionCheck({ permission: [''] }),
+  PermissionCheck({ permission: ['department_add'] }),
   (req, res) => {
     addDepartment({ req, res });
   },
 );
 router.post(
   '/deldepartment',
-  PermissionCheck({ permission: [''] }),
+  PermissionCheck({ permission: ['department_del'] }),
   (req, res) => {
     delDepartment({ req, res });
   },
 );
 router.post(
   '/editdepartment',
-  PermissionCheck({ permission: [''] }),
+  PermissionCheck({ permission: ['department_edit'] }),
   (req, res) => {
     editDepartment({ req, res });
   },

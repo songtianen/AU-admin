@@ -121,6 +121,11 @@ const postRegister = async ({ req, res }) => {
       data: { info: 'username' },
     });
   } else {
+    //   const info = await UserModel.create({
+    //   ...dbSchema.User,
+    //   ...userInfo,
+    //   id: uuidv4(),
+    // });
     const info = await new UserModel({
       id: uuidv4(),
       email: email,

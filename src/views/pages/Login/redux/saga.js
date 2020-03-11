@@ -11,6 +11,7 @@ import { actionTypes } from './actions';
 
 function* fetchUser(action) {
   try {
+    yield put({ type: actionTypes.BEFORE_LOGIN, payload: {} });
     const userInfo = yield call(loginByUsername, action.payload);
     // console.log('登陆', userInfo);
     if (userInfo.statusCode === 200 && userInfo.data.accessToken) {
