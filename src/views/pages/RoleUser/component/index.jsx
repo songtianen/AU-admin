@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, Divider, Modal, Tag, Button } from 'antd';
 import { getRolePagedList } from '../../../../api';
 import schema from '../../../../schema/RoleUser';
-import SearchForm from '../../../../schema/SearchForm/SearchForm';
+import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import EditRoleUserModal from './editRoleUserModal';
 
 class RoleUser extends React.Component {

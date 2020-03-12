@@ -7,7 +7,7 @@ import React from 'react';
 import { Table, Divider, notification, Tag } from 'antd';
 import { getRolePagedList, savePermission } from '../../../../api';
 import schema from '../../../../schema/RolePermission';
-import SearchForm from '../../../../schema/SearchForm/SearchForm';
+import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import EditRolePermissionModal from './editRolePermissionModal';
 
 class RolePermission extends React.PureComponent {
@@ -15,6 +15,7 @@ class RolePermission extends React.PureComponent {
     tableFilter: {
       name: '',
       code: '',
+      departmentId: '',
     },
     searchFormExpand: true,
     tableSelectedRowKeys: [],

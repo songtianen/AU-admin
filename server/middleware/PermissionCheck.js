@@ -18,13 +18,13 @@ const PermissionCheck = ({ permission = [], role = [] }) => {
       const functionCodeAndModuleId = await findUserPermission(userRole);
 
       let userPermission = functionCodeAndModuleId.functionCode;
-      console.log('PermissionCheck-----userPermission', userPermission);
+      // console.log('PermissionCheck-----userPermission', userPermission);
 
       let p = userPermission.filter((s) => {
         return permission.indexOf(s) > -1;
       });
       if (p && p.length > 0) {
-        console.log('PermissionCheck-----查询出来的权限', p);
+        // console.log('PermissionCheck-----查询出来的权限', p);
         return next();
       }
       // //  根据userId得用户角色列表(查找是否存在传进来的角色)

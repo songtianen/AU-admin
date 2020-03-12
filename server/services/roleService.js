@@ -84,6 +84,11 @@ module.exports = {
         return o.name.indexOf(filter.name) > -1;
       });
     }
+    if (filter.departmentId) {
+      roleLists = _.filter(roleLists, (o) => {
+        return o.departmentId.indexOf(filter.departmentId) > -1;
+      });
+    }
 
     // 总页数
     let totalCount = roleLists.length;

@@ -7,7 +7,7 @@ import {
   editFunction,
   getAllMenu,
 } from '../../../api';
-import SearchForm from '../../../schema/SearchForm/SearchForm';
+import SearchForm from '../../../schema/Common/SearchForm/SearchForm';
 import CommonModal from '../Common/CommonModal';
 import AddRemoveComponent from '../Common/AddRemoveConponent';
 import schema from '../../../schema/Function';

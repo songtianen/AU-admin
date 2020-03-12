@@ -8,7 +8,7 @@ const { commonService } = require('../util/services');
 
 module.exports = {
   getRolePagedList: async ({ req, res }) => {
-    // console.log('获取用户列表', req.query);
+    // console.log('获取Role', req.query);
     let pageIndex = req.query.pageIndex || '';
     let pageSize = req.query.pageSize || '';
     let sortBy = req.query.sortBy || '';

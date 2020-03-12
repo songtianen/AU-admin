@@ -3,7 +3,7 @@ import React from 'react';
 import { Table, Divider, notification, Badge, Tag } from 'antd';
 import { getAllMenu, editMenu, delMenus, addMenu } from '../../../api';
 
-import SearchForm from '../../../schema/SearchForm/SearchForm';
+import SearchForm from '../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../schema/Menu';
 import CommonModal from '../Common/CommonModal';
 import AddRemoveComponent from '../Common/AddRemoveConponent';

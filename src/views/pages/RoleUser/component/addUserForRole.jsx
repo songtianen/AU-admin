@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Divider, notification } from 'antd';
 import { getAllUser, addUserForRole } from '../../../../api';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
-import SearchForm from '../../../../schema/SearchForm/SearchForm';
+import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 // import CommonModal from '../../Common/CommonModal';
 import schema from '../../../../schema/RoleUser/User';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Button, Icon } from 'antd';
 import PropTypes from 'prop-types';
-import searchFormSchemaUtil from '../Common/commonFormSchemaUtilPlus';
+import searchFormSchemaUtil from '../commonFormSchemaUtilPlus';
 
 class SearchForm extends React.PureComponent {
   state = {

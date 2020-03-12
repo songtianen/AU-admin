@@ -14,7 +14,7 @@ import {
 //   saveRole,
 //   delRole,
 // } from '../states/actions';
-import SearchForm from '../../../../schema/SearchForm/SearchForm';
+import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../../schema/Role';
 import CommonModal from '../../Common/CommonModal';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';

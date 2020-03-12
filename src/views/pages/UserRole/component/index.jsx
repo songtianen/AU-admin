@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Modal, Tag, Button } from 'antd';
 import { getAllUser, getRolePagedList } from '../../../../api';
-import SearchForm from '../../../../schema/SearchForm/SearchForm';
+import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../../schema/UserRole';
 import EditUserRoleModalContent from './editUserRoleModalContent';
 
