@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Icon, Row, Col, Button, Card, notification } from 'antd';
+import { Form, Input, Icon, Row, Col, Button, Card } from 'antd';
 import { connect } from 'react-redux';
 import logo from '../../../resource/assets/logo.jpg';
-import { register, clearRegisterError } from './redux/actions';
+import { register } from './redux/actions';
 
 const { Meta } = Card;
 
@@ -12,22 +12,13 @@ class RegistrationForm extends React.Component {
     count: 0,
     confirmDirty: false,
     loading: false,
-    isValidate: false,
-    username: '#$@!#%',
-    email: '#$@!#%',
-    phone: '#$@!#%',
-    confirm: '#$@!#%',
-    password: '#$@!#%',
-    captcha: '#$@!#%',
-    error: false,
-    data: {},
-    msg: '',
   };
 
   interval = undefined;
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    this.endLogin();
   }
 
   startLogin = () => {
@@ -40,36 +31,13 @@ class RegistrationForm extends React.Component {
 
   handleSubmit = (e) => {
     const { dispatch } = this.props;
-    dispatch(
-      clearRegisterError({
-        error: false,
-        data: {},
-        msg: '',
-      }),
-    );
     e.preventDefault();
     this.props.form.validateFields((err, val) => {
       if (!err) {
-        let vals = { ...val };
-        const keys = Object.keys(vals);
-        keys.forEach((item) => {
-          let a = vals[item];
-          this.setState({
-            [item]: a,
-          });
-        });
-
         dispatch(register(val));
         this.startLogin();
       }
       if (err) {
-        const username = val.username;
-        const password = val.phone;
-        if (!username || !password) {
-          notification.error({
-            message: '请输入用户名和手机',
-          });
-        }
         this.endLogin();
       }
     });
@@ -116,37 +84,13 @@ class RegistrationForm extends React.Component {
     callback();
   };
 
-  // 根据后端返回error数据提示
-  validateInfo = ({ error, data, msg }, key) => {
-    const { form } = this.props;
-    const FieldValue = form.getFieldValue(key);
-    const isTouched = form.isFieldTouched(key);
-    if (isTouched && (!FieldValue || !FieldValue.trim())) {
-      return {
-        error: 'error',
-        msg: '不能输入空格',
-      };
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isLogin) {
+      this.props.history.push('/');
     }
-
-    if (error && data.info === key) {
-      if (this.state[key] !== FieldValue) {
-        return '';
-      }
-      return {
-        error: 'error',
-        msg,
-      };
-    }
-    return '';
-  };
-
-  // eslint-disable-next-line no-unused-vars
-  componentDidUpdate(prevProps, prevState) {
-    // 典型用法（不要忘记比较 props）
-    if (
-      this.props.error !== prevProps.error &&
-      this.state.loading === prevState.loading
-    ) {
+    const { error } = nextProps;
+    if (error) {
+      console.log('componentWillReceiveProps', error);
       this.endLogin();
     }
   }
@@ -154,24 +98,6 @@ class RegistrationForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { count } = this.state;
-    const { error, data, msg } = this.props;
-    const userNameValidateStatus = this.validateInfo(
-      {
-        error,
-        data,
-        msg,
-      },
-      'username',
-    );
-    const phoneValidateStatus = this.validateInfo(
-      {
-        error,
-        data,
-        msg,
-      },
-      'phone',
-    );
-
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -188,21 +114,13 @@ class RegistrationForm extends React.Component {
         <Form.Item
           // {...tailFormItemLayout}
           label='用户名'
-          validateStatus={
-            userNameValidateStatus ? userNameValidateStatus.error : ''
-          }
-          help={userNameValidateStatus ? userNameValidateStatus.msg : ''}
         >
-          {getFieldDecorator(
-            'username',
-            {
-              rules: [
-                { required: true, message: '输入用户名' },
-                { whitespace: true, message: '用户名不能有空格' },
-              ],
-            },
-            { validateTrigger: 'onChange' },
-          )(
+          {getFieldDecorator('username', {
+            rules: [
+              { required: true, message: '输入用户名' },
+              { whitespace: true, message: '用户名不能输入空格' },
+            ],
+          })(
             <Input
               prefix={<Icon type='user' style={{ color: 'rgba(0,0,0,.25)' }} />}
               placeholder='用户名'
@@ -229,6 +147,8 @@ class RegistrationForm extends React.Component {
                 required: true,
                 message: '请输入密码!',
               },
+              { whitespace: true, message: '用户名不能输入空格' },
+
               {
                 validator: this.validateToNextPassword,
               },
@@ -248,19 +168,20 @@ class RegistrationForm extends React.Component {
                 required: true,
                 message: '请确认密码!',
               },
+              { whitespace: true, message: '用户名不能输入空格' },
+
               {
                 validator: this.compareToFirstPassword,
               },
             ],
           })(<Input.Password onBlur={this.handleConfirmBlur} />)}
         </Form.Item>
-        <Form.Item
-          label='手机号'
-          validateStatus={phoneValidateStatus ? phoneValidateStatus.error : ''}
-          help={phoneValidateStatus ? phoneValidateStatus.msg : ''}
-        >
+        <Form.Item label='手机号'>
           {getFieldDecorator('phone', {
-            rules: [{ required: true, message: '请输入手机号' }],
+            rules: [
+              { required: true, message: '请输入手机号' },
+              { pattern: /^1[3-578]\d{9}$/, message: '请输入正确的手机格式' },
+            ],
           })(
             <Input
               prefix={
@@ -276,8 +197,12 @@ class RegistrationForm extends React.Component {
           <Row gutter={8}>
             <Col span={12}>
               {getFieldDecorator('captcha', {
-                rules: [{ required: true, message: '请输入验证码' }],
-              })(<Input />)}
+                rules: [
+                  { required: true, message: '请输入验证码' },
+                  { max: 6, message: '6位' },
+                  { whitespace: true, message: '用户名不能输入空格' },
+                ],
+              })(<Input placeholder='任意6位' />)}
             </Col>
             <Col span={12}>
               <Button
@@ -292,12 +217,7 @@ class RegistrationForm extends React.Component {
         </Form.Item>
 
         <Form.Item>
-          <Button
-            // disabled={error ? 1 : 0}
-            type='primary'
-            loading={this.state.loading}
-            htmlType='submit'
-          >
+          <Button type='primary' loading={this.state.loading} htmlType='submit'>
             提交
           </Button>
         </Form.Item>
@@ -348,18 +268,16 @@ class RegistrationForm extends React.Component {
 }
 const mapStateToProps = (state) => {
   return {
-    error: state.user.error,
-    msg: state.user.msg,
-    data: state.user.data,
+    error: state.login.error,
+    isLogin: state.login.isLogin,
   };
 };
 RegistrationForm.propTypes = {
-  // history: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  isLogin: PropTypes.bool.isRequired,
   form: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
-  error: PropTypes.bool.isRequired,
-  msg: PropTypes.string.isRequired,
-  data: PropTypes.object.isRequired,
+  error: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps)(

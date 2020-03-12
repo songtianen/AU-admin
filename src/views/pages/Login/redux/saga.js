@@ -38,10 +38,11 @@ function* fetchUser(action) {
 
 function* register(action) {
   try {
+    yield put({ type: actionTypes.BEFORE_LOGIN, payload: {} });
     const userInfo = yield call(loginRegister, action.payload);
     if (userInfo.statusCode === 200 && userInfo.data.accessToken) {
-      yield put({ type: actionTypes.REGISTER_SUCCESS, payload: userInfo });
       setToken(userInfo.data.accessToken);
+      yield put({ type: actionTypes.REGISTER_SUCCESS, payload: userInfo });
       // history.push('/');
     }
     if (userInfo.statusCode === 500) {
@@ -52,16 +53,6 @@ function* register(action) {
   }
 }
 
-function* clearRegisterError(action) {
-  yield put({
-    type: actionTypes.REGISTER_CLEARERROR_OK,
-    payload: action.payload,
-  });
-}
-
-function* watchClearRegisterError() {
-  yield takeEvery(actionTypes.DO_REGISTER_CLEARERROR, clearRegisterError);
-}
 function* watchFetchUser() {
   yield takeEvery(actionTypes.DO_LOGIN, fetchUser);
 }
@@ -69,8 +60,4 @@ function* watchRegister() {
   yield takeEvery(actionTypes.DO_REGISTER, register);
 }
 
-export const loginSagas = [
-  watchFetchUser(),
-  watchRegister(),
-  watchClearRegisterError(),
-];
+export const loginSagas = [watchFetchUser(), watchRegister()];

@@ -54,7 +54,7 @@ const buildMenu = (menus) => {
 //   parentMenu.children.push(...children);
 // };
 const buildAccessMenu = (menus, userPermissionIds) => {
-  console.log('uniqueMenu---', userPermissionIds);
+  // console.log('uniqueMenu---', userPermissionIds);
 
   // 找到所有具有权限显示的菜单
   let permissionMenus = [];
@@ -231,7 +231,7 @@ let menuService = {
     menuList = _.sortBy(menuList, ['sort']); // 所有菜单
     // 用户的角色是否是管理员
     let isAdmin = userInfo.isAdmin;
-    console.log('userInfo中的isAdmin', isAdmin);
+    // console.log('userInfo中的isAdmin', isAdmin);
     // 获取用户的用户角色，角色里有权限
     let userRole = userInfo.userRole;
     // 如若是管理员构建管理员菜单（全部菜单）

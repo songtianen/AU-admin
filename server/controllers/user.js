@@ -8,8 +8,33 @@ const { secretKey } = require('../util/md5');
 const { checkParametersEmpety } = require('../util/util');
 
 let postRegister = async ({ req, res }) => {
-  console.log('用户注册', req.body);
-  // userSservice.postRegister({ req, res });
+  const { email, password, phone, username } = req.body;
+  await userSservice
+    .postRegister({ email, password, phone, username })
+    .then((doc) => {
+      if (doc.success) {
+        const tokenObj = {
+          username: doc.data.userName,
+          isAdmin: doc.data.isAdmin,
+          userId: doc.data.id,
+        };
+        // 用户登录成功过后生成token返给前端
+        let token = jwt.sign(tokenObj, secretKey, {
+          expiresIn: '24h', // 授权时效24小时
+        });
+        return success({
+          res,
+          msg: doc.msg,
+          data: { accessToken: token, isLogin: true, user: doc.data },
+        });
+      }
+      if (!doc.success) {
+        return businessError({ res, msg: doc.msg });
+      }
+    })
+    .catch((e) => {
+      return businessError({ res, msg: e.msg });
+    });
 };
 let getUserInfo = ({ req, res }) => {
   // console.log('user-controller', req.user);
@@ -80,7 +105,7 @@ let addUser = async ({ req, res }) => {
 
 let postDelUser = async ({ req, res }) => {
   let ids = req.body.ids;
-  console.log('删除User', req.body);
+  // console.log('删除User', req.body);
   await userSservice
     .postDelUser(ids)
     .then((doc) => {
@@ -108,7 +133,7 @@ let editUser = async ({ req, res }) => {
 };
 let loginUser = async ({ req, res }) => {
   const userInfo = req.body;
-  console.log('登陆请求', userInfo);
+  // console.log('登陆请求', userInfo);
 
   await userSservice
     .loginUser(userInfo)

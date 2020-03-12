@@ -5,19 +5,15 @@ import { actionTypes } from './actions';
 export default function(state, action) {
   if (!state) {
     state = {
-      isLogin: false,
-      error: '',
+      // isLogin: false,
+      // error: '',
+      // isLogout: false,
     };
   }
   switch (action.type) {
-    case actionTypes.REGISTER_CLEARERROR_OK:
-      return {
-        ...state,
-        ...action.payload,
-      };
     case actionTypes.BEFORE_LOGIN:
       // 获取用户信息
-      console.log('BEFORE_LOGIN', state);
+      // console.log('BEFORE_LOGIN', state);
       return {
         ...state,
         isLogin: false,
@@ -28,13 +24,14 @@ export default function(state, action) {
       return {
         ...state,
         ...action.payload.data,
+        isLogout: false,
       };
     case actionTypes.REGISTER_SUCCESS:
       return {
         ...state,
-        token: action.payload.data.accessToken,
-        ...action.payload,
+        ...action.payload.data,
         isLogin: true,
+        isLogout: false,
       };
     case actionTypes.LOGIN_ERROR:
       // 登出
@@ -47,8 +44,9 @@ export default function(state, action) {
       // 登出
       return {
         ...state,
-        isLogin: false,
-        error: '',
+        // isLogin: false,
+        // error: '',
+        ...action.payload,
       };
     default:
       return state;

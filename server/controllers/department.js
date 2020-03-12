@@ -75,12 +75,12 @@ const delDepartment = async ({ req, res }) => {
 const editDepartment = async ({ req, res }) => {
   // let data = JSON.parse(JSON.stringify(req.body));
   let data = req.body;
-  console.log('.....', data);
+  // console.log('.....', data);
 
   departmentService
     .editDepartment(data)
     .then((doc) => {
-      console.log('修改部门', doc);
+      // console.log('修改部门', doc);
       return success({ res, data: doc });
     })
     .catch((err) => {

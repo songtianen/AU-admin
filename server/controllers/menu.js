@@ -8,7 +8,7 @@ const { businessError, success } = require('../lib/responseTemplate');
 const getAccessMenu = async ({ req, res }) => {
   if (req.user && req.user.userId) {
     const userInfo = await getUserInfoById(req.user.userId);
-    console.log('查询userInfo', userInfo);
+    // console.log('查询userInfo', userInfo);
     const menuList = await menuService.AccessMenu(userInfo);
     if (menuList.success) {
       return success({ res, data: menuList.menuTree });
@@ -102,7 +102,7 @@ const editMenu = ({ req, res }) => {
 };
 
 const delMenus = ({ req, res }) => {
-  console.log('删除菜单', req.body);
+  // console.log('删除菜单', req.body);
   const { ids } = req.body;
   menuService
     .delMenus(ids)
@@ -121,7 +121,7 @@ const delMenus = ({ req, res }) => {
 const getAllMenuWithFunction = async ({ req, res }) => {
   const { roleId } = req.query;
   // 传入roleID，返回role下的permission
-  console.log('roleId', roleId);
+  // console.log('roleId', roleId);
   menuService
     .getAllMenuWithFunction(roleId)
     .then((doc) => {

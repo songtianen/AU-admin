@@ -53,6 +53,7 @@ class MyHeader extends React.PureComponent {
         payload: {
           isLogin: false,
           isLogout: true,
+          error: '',
         },
       });
       this.props.history.push('/login');

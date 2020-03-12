@@ -1,10 +1,8 @@
 // const _ = require('lodash')
 const { UserModel, RoleModel, FunctionModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
-const { secretKey, Encrypt } = require('../util/md5');
-const { businessError, success } = require('../lib/responseTemplate');
+const { Encrypt } = require('../util/md5');
 const dbSchema = require('../db/dbSchema');
-const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const { unique } = require('../util/util');
 
@@ -108,52 +106,40 @@ const getAllUser = async ({
   };
 };
 // 用户注册
-const postRegister = async ({ req, res }) => {
-  const { email, password, phone, username } = req.body;
+const postRegister = async ({ email, password, phone, username }) => {
   // 查询username是否存在，如果存在，返回错误
   const user = await UserModel.findOne({
     userName: username,
   });
   if (user) {
-    return businessError({
-      res,
-      msg: '用户名已经存在!',
-      data: { info: 'username' },
-    });
+    return {
+      success: false,
+      msg: `用户名${user.userName}已存在`,
+      data: '',
+    };
   } else {
-    //   const info = await UserModel.create({
-    //   ...dbSchema.User,
-    //   ...userInfo,
-    //   id: uuidv4(),
-    // });
-    const info = await new UserModel({
-      id: uuidv4(),
+    const info = await UserModel.create({
+      ...dbSchema.User,
       email: email,
       isAdmin: phone === '13548106816' ? 'admin' : 'user',
       userName: username,
       pwd: Encrypt(password),
       phone: phone,
+      id: uuidv4(),
     });
     // console.log('userinfo', info);
-    info.save(function(err) {
-      if (err) {
-        return businessError({
-          res,
-          msg: '数据库保存失败!',
-          data: { info: err },
-        });
-      }
-      const tokenObj = {
-        username: info.userName,
-        isAdmin: info.isAdmin,
-        userId: info.id,
+    if (info) {
+      return {
+        success: true,
+        msg: '注册成功',
+        data: info,
       };
-      // 用户登录成功过后生成token返给前端
-      let token = jwt.sign(tokenObj, secretKey, {
-        expiresIn: '24h', // 授权时效24小时
-      });
-      return success({ res, data: { accessToken: token } });
-    });
+    }
+    return {
+      success: false,
+      data: '',
+      msg: '注册失败',
+    };
   }
 };
 // 添加

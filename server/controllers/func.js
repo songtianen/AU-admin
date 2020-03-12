@@ -73,7 +73,7 @@ const addFunction = ({ req, res }) => {
 };
 const editFunction = ({ req, res }) => {
   const info = req.body;
-  console.log('编辑功能', info);
+  // console.log('编辑功能', info);
   functionService
     .editFunction(info)
     .then((doc) => {
