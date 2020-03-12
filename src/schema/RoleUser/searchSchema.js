@@ -14,4 +14,7 @@ export default {
       title: '角色编码',
     },
   },
+  formLayout: {
+    layout: 'inline',
+  },
 };

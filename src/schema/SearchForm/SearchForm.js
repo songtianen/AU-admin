@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Button, Icon } from 'antd';
 import PropTypes from 'prop-types';
-import searchFormSchemaUtil from './searchFormSchemaUtil';
+import searchFormSchemaUtil from '../Common/commonFormSchemaUtilPlus';
 
 class SearchForm extends React.PureComponent {
   state = {
@@ -55,15 +55,22 @@ class SearchForm extends React.PureComponent {
           padding: '18px 0px',
         }}
       >
-        <FormComponent
-          noCacheSchema={noCacheSchema}
-          schema={schema}
-          uiSchema={uiSchema}
-          style={{ display: this.state.expand ? 'inline' : 'none' }}
-          wrappedComponentRef={(instance) => {
-            this.formRef = instance;
+        <div
+          style={{
+            display: this.state.expand ? 'block' : 'none',
+            marginBottom: 16,
           }}
-        />
+        >
+          <FormComponent
+            noCacheSchema={noCacheSchema}
+            schema={schema}
+            uiSchema={uiSchema}
+            wrappedComponentRef={(instance) => {
+              this.formRef = instance;
+            }}
+          />
+        </div>
+
         <Row>
           <Col span={24} style={{ textAlign: 'center' }}>
             <span style={{ display: this.state.expand ? 'inline' : 'none' }}>

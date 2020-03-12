@@ -1,7 +1,7 @@
 export default {
-  $id: 'role-search-schema',
-  title: 'role-search-schema',
-  description: 'role-search-schema.',
+  $id: 'rolePermission-search-schema',
+  title: 'rolePermission-search-schema',
+  description: 'rolePermission-search-schema.',
   type: 'object',
   required: [],
   properties: {
@@ -12,6 +12,10 @@ export default {
     code: {
       type: 'string',
       title: '角色编码',
+    },
+    departmentId: {
+      type: 'string',
+      title: '部门名称',
     },
   },
   formLayout: {

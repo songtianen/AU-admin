@@ -10,4 +10,7 @@ export default {
       title: '菜单名称',
     },
   },
+  formLayout: {
+    layout: 'inline',
+  },
 };

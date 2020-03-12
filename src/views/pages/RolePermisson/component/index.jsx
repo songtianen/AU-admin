@@ -6,7 +6,7 @@
 import React from 'react';
 import { Table, Divider, notification, Tag } from 'antd';
 import { getRolePagedList, savePermission } from '../../../../api';
-import schema from '../../../../schema/Role';
+import schema from '../../../../schema/RolePermission';
 import SearchForm from '../../../../schema/SearchForm/SearchForm';
 import EditRolePermissionModal from './editRolePermissionModal';
 

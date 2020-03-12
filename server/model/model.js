@@ -62,6 +62,7 @@ const roleSchema = new mongoose.Schema({
   permission: [String],
   userId: [String],
   departmentId: String,
+  level: String,
 });
 // 部门
 const departmentSchema = new mongoose.Schema({

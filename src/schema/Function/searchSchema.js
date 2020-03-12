@@ -14,4 +14,7 @@ export default {
       title: '功能编码',
     },
   },
+  formLayout: {
+    layout: 'inline',
+  },
 };

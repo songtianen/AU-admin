@@ -14,4 +14,7 @@ export default {
       title: '用户邮箱',
     },
   },
+  formLayout: {
+    layout: 'inline',
+  },
 };

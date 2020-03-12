@@ -322,7 +322,8 @@ const SchemaUtils = {
       for (const item of items) {
         formItems.push(item(getFieldDecorator, formData));
       }
-      return <Form>{formItems}</Form>;
+      const formLayout = schema.formLayout || {};
+      return <Form {...formLayout}>{formItems}</Form>;
     };
   },
   // parse 相关函数
