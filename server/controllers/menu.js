@@ -68,17 +68,17 @@ const addMenu = async ({ req, res }) => {
         }
         if (data.err.length === 0 && data.msg === '') {
           menuService
-            .addMenu(menuData)
+            .addMenu('') // menuData
             .then((resdata) => {
               success({ res, msg: '数据库保存成功' });
             })
             .catch((e) => {
-              businessError({ res, msg: e.msg });
+              businessError({ res, msg: e.message });
             });
         }
       })
       .catch((e) => {
-        businessError({ res, msg: e.msg });
+        businessError({ res, msg: e.message });
       });
   }
 };
@@ -113,7 +113,7 @@ const delMenus = ({ req, res }) => {
       return success({ res, msg: doc.msg });
     })
     .catch((e) => {
-      businessError({ res, msg: e.msg });
+      businessError({ res, msg: e.message });
     });
 };
 

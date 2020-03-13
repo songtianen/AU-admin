@@ -9,23 +9,20 @@ import constantMenu from '../../conf/menuConf';
 function* fetchUserInfo(action) {
   try {
     const userInfo = yield call(getUserInfo, action.payload);
-    console.log('saga---', userInfo);
+    // console.log('saga---', userInfo);
     if (userInfo.statusCode === 200) {
-      let permission = [
-        ...userInfo.data.userRole,
-        ...userInfo.data.userPermission,
-      ];
       let isAdmin = userInfo.data.isAdmin;
       let userInfoData = {
         // 用户信息
         name: userInfo.data.userName,
         avatar: userInfo.data.avatarUrl,
         isAdmin,
-        permission,
+        userRole: userInfo.data.userRole,
+        permission: userInfo.data.userPermission,
       };
       localStorage.setItem(
         'permission',
-        JSON.stringify(userInfo.data.permission),
+        JSON.stringify(userInfo.data.userPermission),
       );
       localStorage.setItem('isAdmin', userInfo.data.isAdmin);
       yield put({
@@ -37,9 +34,11 @@ function* fetchUserInfo(action) {
       yield put({ type: actionTypes.LOGIN_ERROR, payload: userInfo });
     }
   } catch (error) {
-    notification.error({
-      message: error,
-    });
+    if (error.message === '403') {
+      notification.error({
+        message: '没有请求用户信息的权限',
+      });
+    }
   }
 }
 
@@ -76,9 +75,11 @@ function* fetchAccessMemu(action) {
       yield put({ type: actionTypes.LOGIN_ERROR, payload: accessMenu });
     }
   } catch (error) {
-    notification.error({
-      message: error,
-    });
+    // notification.error({
+    //   message: error,
+    // });
+
+    console.log('saga-fetchAccessMemu-CatchError-', error);
   }
 }
 

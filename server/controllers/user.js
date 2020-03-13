@@ -4,6 +4,7 @@ const userSservice = require('../services/userService');
 const { Encrypt } = require('../util/md5');
 const jwt = require('jsonwebtoken');
 const { secretKey } = require('../util/md5');
+const { findUserPermission } = require('../services/userService');
 
 const { checkParametersEmpety } = require('../util/util');
 
@@ -33,32 +34,33 @@ let postRegister = async ({ req, res }) => {
       }
     })
     .catch((e) => {
-      return businessError({ res, msg: e.msg });
+      return businessError({ res, msg: e.message });
     });
 };
-let getUserInfo = ({ req, res }) => {
+let getUserInfo = async ({ req, res }) => {
   // console.log('user-controller', req.user);
   let user = req.user;
   if (!user || !user.userId) {
     return businessError({ res, msg: '获取用户信息失败!' });
   }
-  UserModel.findOne({ id: user.userId }, function(err, doc) {
-    if (err) {
-      return businessError({ res, msg: '获取用户信息失败!' });
-    }
-    if (doc) {
-      success({
-        res,
-        data: {
-          userName: doc.userName,
-          userRole: doc.userRole,
-          userPermission: doc.userPermission,
-          isAdmin: doc.isAdmin,
-          avatarUrl: doc.avatar,
-        },
-      });
-    }
-  });
+  const userInfo = await UserModel.findOne({ id: user.userId });
+  if (userInfo && userInfo.userRole) {
+    const functionCodeAndModuleId = await findUserPermission(userInfo.userRole);
+
+    let userPermission = functionCodeAndModuleId.functionCode;
+    let menuId = functionCodeAndModuleId.functionCode;
+    return success({
+      res,
+      data: {
+        userName: userInfo.userName,
+        userRole: userInfo.userRole,
+        userPermission: userPermission,
+        isAdmin: userInfo.isAdmin,
+        avatarUrl: userInfo.avatar,
+        menuId,
+      },
+    });
+  }
 };
 
 const getAllUser = async ({ req, res }) => {
@@ -128,7 +130,7 @@ let editUser = async ({ req, res }) => {
       }
     })
     .catch((e) => {
-      return businessError({ res, msg: e.msg });
+      return businessError({ res, msg: e.message });
     });
 };
 let loginUser = async ({ req, res }) => {
@@ -160,7 +162,7 @@ let loginUser = async ({ req, res }) => {
       }
     })
     .catch((e) => {
-      return businessError({ res, msg: e.msg });
+      return businessError({ res, msg: e.message });
     });
 };
 

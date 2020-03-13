@@ -161,7 +161,7 @@ const addUser = async ({ userInfo }) => {
     );
     return info;
   }
-  return Promise.reject(new Error({ msg: '后端出错' }));
+  return Promise.reject(new Error('后端出错'));
 };
 const postDelUser = async (ids) => {
   const deleteUser = UserModel.deleteMany({ id: ids });
@@ -233,7 +233,7 @@ const editUser = async (userInfo) => {
       msg: '更新成功了！',
     };
   }
-  return Promise.reject(new Error({ msg: '没有参数' }));
+  return Promise.reject(new Error('没有参数'));
 };
 const loginUser = async (userInfo) => {
   if (userInfo) {
@@ -257,7 +257,7 @@ const loginUser = async (userInfo) => {
       };
     }
   }
-  return Promise.reject(new Error({ msg: '没有参数' }));
+  return Promise.reject(new Error('没有参数'));
 };
 const findUserPermission = async (userRole) => {
   if (userRole && userRole.length) {

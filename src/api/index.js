@@ -37,12 +37,6 @@ export function getUserInfo() {
 }
 
 // user
-export function getUserList() {
-  return request({
-    url: '/user/userlist',
-    method: 'get',
-  });
-}
 // 根据角色获取用户列表
 export function getUserFromRole(query) {
   return request({

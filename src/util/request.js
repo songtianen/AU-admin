@@ -20,7 +20,6 @@ const service = axios.create({
   baseURL:
     // eslint-disable-next-line no-undef
     WEBPACK_ENV === 'development' ? '/api' : 'https://www.card12.com/api', // api的base_url：生产环境http://47.108.85.34/api */,
-  // eslint-disable-next-line no-undef
   // WEBPACK_ENV === 'development' ? '/api' : 'http://localhost:8888/api', // 测试用,
   timeout: 20000,
   withCredentials: true,
@@ -32,12 +31,11 @@ service.interceptors.request.use(
     // Do something before request is sent
     // 接口级权限效验
     if (!permission.check(config)) {
-      // eslint-disable-next-line no-throw-literal
-      throw '403';
+      // console.log('permission.check', config);
+      return Promise.reject(new Error('403'));
     }
     loading.show(config);
     let token = getToken();
-    // console.log('token??', config)
     // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
     // eslint-disable-next-line prefer-template
     if (token) {
@@ -47,7 +45,6 @@ service.interceptors.request.use(
   },
   (error) => {
     // Do something with request error
-    // console.log('请求错误', error); // for debug
     Promise.reject(error);
   },
 );
@@ -81,7 +78,7 @@ service.interceptors.response.use(
       notification.error({ message: '系统错误!' });
     } else if (error.message && error.message.indexOf('timeout') > -1) {
       notification.error({ message: '网络超时!' });
-    } else if (error === '403') {
+    } else if (error.message === '403') {
       notification.error({ message: '没有请求权限!' });
     } else {
       notification.error({ message: '网络错误!' });

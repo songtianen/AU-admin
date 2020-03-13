@@ -86,7 +86,7 @@ module.exports = {
       })
       .catch((e) => {
         // console.log(err);
-        return responseTemplate.businessError({ res, msg: e.msg });
+        return responseTemplate.businessError({ res, msg: e.message });
       });
   },
 
@@ -118,7 +118,7 @@ module.exports = {
         return success({ res, data: '', msg: '服务器保存成功' });
       })
       .catch((e) => {
-        return businessError({ res, msg: e.msg });
+        return businessError({ res, msg: e.message });
       });
   },
   // 删除Role,里面的userId
@@ -131,7 +131,7 @@ module.exports = {
         return success({ res, msg: '删除成功' });
       })
       .catch((e) => {
-        return businessError({ res, msg: e.msg });
+        return businessError({ res, msg: e.message });
       });
   },
 
@@ -148,7 +148,7 @@ module.exports = {
         return success({ res, msg: '删除成功' });
       })
       .catch((e) => {
-        return businessError({ res, msg: e.msg });
+        return businessError({ res, msg: e.message });
       });
   },
   // 给Role添加用户
@@ -162,7 +162,7 @@ module.exports = {
         }
       })
       .catch((e) => {
-        return businessError({ res, msg: e.msg });
+        return businessError({ res, msg: e.message });
       });
   },
   // 得到Roleid下的所有user
@@ -199,7 +199,7 @@ module.exports = {
         success({ res, msg: '查询成功', data: doc });
       })
       .catch((e) => {
-        businessError({ res, msg: e.msg });
+        businessError({ res, msg: e.message });
       });
   },
 };

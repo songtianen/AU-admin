@@ -35,7 +35,7 @@ router.get('/info', (req, res) => {
 router.get(
   '/getalluser',
   PermissionCheck({
-    permission: ['role_user_edit', 'user_role_edit'],
+    permission: ['user_view'],
   }),
   (req, res) => {
     getAllUser({ req, res });

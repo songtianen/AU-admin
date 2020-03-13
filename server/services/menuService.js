@@ -55,7 +55,6 @@ const buildMenu = (menus) => {
 // };
 const buildAccessMenu = (menus, userPermissionIds) => {
   // console.log('uniqueMenu---', userPermissionIds);
-
   // 找到所有具有权限显示的菜单
   let permissionMenus = [];
   for (let i of menus) {
@@ -347,7 +346,7 @@ let menuService = {
         msg: `修改成功`,
       };
     }
-    return Promise.reject(new Error({ msg: '保存错误，没有参数' }));
+    return Promise.reject(new Error('保存错误，没有参数'));
   },
   addMenu: async (data) => {
     if (data) {
@@ -398,7 +397,7 @@ let menuService = {
       };
     }
     // eslint-disable-next-line prefer-promise-reject-errors
-    return Promise.reject({ msg: '没有参数' });
+    return Promise.reject(new Error('没有参数'));
   },
   checkSameItemsInDB: async (...data) => {
     let arr = [];
@@ -422,7 +421,7 @@ let menuService = {
         msg: '删除成功!',
       };
     } else {
-      return Promise.reject(new Error({ msg: '服务器错误' }));
+      return Promise.reject(new Error('服务器错误'));
     }
   },
   getAllMenuWithFunction: async (roleId) => {

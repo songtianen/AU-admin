@@ -145,7 +145,7 @@ module.exports = {
     if (update) {
       return update;
     }
-    return Promise.reject(new Error({ msg: '错误了song' }));
+    return Promise.reject(new Error('错误了song'));
   },
   editRole: async (role) => {
     let exist = await RoleModel.findOne({ code: role.code });
@@ -229,7 +229,7 @@ module.exports = {
         msg: '',
       };
     }
-    return Promise.reject(new Error({ msg: '服务端错误' }));
+    return Promise.reject(new Error('服务端错误'));
   },
   getRoleFunctions: async (roleId) => {
     let roleFunctions = await RoleModel.findOne({ id: roleId });
@@ -266,7 +266,7 @@ module.exports = {
         ),
       ]);
     }
-    return Promise.reject(new Error({ msg: '参数错误' }));
+    return Promise.reject(new Error('参数错误'));
   },
   addUserForRole: async ({ userIds, roleId }) => {
     // 1,查询roleid
@@ -293,7 +293,7 @@ module.exports = {
         ),
       ]);
     }
-    return Promise.reject(new Error({ msg: '参数错误' }));
+    return Promise.reject(new Error('参数错误'));
   },
   delUserForRoleId: async ({ roleId, userIds }) => {
     if (roleId && userIds) {
@@ -351,7 +351,7 @@ module.exports = {
 
       return updateRoleModel && updateUserModel;
     } else {
-      return new Error({ msg: '请求参数错误' });
+      return Promise.reject(new Error('请求参数错误'));
     }
   },
   getUserFromRoleId: async (
@@ -479,6 +479,6 @@ module.exports = {
         rows: roleLists,
       };
     }
-    return new Error({ msg: '没有userid' });
+    return Promise.reject(new Error('没有userid'));
   },
 };
