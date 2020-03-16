@@ -121,7 +121,7 @@ const postRegister = async ({ email, password, phone, username }) => {
     const info = await UserModel.create({
       ...dbSchema.User,
       email: email,
-      isAdmin: phone === '13548106816' ? 'admin' : 'user',
+      isAdmin: phone,
       userName: username,
       pwd: Encrypt(password),
       phone: phone,

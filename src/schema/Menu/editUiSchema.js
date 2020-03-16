@@ -18,7 +18,7 @@ export default {
       { required: true, message: '请输入角色编码' },
       { whitespace: true, message: 'no space' },
 
-      { max: 25, message: '最多输入25字符' },
+      { max: 100, message: '最多输入100字符' },
     ], // 校验规则
     'ui:title': '菜单title',
     'ui:description': '',
@@ -43,7 +43,7 @@ export default {
       { required: true, message: '请输入角色名称' },
       { whitespace: true, message: 'no space' },
 
-      { max: 25, message: '最多输入25字符' },
+      { max: 100, message: '最多输入100字符' },
     ], // 校验规则
     'ui:title': '菜单名称',
     'ui:description': '',
@@ -68,7 +68,7 @@ export default {
       { required: true, message: '请输入角色编码' },
       { whitespace: true, message: 'no space' },
 
-      { max: 25, message: '最多输入25字符' },
+      { max: 100, message: '最多输入100字符' },
     ], // 校验规则
     'ui:title': '菜单编码',
     'ui:description': '',
@@ -89,7 +89,7 @@ export default {
       { required: true, message: '请输入角色编码' },
       { whitespace: true, message: 'no space' },
 
-      { max: 25, message: '最多输入25字符' },
+      { max: 100, message: '最多输入100字符' },
     ], // 校验规则
     'ui:title': '菜单路径',
     'ui:description': '',
@@ -152,7 +152,7 @@ export default {
       { required: true, message: '输入数字' },
       { whitespace: true, message: 'no space' },
 
-      { max: 25, message: '最多输入25字符' },
+      { max: 100, message: '最多输入100字符' },
     ], // 校验规则
     'ui:title': '排序',
     'ui:description': '',

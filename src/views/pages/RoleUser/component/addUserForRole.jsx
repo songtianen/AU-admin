@@ -4,7 +4,6 @@ import { Table, Divider, notification } from 'antd';
 import { getAllUser, addUserForRole } from '../../../../api';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
-// import CommonModal from '../../Common/CommonModal';
 import schema from '../../../../schema/RoleUser/User';
 
 class AddUserForRole extends React.PureComponent {
@@ -58,35 +57,6 @@ class AddUserForRole extends React.PureComponent {
       dataIndex: 'phone',
       sorter: true,
     },
-    // {
-    //   title: '添加状态',
-    //   dataIndex: 'isAdd',
-    //   align: 'center',
-    //   render: (text, record) => {
-    //     return record.isAdd === 1 ? (
-    //       <Badge status='success' />
-    //     ) : (
-    //       <Badge status='error' />
-    //     );
-    //   },
-    // },
-    // {
-    //   title: '操作',
-    //   dataIndex: 'id',
-    //   align: 'center',
-    //   fixed: 'right',
-    //   width: 120,
-    //   render: (text, record) => {
-    //     return (
-    //       <Popconfirm
-    //         title='确定删除?'
-    //         onConfirm={() => this.deleteUserForRole(record)}
-    //       >
-    //         <a>删除</a>
-    //       </Popconfirm>
-    //     );
-    //   },
-    // },
   ];
 
   // SearchForm 搜索

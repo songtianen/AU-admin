@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
 
-import spin from '../../views/layout/Spin';
-import login from '../../views/pages/Login/redux';
-import role from '../../views/pages/Role/redux/index';
+import spin from '../views/layout/Spin';
+import login from '../views/pages/Login/redux';
+import role from '../views/pages/Role/redux/index';
+import header from '../views/layout/Header/redux/index';
 
-import app from '../redux_app';
+import app from '../views/layout/redux/redux_app';
 
 // console.log('user', role.constants.NAME, role.reducer);
 
@@ -15,5 +16,6 @@ const rootReducer = combineReducers({
   [role.constants.NAME]: role.reducer,
   [app.constants.NAME]: app.reducer,
   [spin.constants.NAME]: spin.reducer,
+  [header.constants.NAME]: spin.reducer,
 });
 export default rootReducer;

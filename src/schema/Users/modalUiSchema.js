@@ -11,7 +11,7 @@ export default {
       { required: true, message: '请输入用户名称' },
       { whitespace: true, message: 'no space' },
 
-      { max: 25, message: '最多输入25字符' },
+      { max: 100, message: '最多输入100字符' },
     ], // 校验规则
     'ui:title': '用户名称',
     'ui:description': '',
@@ -79,7 +79,7 @@ export default {
       { required: true, message: '请输入密码' },
       { whitespace: true, message: 'no space' },
 
-      { max: 25, message: '最多输入25字符' },
+      { max: 100, message: '最多输入100字符' },
     ], // 校验规则
     'ui:title': '密码设置',
     'ui:description': '',

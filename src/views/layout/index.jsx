@@ -4,16 +4,16 @@ import { connect } from 'react-redux';
 import { Layout } from 'antd';
 import MyHeader from './Header';
 import Footer from './Footer';
-import Sider from './Sider';
+import MySider from './Sider';
 import MyNavTabs from './Content/index';
 import { getToken } from '../../util/token';
-import reduxApp from '../../redux/redux_app';
+import reduxApp from './redux/redux_app';
 import './layout.less';
 
 const { Content } = Layout;
-const { MySider } = Sider;
 
-const { updateAccessMenu, getUserInfo } = reduxApp.actions;
+// const { getAccessMenuAction, getUserInfoAction } = reduxApp.actions;
+const { initAppDataAction } = reduxApp.actions;
 class MyLayout extends React.PureComponent {
   state = {
     collapsed: false,
@@ -73,7 +73,7 @@ class MyLayout extends React.PureComponent {
   };
 
   toggle = () => {
-    this.child.setOpenKeys(this.state.collapsed);
+    this.Sider.setOpenKeys(this.state.collapsed);
     this.setState({
       collapsed: !this.state.collapsed,
     });
@@ -85,7 +85,7 @@ class MyLayout extends React.PureComponent {
   };
 
   // 初始化Layout组件，初始化Sider组件
-  initAppData = async () => {
+  initAppData = () => {
     // 获取用户信息,菜单,权限列表(整个应用就一种layout布局,App就是相当母版页,不必在AuthrizedRoute里每次路由跳转的时候判断是否需要获取,是否登录也在此处判断)
     // 没有登录，跳转到登录界面，并记下当前路径
     let token = getToken();
@@ -93,15 +93,10 @@ class MyLayout extends React.PureComponent {
       this.props.history.push('/login');
       return;
     }
-    // let [infoRes, menuRes] = await Promise.all([
-    //   getUserInfo(),
-    //   getAccessMemu(),
-    // ]);
-
-    // eslint-disable-next-line no-shadow
-    const { dispatch } = this.props;
-    dispatch(getUserInfo());
-    dispatch(updateAccessMenu());
+    const { dispatch, location } = this.props;
+    // dispatch(getUserInfoAction());
+    // dispatch(getAccessMenuAction());
+    dispatch(initAppDataAction(location.pathname));
 
     // 初始化子组件
     this.initChildData(this.props);
@@ -109,11 +104,16 @@ class MyLayout extends React.PureComponent {
 
   initChildData(props) {
     // 传给sider组件当前路由 pathname
-    this.child.initMenu(props.location.pathname);
+    this.childSider.initMenu(props.location.pathname);
+    this.childHeader.initMenu(props.location.pathname);
   }
 
-  onRef = (ref) => {
-    this.child = ref;
+  onRefSider = (ref) => {
+    this.childSider = ref;
+  };
+
+  onRefHeader = (ref) => {
+    this.childHeader = ref;
   };
 
   render() {
@@ -125,7 +125,7 @@ class MyLayout extends React.PureComponent {
         }}
       >
         <MySider
-          onRef={this.onRef}
+          onRefSider={this.onRefSider}
           responsive={this.state.responsive}
           collapsed={this.state.collapsed}
         />
@@ -140,6 +140,7 @@ class MyLayout extends React.PureComponent {
             toggleNavTab={this.toggleNavTab}
             navTabshow={this.state.navTabShow}
             itemDisplay={this.state.headerItemDisplay}
+            onRefHeader={this.onRefHeader}
           />
           <Content
             style={{

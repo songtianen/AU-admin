@@ -3,10 +3,6 @@ import { Icon, Tag } from 'antd';
 
 // eslint-disable-next-line import/no-mutable-exports
 let util = {};
-util.title = function(title) {
-  title = title || 'vue.quasar.admin';
-  window.document.title = title;
-};
 
 util.getMenuByName = function(name, menulist) {
   let menu = {};
@@ -204,6 +200,53 @@ util.unique = (arr) => {
     }
   }
   return arr;
+};
+// 找到父级菜单
+util.findCurrentMenuNameAndModule = (menuList, pathName) => {
+  let pathNameItem;
+  let upperId;
+  let module = [];
+  const findItem = (data, _name) => {
+    for (let i = 0, len = data.length; i < len; i++) {
+      if (data[i].path === _name) {
+        pathNameItem = {
+          ...data[i],
+        };
+        break;
+      }
+      if (data[i].children && data[i].children.length) {
+        findItem(data[i].children, _name);
+      }
+    }
+  };
+  findItem(menuList, pathName);
+
+  const findUpper = (menu, _id) => {
+    for (let i = 0, len = menu.length; i < len; i++) {
+      if (menu[i].id === _id) {
+        upperId = menu[i].parentId;
+        break;
+      }
+      if (menu[i].children && menu[i].children.length) {
+        findUpper(menu[i].children, _id);
+      }
+    }
+  };
+  findUpper(menuList, pathNameItem.id);
+  if (upperId !== '0') {
+    findUpper(menuList, upperId);
+  }
+  const findModule = (menu, _id) => {
+    for (let i of menu) {
+      if (i.id === _id) {
+        module.push(i);
+      }
+    }
+  };
+  findModule(menuList, upperId);
+
+  // console.log('找到pathName所在的module', module);
+  return module;
 };
 
 export default util;

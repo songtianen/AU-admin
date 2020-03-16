@@ -7,9 +7,9 @@ class PermissionContainer extends React.PureComponent {
     const { display, permission, children } = this.props;
 
     const needPermission = permission || [];
-    const isAdmin = parseInt(localStorage.getItem('isAdmin'), 10);
+    const isAdmin = localStorage.getItem('isAdmin');
     const userPermission = JSON.parse(localStorage.getItem('permission'));
-    let hasPermission = isAdmin === 1;
+    let hasPermission = isAdmin === 'admin';
     // 不是管理员（没有权限），并且neddPermission明确需要某种权限
     if (!hasPermission && needPermission.length > 0) {
       for (let p of needPermission) {

@@ -3,31 +3,35 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Menu, Icon, Layout, Row, Col, Avatar, Badge } from 'antd';
 import { connect } from 'react-redux';
-import ModuleMenu from './ModuleMenu';
-import appActions from '../../../redux/redux_app';
+import ModuleMenu from './Component/ModuleMenu';
+import appActions from '../redux/redux_app';
 import { logout } from '../../../api';
 import { removeToken } from '../../../util/token';
-import FullScreen from './FullScreen';
-import SearchInput from './SearchInput';
+import FullScreen from './Component/FullScreen';
+import SearchInput from './Component/SearchInput';
 import { actionTypes } from '../../pages/Login/redux/actions';
+import { doInitMenu } from './redux/actions';
 import './index.less';
 
-const { updateModule } = appActions.actions;
+// eslint-disable-next-line no-unused-vars
+const { updateModuleAction } = appActions.actions;
 const { Header } = Layout;
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 class MyHeader extends React.PureComponent {
   // 更新左侧的菜单
+  // eslint-disable-next-line no-unused-vars
   updateModule = (e) => {
-    const { dispatch } = this.props;
-    let accesseMenu = this.props.accessMenu;
+    const { dispatch, history } = this.props;
+    let accesseMenu = this.props.moduleList;
     let moduleList = accesseMenu.filter((item) => {
       return item.leftMenu && item.name === e.key;
     });
     let moduleMenu = moduleList[0].children;
+    history.push(moduleList[0].path);
     dispatch(
-      updateModule({
+      updateModuleAction({
         currentModule: e.key,
         moduleMenu,
       }),
@@ -42,6 +46,18 @@ class MyHeader extends React.PureComponent {
     // eslint-disable-next-line no-unused-expressions
     e.key === 'navTab' && this.props.toggleNavTab && this.props.toggleNavTab();
   };
+
+  componentDidMount() {
+    // 组件的this传给父组件的属性，以便父组件拿到子组件的方法
+    this.props.onRefHeader(this);
+    const { dispatch, moduleList, location } = this.props;
+    console.log('Header 组件中的moduleList', moduleList);
+
+    dispatch(doInitMenu({ moduleList, pathname: location.pathname }));
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  initMenu = (pathname) => {};
 
   logout = async () => {
     const { dispatch } = this.props;
@@ -208,20 +224,20 @@ const mapStateToProps = (state) => {
     avatar: state.app.avatar,
     currentModule: state.app.currentModule,
     moduleList: state.app.moduleList,
-    accessMenu: state.app.accessMenu,
   };
 };
 
 MyHeader.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  onRefHeader: PropTypes.func.isRequired,
   moduleList: PropTypes.array.isRequired,
   currentModule: PropTypes.string.isRequired,
   toggle: PropTypes.func.isRequired,
   collapsed: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
-  accessMenu: PropTypes.array.isRequired,
   toggleNavTab: PropTypes.func.isRequired,
   itemDisplay: PropTypes.bool.isRequired,
+  location: PropTypes.object.isRequired,
 };
 export default withRouter(connect(mapStateToProps)(MyHeader));

@@ -8,8 +8,6 @@ permission.check = function(config) {
     let hasPermission = permissions.some((s) => {
       return configPermissions.indexOf(s) > -1;
     });
-    console.log('permission.check', permissions);
-    console.log('permission.check', hasPermission);
     return hasPermission;
   }
   return true;

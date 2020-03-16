@@ -13,7 +13,7 @@ import Layout from '../views/layout';
 const Routers = () => (
   <Router>
     <Switch>
-      <Route exact path='/' render={() => <Redirect to='/app/home' push />} />
+      <Route exact path='/' render={() => <Redirect to='/app' push />} />
       <Route path='/app' component={Layout} />
       <Route exact path='/login' component={Login} />
       <Route exact path='/register' component={Register} />

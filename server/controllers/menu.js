@@ -68,7 +68,7 @@ const addMenu = async ({ req, res }) => {
         }
         if (data.err.length === 0 && data.msg === '') {
           menuService
-            .addMenu('') // menuData
+            .addMenu(menuData) // menuData
             .then((resdata) => {
               success({ res, msg: '数据库保存成功' });
             })

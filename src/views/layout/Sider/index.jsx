@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import MySiderPre from './SiderMenu';
-import appActions from '../../../../redux/redux_app';
-import { MenuToRouter } from '../../../../conf';
-import util from '../../../../util/util';
+import MySiderPre from './Component/SiderMenu';
+import appActions from '../redux/redux_app';
+import { MenuToRouter } from '../../../conf';
+import util from '../../../util/util';
 
-const { updateModule } = appActions.actions;
+const { updateModuleAction } = appActions.actions;
 
 class MySider extends React.PureComponent {
   state = {
@@ -17,10 +17,12 @@ class MySider extends React.PureComponent {
 
   componentDidMount() {
     // 组件的this传给父组件的属性，以便父组件拿到子组件的方法
-    this.props.onRef(this);
+    this.props.onRefSider(this);
   }
 
   initMenu = (pathname) => {
+    // 程序刷新时sider的位置
+    console.log('Layout组件初始化传入的location.pathname', pathname);
     let name = Object.keys(MenuToRouter).find(
       (key) => MenuToRouter[key] === pathname,
     );
@@ -31,6 +33,11 @@ class MySider extends React.PureComponent {
         .map((item) => {
           return item.name;
         });
+      console.log(
+        'Layout组件初始化Sider组件的getParentMenusByName(',
+        util.getParentMenusByName(this.props.openAccessMenu, name),
+      );
+      console.log('Layout组件初始化Sider组件的parentKeys', parentKeys);
 
       if (parentKeys.length > 0) {
         let currentModule = parentKeys[0];
@@ -77,7 +84,7 @@ class MySider extends React.PureComponent {
   // }; // 不需要点击事件,切换路由的时候会触发initMenu,选中相应菜单
 
   openMenu = (v) => {
-    // console.log('sider按钮展开的回调函数', v);
+    console.log('sider按钮展开的回调函数', v);
     let parentKeys = util
       .getParentMenusByName(this.props.openAccessMenu, v[v.length - 1])
       .map((item) => {
@@ -115,13 +122,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     updateModule: (module) => {
-      dispatch(updateModule(module));
+      dispatch(updateModuleAction(module));
     },
   };
 };
 
 MySider.propTypes = {
-  onRef: PropTypes.func.isRequired,
+  onRefSider: PropTypes.func.isRequired,
   responsive: PropTypes.bool.isRequired,
   collapsed: PropTypes.bool.isRequired,
   menus: PropTypes.array.isRequired,

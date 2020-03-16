@@ -23,6 +23,12 @@ export default function app(state, action) {
         ...state,
         ...action.payload,
       };
+    case actionTypes.INIT_APPDATA_SUCCESS:
+      console.log('actions.DO_INIT_MENU', action.payload);
+      return {
+        ...state,
+        ...action.payload,
+      };
     case actionTypes.UPDATE_MODULE_SUCCESS:
       console.log('actions.UPDATE_MODULE_SUCCESS', action.payload);
       return {
