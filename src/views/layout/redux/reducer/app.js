@@ -10,11 +10,13 @@ export default function app(state, action) {
       permission: [],
       spinLoading: false,
       toPath: '/',
-      currentModule: '', // Header title
+      siderSelectedKey: [],
+      siderOpenKeys: [],
+      headerCurrentModuleName: '', // Header title
       accessMenu: [], // 后端返回的menu与前端固定的menu总和,
       openAccessMenu: [], // 展开的可访问的菜单(子级包含父级name)
       moduleList: [], // 模块列表
-      moduleMenu: [], // 模块菜单
+      siderModuleMenu: [], // 模块菜单
     };
   }
   switch (action.type) {
@@ -33,8 +35,8 @@ export default function app(state, action) {
       console.log('actions.UPDATE_MODULE_SUCCESS', action.payload);
       return {
         ...state,
-        currentModule: action.payload.currentModule,
-        moduleMenu: action.payload.moduleMenu,
+        headerCurrentModuleName: action.payload.headerCurrentModuleName,
+        siderModuleMenu: action.payload.siderModuleMenu,
       };
     case actionTypes.GET_USERINFO_SUCCESS:
       // 获取用户信息

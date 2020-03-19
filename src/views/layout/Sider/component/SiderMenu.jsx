@@ -3,31 +3,26 @@ import PropTypes from 'prop-types';
 import { Menu, Icon, Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import logo from '../../../../resource/assets/logo.jpg';
-import { MenuToRouter } from '../../../../conf';
+// import { MenuToRouter } from '../../../../conf';
 
 const { SubMenu } = Menu;
 const { Item } = Menu;
 const { Sider } = Layout;
 
 class SubMenuList extends React.PureComponent {
-  renderMenuItem = ({ name, title, icon }) => {
+  renderMenuItem = ({ path, name, title, icon }) => {
     // 路由跳转到 配置文件中的 value
-    let link = MenuToRouter[name];
+    // let link = MenuToRouter[name];
     return (
       <Item key={name}>
-        {link ? (
-          <Link to={link}>
+        {
+          <Link to={path}>
             <span>
               {icon && <Icon type={icon} style={{ color: '#08c' }} />}
               <span>{title}</span>
             </span>
           </Link>
-        ) : (
-          <span>
-            {icon && <Icon type={icon} style={{ color: '#08c' }} />}
-            <span>{title}</span>
-          </span>
-        )}
+        }
       </Item>
     );
   };
@@ -55,7 +50,12 @@ class SubMenuList extends React.PureComponent {
   };
 
   render() {
-    const { menus, openMenu, openKeys, selectedKey } = this.props;
+    const {
+      siderModuleMenu,
+      menuOpenchange,
+      siderOpenKeys,
+      selectedKey,
+    } = this.props;
     return (
       <Sider
         breakpoint='lg'
@@ -104,13 +104,13 @@ class SubMenuList extends React.PureComponent {
         </div>
         <Menu
           mode='inline'
-          onOpenChange={openMenu}
-          selectedKeys={[selectedKey]}
-          openKeys={openKeys}
+          onOpenChange={menuOpenchange}
+          selectedKeys={selectedKey}
+          openKeys={siderOpenKeys}
           style={{ border: 'none' }}
         >
-          {menus &&
-            menus.map((item) =>
+          {siderModuleMenu &&
+            siderModuleMenu.map((item) =>
               item.children && item.children.length
                 ? this.renderSubMenu(item)
                 : this.renderMenuItem(item),
@@ -124,9 +124,9 @@ class SubMenuList extends React.PureComponent {
 SubMenuList.propTypes = {
   responsive: PropTypes.bool.isRequired,
   collapsed: PropTypes.bool.isRequired,
-  menus: PropTypes.array.isRequired,
-  openMenu: PropTypes.func.isRequired,
-  selectedKey: PropTypes.string.isRequired,
-  openKeys: PropTypes.array.isRequired,
+  siderModuleMenu: PropTypes.array.isRequired,
+  menuOpenchange: PropTypes.func.isRequired,
+  selectedKey: PropTypes.array.isRequired,
+  siderOpenKeys: PropTypes.array.isRequired,
 };
 export default SubMenuList;

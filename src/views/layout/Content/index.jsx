@@ -24,8 +24,8 @@ class MyNavTabs extends React.PureComponent {
 
   hasPermission = true;
 
-  componentWillReceiveProps(nextProps, nextState) {
-    // console.log('content 组件 中 接收的 laocation', nextState);
+  componentWillReceiveProps(nextProps) {
+    console.log('content 组件 中 接收的 laocation', nextProps);
 
     // 如果layout容器组件，请求的数据没有，或者没有设置显示，就不显示tabs,也不进行
     // 下面的逻辑
@@ -93,7 +93,7 @@ class MyNavTabs extends React.PureComponent {
       // 如果路由配置文件中没找到name，就返回home页面（state默认的）
     } else if (
       nextProps.location.pathname === '/app/home' &&
-      nextState.currentPage !== 'home'
+      this.state.currentPage !== 'home'
     ) {
       this.setState({
         currentPage: 'home',

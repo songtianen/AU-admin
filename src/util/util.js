@@ -1,10 +1,7 @@
 import React from 'react';
 import { Icon, Tag } from 'antd';
 
-// eslint-disable-next-line import/no-mutable-exports
-let util = {};
-
-util.getMenuByName = function(name, menulist) {
+const getMenuByName = (name, menulist) => {
   let menu = {};
   // eslint-disable-next-line no-shadow
   let forFn = function(name, menulist) {
@@ -22,8 +19,7 @@ util.getMenuByName = function(name, menulist) {
   forFn(name, menulist);
   return menu;
 };
-
-util.getTreeEleByPropertyValue = function(value, property, list) {
+const getTreeEleByPropertyValue = (value, property, list) => {
   let ele = {};
   // eslint-disable-next-line no-shadow
   let forFn = function(value, property, list) {
@@ -41,14 +37,13 @@ util.getTreeEleByPropertyValue = function(value, property, list) {
   forFn(value, property, list);
   return ele;
 };
-
-util.oneOf = function(ele, targetArr) {
+const oneOf = (ele, targetArr) => {
   if (targetArr.indexOf(ele) >= 0) {
     return true;
   }
   return false;
 };
-util.getParentMenusByName = function(openAccesseMenu, name) {
+const getParentMenusByName = (openAccesseMenu, name) => {
   let temp = [];
   let forFn = function(Menu, _name) {
     for (let item of Menu) {
@@ -63,23 +58,22 @@ util.getParentMenusByName = function(openAccesseMenu, name) {
   return temp;
 };
 // 打开的菜单
-util.openAccesseMenu = function(accesseMenu) {
-  let openAccesseMenu = [];
+const openAccesseMenu = (accesseMenu) => {
+  let accesseMenus = [];
   let forFn = function(menulist, parentName) {
     for (let item of menulist) {
       // 添加parentName属性
       item.parentName = parentName;
-      openAccesseMenu.push(item);
+      accesseMenus.push(item);
       if (item.children && item.children.length > 0) {
         forFn(item.children, item.name);
       }
     }
   };
   forFn(accesseMenu, '');
-  return openAccesseMenu;
+  return accesseMenus;
 };
-
-util.getTreeEleWithParent = function(id, list) {
+const getTreeEleWithParent = (id, list) => {
   let temp = [];
   // eslint-disable-next-line no-shadow
   let forFn = function(id, list) {
@@ -95,27 +89,24 @@ util.getTreeEleWithParent = function(id, list) {
   temp.reverse();
   return temp;
 };
-
-util.handleTitle = function(vm, item) {
+const handleTitle = (vm, item) => {
   return item.title;
 };
-
-util.openTreeData = (data) => {
-  let openAccesseMenu = [];
+const openTreeData = (data) => {
+  let Menu = [];
   // eslint-disable-next-line no-shadow
   let forFn = function(data) {
     for (let item of data) {
-      openAccesseMenu.push({ ...item });
+      Menu.push({ ...item });
       if (item.children && item.children.length > 0) {
         forFn(item.children);
       }
     }
   };
   forFn(data);
-  return openAccesseMenu;
+  return Menu;
 };
-
-util.treeData = (data) => {
+const treeData = (data) => {
   const changeData = function(params) {
     for (let i = 0; i < params.length; i++) {
       params[i].value = params[i].id;
@@ -130,7 +121,7 @@ util.treeData = (data) => {
 
   return a;
 };
-util.iconTreeData = (data) => {
+const iconTreeData = (data) => {
   const changeData = function(params) {
     // let count = 1;
     for (let i = 0; i < params.length; i++) {
@@ -166,8 +157,7 @@ util.iconTreeData = (data) => {
 
   return a;
 };
-
-util.deparmentTreeWithRole = (data) => {
+const deparmentTreeWithRole = (data) => {
   const changeTree = (dataTree) => {
     for (let i = 0; i < dataTree.length; i++) {
       dataTree[i].key = dataTree[i].id;
@@ -186,7 +176,7 @@ util.deparmentTreeWithRole = (data) => {
   };
   return changeTree(data);
 };
-util.unique = (arr) => {
+const unique = (arr) => {
   if (arr.length === 1) {
     return arr;
   }
@@ -201,11 +191,9 @@ util.unique = (arr) => {
   }
   return arr;
 };
-// 找到父级菜单
-util.findCurrentMenuNameAndModule = (menuList, pathName) => {
-  let pathNameItem;
-  let upperId;
-  let module = [];
+// 根据路由找到父级菜单
+const findCurrentMenuNameAndModule = (menuList, pathName) => {
+  let pathNameItem = '';
   const findItem = (data, _name) => {
     for (let i = 0, len = data.length; i < len; i++) {
       if (data[i].path === _name) {
@@ -221,35 +209,113 @@ util.findCurrentMenuNameAndModule = (menuList, pathName) => {
   };
   findItem(menuList, pathName);
 
-  const findUpper = (menu, _id) => {
-    for (let i = 0, len = menu.length; i < len; i++) {
-      if (menu[i].id === _id) {
-        upperId = menu[i].parentId;
-        break;
-      }
-      if (menu[i].children && menu[i].children.length) {
-        findUpper(menu[i].children, _id);
-      }
+  if (pathNameItem && pathNameItem.parentId) {
+    if (pathNameItem.parentId === '0') {
+      return pathNameItem;
     }
-  };
-  findUpper(menuList, pathNameItem.id);
-  if (upperId !== '0') {
-    findUpper(menuList, upperId);
+    const findTop = (list, currentId) => {
+      let upperItem;
+      const findUpper = (menu, _id) => {
+        for (let i = 0, len = menu.length; i < len; i++) {
+          if (menu[i].id === _id) {
+            upperItem = {
+              ...menu[i],
+            };
+          }
+          if (menu[i].children && menu[i].children.length) {
+            findUpper(menu[i].children, _id);
+          }
+        }
+      };
+      findUpper(list, currentId);
+      if (upperItem.parentId !== '0') {
+        findUpper(list, upperItem.parentId);
+      }
+      return upperItem;
+    };
+    const topItem = findTop(menuList, pathNameItem.parentId);
+    console.log('找到HeaderMenu菜单-顶层id', topItem);
+
+    return topItem;
   }
-  const findModule = (menu, _id) => {
+  return {
+    name: '',
+    children: [],
+  };
+};
+const findSiderComponentSelectedNameAndOpenKeys = (menuLists, pathName) => {
+  const men = JSON.parse(JSON.stringify(menuLists));
+  const menuList = men.map((item) => {
+    item.parentId = '0';
+    return item;
+  });
+  console.log('Sider组件方法111', menuList);
+  console.log('Sider组件方法', menuLists);
+  let pathNameItem = '';
+
+  const findSiderItem = (menu, _name) => {
     for (let i of menu) {
-      if (i.id === _id) {
-        module.push(i);
+      if (i.path === _name) {
+        pathNameItem = {
+          ...i,
+        };
+      }
+      if (i.children && i.children.length) {
+        findSiderItem(i.children, _name);
       }
     }
   };
-  findModule(menuList, upperId);
 
-  // console.log('找到pathName所在的module', module);
-  return module;
+  findSiderItem(menuList, pathName);
+  console.log('sider组件的--pathNameItem', pathNameItem);
+
+  // 找到多个父级
+  const findOpenKeys = (list, currentId) => {
+    let upperId;
+    let siderOpenKeys = [];
+    const findUpper = (menu, _id) => {
+      for (let i of menu) {
+        if (i.id === _id) {
+          upperId = i.parentId;
+          siderOpenKeys.push(i.name);
+        }
+        if (i.children && i.children.length) {
+          findUpper(i.children, _id);
+        }
+      }
+    };
+    findUpper(list, currentId);
+    if (upperId !== '0') {
+      findUpper(list, upperId);
+    }
+    return siderOpenKeys;
+  };
+  if (!pathNameItem) {
+    return { siderKey: [], siderOpenKeys: [] };
+  }
+  const siderOpenKeys = findOpenKeys(menuList, pathNameItem.parentId);
+  console.log('sider组件的--siderOpenKeys', siderOpenKeys);
+  return {
+    siderKey: [pathNameItem.name],
+    siderOpenKeys,
+  };
 };
-
-export default util;
+export default {
+  findSiderComponentSelectedNameAndOpenKeys,
+  findCurrentMenuNameAndModule,
+  unique,
+  deparmentTreeWithRole,
+  iconTreeData,
+  treeData,
+  openTreeData,
+  handleTitle,
+  getTreeEleWithParent,
+  openAccesseMenu,
+  getParentMenusByName,
+  oneOf,
+  getTreeEleByPropertyValue,
+  getMenuByName,
+};
 
 export function formatDateTime(inputTime) {
   let date = new Date(inputTime);

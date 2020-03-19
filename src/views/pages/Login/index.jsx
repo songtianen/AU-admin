@@ -50,7 +50,7 @@ class Login extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isLogin) {
-      this.props.history.push('/');
+      this.props.history.replace('/');
     }
     const { error } = nextProps;
     if (error) {

@@ -7,13 +7,14 @@ import Footer from './Footer';
 import MySider from './Sider';
 import MyNavTabs from './Content/index';
 import { getToken } from '../../util/token';
+import util from '../../util/util';
 import reduxApp from './redux/redux_app';
+
 import './layout.less';
 
 const { Content } = Layout;
 
-// const { getAccessMenuAction, getUserInfoAction } = reduxApp.actions;
-const { initAppDataAction } = reduxApp.actions;
+const { initAppDataAction, updateModuleAction } = reduxApp.actions;
 class MyLayout extends React.PureComponent {
   state = {
     collapsed: false,
@@ -24,6 +25,8 @@ class MyLayout extends React.PureComponent {
   };
 
   componentDidMount() {
+    console.log('Layout-componentDidMount----');
+
     this.initAppData(); // 数据初始化完后再触发一次render
     this.getClientWidth(); // 判断屏幕尺寸再触发一次render(不需要可去掉)
     window.onresize = () => {
@@ -37,9 +40,38 @@ class MyLayout extends React.PureComponent {
   }
 
   componentWillUpdate(nextProps) {
-    if (this.props.location.pathname !== nextProps.location.pathname) {
-      // 路由变更,选中菜单
-      this.initChildData(nextProps);
+    const thisPathname = this.props.location.pathname;
+    const nextPathname = nextProps.location.pathname;
+    console.log('宋大明白----', thisPathname, nextPathname);
+
+    if (thisPathname !== nextPathname) {
+      const { siderModuleMenu } = nextProps;
+      const { dispatch, moduleList } = this.props;
+      const isModelMenu = moduleList.some((item) => {
+        return item.path === nextPathname;
+      });
+      console.log('宋大明白----', isModelMenu);
+      if (isModelMenu) {
+        dispatch(
+          updateModuleAction({
+            // siderOpenKeys: [],
+            siderSelectedKey: [],
+          }),
+        );
+      }
+      // const module = util.findCurrentMenuNameAndModule(moduleList, pathname);
+      const siderSelectedKey = util.findSiderComponentSelectedNameAndOpenKeys(
+        siderModuleMenu,
+        nextPathname,
+      );
+      if (siderSelectedKey.siderKey) {
+        let data = {
+          // headerCurrentModuleName: module[0].name,
+          // siderModuleMenu: module[0].children,
+          siderSelectedKey: siderSelectedKey.siderKey,
+        };
+        dispatch(updateModuleAction(data));
+      }
     }
   }
 
@@ -73,7 +105,6 @@ class MyLayout extends React.PureComponent {
   };
 
   toggle = () => {
-    this.Sider.setOpenKeys(this.state.collapsed);
     this.setState({
       collapsed: !this.state.collapsed,
     });
@@ -94,29 +125,23 @@ class MyLayout extends React.PureComponent {
       return;
     }
     const { dispatch, location } = this.props;
-    // dispatch(getUserInfoAction());
-    // dispatch(getAccessMenuAction());
     dispatch(initAppDataAction(location.pathname));
 
     // 初始化子组件
-    this.initChildData(this.props);
+    // this.initChildData(this.props);
   };
 
-  initChildData(props) {
-    // 传给sider组件当前路由 pathname
-    this.childSider.initMenu(props.location.pathname);
-    this.childHeader.initMenu(props.location.pathname);
-  }
+  // initChildData(props) {
+  //   // 传给sider组件当前路由 pathname
+  //   this.childSider.initMenu(props.location.pathname);
+  // }
 
-  onRefSider = (ref) => {
-    this.childSider = ref;
-  };
-
-  onRefHeader = (ref) => {
-    this.childHeader = ref;
-  };
+  // onRefSider = (ref) => {
+  //   this.childSider = ref;
+  // };
 
   render() {
+    const { siderModuleMenu } = this.props;
     console.log('Layout render');
     return (
       <Layout
@@ -125,9 +150,10 @@ class MyLayout extends React.PureComponent {
         }}
       >
         <MySider
-          onRefSider={this.onRefSider}
+          // onRefSider={this.onRefSider}
           responsive={this.state.responsive}
           collapsed={this.state.collapsed}
+          siderModuleMenu={siderModuleMenu}
         />
         <Layout
           style={{
@@ -140,7 +166,6 @@ class MyLayout extends React.PureComponent {
             toggleNavTab={this.toggleNavTab}
             navTabshow={this.state.navTabShow}
             itemDisplay={this.state.headerItemDisplay}
-            onRefHeader={this.onRefHeader}
           />
           <Content
             style={{
@@ -166,9 +191,11 @@ class MyLayout extends React.PureComponent {
 
 const mapStateToPorps = (state) => {
   console.log('app state', state);
-  const { name } = state.app;
+  const { name, siderModuleMenu, moduleList } = state.app;
   return {
     name,
+    moduleList,
+    siderModuleMenu,
   };
 };
 // const mapDispatchToProps = (dispatch) => {
@@ -185,6 +212,8 @@ MyLayout.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
+  moduleList: PropTypes.array.isRequired,
+  siderModuleMenu: PropTypes.array.isRequired,
 };
 
 export default connect(mapStateToPorps)(MyLayout);
