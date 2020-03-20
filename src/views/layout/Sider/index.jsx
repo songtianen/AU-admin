@@ -16,6 +16,11 @@ class MySider extends React.PureComponent {
     dispatch(updateModuleAction({ siderOpenKeys: v }));
   };
 
+  menuOnClick = (e) => {
+    const { dispatch } = this.props;
+    dispatch(updateModuleAction({ siderSelectedKey: [e.key] }));
+  };
+
   render() {
     console.log('Sider-Container render');
     return (
@@ -26,6 +31,7 @@ class MySider extends React.PureComponent {
         menuOpenchange={this.menuOpenchange}
         selectedKey={this.props.siderSelectedKey}
         siderOpenKeys={this.props.siderOpenKeys}
+        menuOnClick={this.menuOnClick}
       />
     );
   }

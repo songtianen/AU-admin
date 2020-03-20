@@ -44,7 +44,6 @@ class Function extends React.PureComponent {
       title: '模块名称',
       dataIndex: 'module',
       render: (text, record) => {
-        console.log('record', record);
         return <Tag color='green'>{this.getMoudleName(record.moduleId)}</Tag>;
       },
       sorter: true,

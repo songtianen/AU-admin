@@ -7,14 +7,14 @@ import Footer from './Footer';
 import MySider from './Sider';
 import MyNavTabs from './Content/index';
 import { getToken } from '../../util/token';
-import util from '../../util/util';
+// import util from '../../util/util';
 import reduxApp from './redux/redux_app';
 
 import './layout.less';
 
 const { Content } = Layout;
 
-const { initAppDataAction, updateModuleAction } = reduxApp.actions;
+const { initAppDataAction } = reduxApp.actions;
 class MyLayout extends React.PureComponent {
   state = {
     collapsed: false,
@@ -39,10 +39,12 @@ class MyLayout extends React.PureComponent {
     }, 200);
   }
 
+  /*
+  优化掉
   componentWillUpdate(nextProps) {
     const thisPathname = this.props.location.pathname;
     const nextPathname = nextProps.location.pathname;
-    console.log('宋大明白----', thisPathname, nextPathname);
+    console.log('宋大明白----', this.props.headerCurrentModuleName);
 
     if (thisPathname !== nextPathname) {
       const { siderModuleMenu } = nextProps;
@@ -54,27 +56,31 @@ class MyLayout extends React.PureComponent {
       if (isModelMenu) {
         dispatch(
           updateModuleAction({
-            // siderOpenKeys: [],
+            siderOpenKeys: [],
             siderSelectedKey: [],
           }),
         );
+        return;
       }
-      // const module = util.findCurrentMenuNameAndModule(moduleList, pathname);
-      const siderSelectedKey = util.findSiderComponentSelectedNameAndOpenKeys(
-        siderModuleMenu,
-        nextPathname,
-      );
-      if (siderSelectedKey.siderKey) {
-        let data = {
-          // headerCurrentModuleName: module[0].name,
-          // siderModuleMenu: module[0].children,
-          siderSelectedKey: siderSelectedKey.siderKey,
-        };
-        dispatch(updateModuleAction(data));
+      if (!isModelMenu) {
+        // const module = util.findCurrentMenuNameAndModule(moduleList, pathname);
+        const siderSelectedKey = util.findSiderComponentSelectedNameAndOpenKeys(
+          JSON.parse(JSON.stringify(siderModuleMenu)),
+          nextPathname,
+        );
+        const { siderKey } = siderSelectedKey;
+        if (siderKey && siderKey.length) {
+          let data = {
+            // headerCurrentModuleName: module[0].name,
+            // siderModuleMenu: module[0].children,
+            siderSelectedKey: siderSelectedKey.siderKey,
+          };
+          dispatch(updateModuleAction(data));
+        }
       }
     }
   }
-
+*/
   // 获取当前浏览器宽度并设置responsive管理响应式
   getClientWidth = () => {
     const clientWidth = document.body.clientWidth;
@@ -126,19 +132,7 @@ class MyLayout extends React.PureComponent {
     }
     const { dispatch, location } = this.props;
     dispatch(initAppDataAction(location.pathname));
-
-    // 初始化子组件
-    // this.initChildData(this.props);
   };
-
-  // initChildData(props) {
-  //   // 传给sider组件当前路由 pathname
-  //   this.childSider.initMenu(props.location.pathname);
-  // }
-
-  // onRefSider = (ref) => {
-  //   this.childSider = ref;
-  // };
 
   render() {
     const { siderModuleMenu } = this.props;
@@ -190,12 +184,17 @@ class MyLayout extends React.PureComponent {
 }
 
 const mapStateToPorps = (state) => {
-  console.log('app state', state);
-  const { name, siderModuleMenu, moduleList } = state.app;
+  const {
+    name,
+    siderModuleMenu,
+    // moduleList,
+    // headerCurrentModuleName,
+  } = state.app;
   return {
     name,
-    moduleList,
+    // moduleList,
     siderModuleMenu,
+    // headerCurrentModuleName,
   };
 };
 // const mapDispatchToProps = (dispatch) => {
@@ -212,8 +211,9 @@ MyLayout.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  moduleList: PropTypes.array.isRequired,
+  // moduleList: PropTypes.array.isRequired,
   siderModuleMenu: PropTypes.array.isRequired,
+  // headerCurrentModuleName: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToPorps)(MyLayout);

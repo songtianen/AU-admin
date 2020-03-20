@@ -244,13 +244,11 @@ const findCurrentMenuNameAndModule = (menuList, pathName) => {
   };
 };
 const findSiderComponentSelectedNameAndOpenKeys = (menuLists, pathName) => {
-  const men = JSON.parse(JSON.stringify(menuLists));
-  const menuList = men.map((item) => {
+  // const men = JSON.parse(JSON.stringify(menuLists));
+  const menuList = menuLists.map((item) => {
     item.parentId = '0';
     return item;
   });
-  console.log('Sider组件方法111', menuList);
-  console.log('Sider组件方法', menuLists);
   let pathNameItem = '';
 
   const findSiderItem = (menu, _name) => {
@@ -267,7 +265,6 @@ const findSiderComponentSelectedNameAndOpenKeys = (menuLists, pathName) => {
   };
 
   findSiderItem(menuList, pathName);
-  console.log('sider组件的--pathNameItem', pathNameItem);
 
   // 找到多个父级
   const findOpenKeys = (list, currentId) => {
@@ -294,13 +291,28 @@ const findSiderComponentSelectedNameAndOpenKeys = (menuLists, pathName) => {
     return { siderKey: [], siderOpenKeys: [] };
   }
   const siderOpenKeys = findOpenKeys(menuList, pathNameItem.parentId);
-  console.log('sider组件的--siderOpenKeys', siderOpenKeys);
   return {
     siderKey: [pathNameItem.name],
     siderOpenKeys,
   };
 };
+const findInModuleList = (list, listKey, name) => {
+  let result = [];
+  const find = (data, key, _name) => {
+    for (let i of data) {
+      if (i[key] === _name) {
+        result.push(i);
+      }
+      if (i.children && i.children.length) {
+        find(i.children, key, _name);
+      }
+    }
+  };
+  find(list, listKey, name);
+  return result;
+};
 export default {
+  findInModuleList,
   findSiderComponentSelectedNameAndOpenKeys,
   findCurrentMenuNameAndModule,
   unique,

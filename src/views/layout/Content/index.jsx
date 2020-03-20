@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tabs } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { MenuToRouter, MenuMapToComponent } from '../../../conf';
+import { MenuMapToComponent } from '../../../conf';
+import { updateModuleAction } from '../redux/actions/actions';
+import util from '../../../util/util';
 
 const TabPane = Tabs.TabPane;
 
@@ -11,108 +13,68 @@ class MyNavTabs extends React.PureComponent {
   state = {
     currentPage: '',
     // 当前打开页面的数组
-    openPages: [
-      {
-        name: 'home',
-        title: '首页',
-        path: '/app/home',
-        closable: false,
-        content: MenuMapToComponent['home'],
-      },
-    ],
+    openPages: [],
   };
 
-  hasPermission = true;
-
   componentWillReceiveProps(nextProps) {
-    console.log('content 组件 中 接收的 laocation', nextProps);
-
-    // 如果layout容器组件，请求的数据没有，或者没有设置显示，就不显示tabs,也不进行
-    // 下面的逻辑
-    if (!nextProps.show || nextProps.openAccessMenu.length === 0) {
+    // 还可以优化一下
+    if (!nextProps.show || nextProps.moduleList.length === 0) {
       return;
     }
-    // 1 得到location 的name属性，
-    const pathname = nextProps.location.pathname;
-    // 2 找到与路由配置文件内与location.pathanme路径匹配的name， key
-    let name = Object.keys(MenuToRouter).find(
-      (key) => MenuToRouter[key] === pathname,
+    // console.log('Content组件中componentWillReceiveProps'); // 第一次接收的moduleList是空
+
+    const { location, moduleList } = nextProps;
+
+    const pageModule = util.findInModuleList(
+      moduleList,
+      'path',
+      location.pathname,
     );
 
-    if (name) {
-      // 验证state状态openPages 中是否存在 name
-      if (this.state.openPages.some((s) => s.name === name)) {
-        // 如果openPages中存在这个name，
-        // 再判断当前state.currentPage，如果不等于这个name
-        if (this.state.currentPage !== name) {
+    if (pageModule && pageModule.length) {
+      // console.log('Content组件中componentWillReceiveProps-有'); // 第一次接收的moduleList是空
+
+      const currentPage = pageModule[0];
+      const isInOpenPages = this.state.openPages.some(
+        (s) => s.name === currentPage.name,
+      );
+      if (!isInOpenPages) {
+        let openPages = this.state.openPages;
+        openPages.push({
+          name: currentPage.name,
+          title: currentPage.title,
+          path: currentPage.path,
+          closable: true,
+        });
+        this.setState({
+          openPages,
+          currentPage: currentPage.name,
+        });
+      }
+      if (isInOpenPages) {
+        // 1.4 如果当前的tab页面（currentPage），不是这页面，那么切换到这个页面
+        if (this.state.currentPage !== currentPage.name) {
           this.setState({
-            currentPage: name,
+            currentPage: currentPage.name,
           });
-        }
-      } else {
-        // 如果state状态openPages中name不等于 配置文件中的name
-        const { openAccessMenu } = nextProps;
-        const menus = openAccessMenu.filter((s) => s.name === name);
-        if (menus.length > 0) {
-          let menu = menus[0];
-          let openPages = this.state.openPages;
-          openPages.push({
-            name: menu.name,
-            title: menu.title,
-            path: MenuToRouter[menu.name],
-            closable: true,
-          });
-          this.setState({
-            openPages,
-            currentPage: name,
-          });
-        } else {
-          // 403
-          // eslint-disable-next-line no-lonely-if
-          if (this.state.openPages.some((s) => s.name === 'page403')) {
-            if (this.state.currentPage !== 'page403') {
-              this.setState({
-                currentPage: 'page403',
-              });
-            }
-          } else {
-            let openPages = this.state.openPages;
-            openPages.push({
-              name: 'page403',
-              title: '没有权限',
-              path: pathname,
-              closable: true,
-            });
-            this.setState({
-              openPages,
-              currentPage: 'page403',
-            });
-          }
         }
       }
-      // 如果路由配置文件中没找到name，就返回home页面（state默认的）
-    } else if (
-      nextProps.location.pathname === '/app/home' &&
-      this.state.currentPage !== 'home'
-    ) {
-      this.setState({
-        currentPage: 'home',
-      });
-    } else {
-      // 404
-      // eslint-disable-next-line no-lonely-if
-      if (this.state.openPages.some((s) => s.name === 'page404')) {
-        if (this.state.currentPage !== 'page404') {
-          this.setState({
-            currentPage: 'page404',
-          });
-        }
-      } else {
-        let openPages = this.state.openPages;
+    }
+    // 后端返回的数据没有这个路由,返回404页面
+    if (pageModule.length === 0) {
+      console.log('Content组件中componentWillReceiveProps-无'); // 第一次接收的moduleList是空
+
+      // openPages 内是否有404的页面？
+      let openPages = this.state.openPages;
+      const isPage404 = openPages.some((s) => s.name === 'page404');
+      const currentPage404 = this.state.currentPage === 'page404';
+      if (!isPage404) {
+        console.log('Content组件中componentWillReceiveProps-openPages-没有404'); // 第一次接收的moduleList是空
+
         openPages.push({
           name: 'page404',
           title: '页面不存在',
-          path: pathname,
+          path: location.pathname,
           closable: true,
         });
         this.setState({
@@ -120,24 +82,43 @@ class MyNavTabs extends React.PureComponent {
           currentPage: 'page404',
         });
       }
+      if (isPage404 && !currentPage404) {
+        this.setState({
+          currentPage: 'page404',
+        });
+      }
     }
   }
 
-  // tab切换
-  onTabClick = (activeKey) => {
-    // if (activeKey !== this.state.currentPage) {
-    //   this.setState({
-    //     currentPage: activeKey
-    //   });
-    //   return;
-    // }
-    if (activeKey !== this.state.currentPage && activeKey === 'home') {
-      this.props.history.push('/app/home');
-      return;
+  tabsOnChange = (activeKey) => {
+    // 还可以优化一下
+    const { dispatch, moduleList } = this.props;
+    const openPages = this.state.openPages;
+    const activeItem = openPages.find((item) => item.name === activeKey);
+
+    // 找到Header.name
+    const pageModule = util.findCurrentMenuNameAndModule(
+      moduleList,
+      activeItem.path,
+    );
+
+    if (pageModule.name) {
+      // 找到SidermoduleMenu
+      const siderData = util.findSiderComponentSelectedNameAndOpenKeys(
+        JSON.parse(JSON.stringify(pageModule.children)),
+        activeItem.path,
+      );
+
+      dispatch(
+        updateModuleAction({
+          siderModuleMenu: pageModule.children,
+          siderSelectedKey: siderData.siderKey,
+          headerCurrentModuleName: pageModule.name,
+          siderOpenKeys: siderData.siderOpenKeys,
+        }),
+      );
     }
-    if (activeKey !== this.state.currentPage) {
-      this.props.history.push(MenuToRouter[activeKey]);
-    }
+    this.props.history.push(activeItem.path);
   };
 
   // tab 新增/删除回调
@@ -145,9 +126,10 @@ class MyNavTabs extends React.PureComponent {
     this[action](targetKey);
   };
 
-  // onEdit 返回的删除回调
+  // onEdit 返回的删除回调/还可以优化一下
   remove = (targetKey) => {
-    let activeKey = this.state.currentPage;
+    const { dispatch, moduleList } = this.props;
+    let currentPage = this.state.currentPage;
     let lastIndex;
     this.state.openPages.forEach((pane, i) => {
       if (pane.name === targetKey) {
@@ -157,14 +139,30 @@ class MyNavTabs extends React.PureComponent {
     const panes = this.state.openPages.filter(
       (pane) => pane.name !== targetKey,
     );
-    if (lastIndex >= 0 && activeKey === targetKey) {
-      activeKey = panes[lastIndex].name;
+
+    if (lastIndex >= 0 && currentPage === targetKey) {
+      currentPage = panes[lastIndex].name;
     }
     this.setState({
       openPages: panes,
-      currentPage: activeKey,
+      currentPage,
     });
-    let path = this.state.openPages.filter((s) => s.name === activeKey)[0].path;
+
+    let path = this.state.openPages.filter((s) => s.name === currentPage)[0]
+      .path;
+    const pageModule = util.findCurrentMenuNameAndModule(moduleList, path);
+    const siderData = util.findSiderComponentSelectedNameAndOpenKeys(
+      JSON.parse(JSON.stringify(pageModule.children)),
+      path,
+    );
+    dispatch(
+      updateModuleAction({
+        siderModuleMenu: pageModule.children,
+        siderSelectedKey: siderData.siderKey,
+        headerCurrentModuleName: pageModule.name,
+        siderOpenKeys: siderData.siderOpenKeys,
+      }),
+    );
     this.props.history.push(path);
   };
 
@@ -186,20 +184,21 @@ class MyNavTabs extends React.PureComponent {
           }}
           onEdit={this.onEdit}
           type='editable-card'
-          onTabClick={this.onTabClick}
+          // onTabClick={this.onTabClick}
+          onChange={this.tabsOnChange}
           // size="small"
         >
           {/* 根据state.openPages渲染页面 */}
-          {this.state.openPages.map((page) => {
-            let Page = MenuMapToComponent[page.name]
-              ? MenuMapToComponent[page.name]
-              : MenuMapToComponent['page404'];
+          {this.state.openPages.map((item) => {
+            let Page = MenuMapToComponent[item.name]
+              ? MenuMapToComponent[item.name]
+              : MenuMapToComponent['notdone']; // 如果前端本地没有这个页面，返回page404
             return (
               <TabPane
                 forceRender
-                tab={page.title}
-                closable={page.closable} // 是否是可关闭
-                key={page.name}
+                tab={item.title}
+                closable={item.closable} // 是否是可关闭
+                key={item.name}
               >
                 <div
                   style={{
@@ -218,14 +217,15 @@ class MyNavTabs extends React.PureComponent {
 }
 const mapStateToProps = (state) => {
   return {
-    openAccessMenu: state.app.openAccessMenu,
+    moduleList: state.app.moduleList,
   };
 };
 MyNavTabs.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   style: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-  openAccessMenu: PropTypes.array.isRequired,
+  moduleList: PropTypes.array.isRequired,
   show: PropTypes.bool.isRequired, // layout 组件的show属性
 };
 export default withRouter(connect(mapStateToProps)(MyNavTabs));

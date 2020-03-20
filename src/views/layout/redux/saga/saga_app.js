@@ -16,7 +16,6 @@ function* initAppData(action) {
       getAccessMenu(),
       getUserInfo(),
     ]);
-    // console.log('appData----', accessMenu, userInfo);
     if (userInfo.statusCode === 200 && accessMenu.statusCode === 200) {
       localStorage.setItem('accessMenu', JSON.stringify(accessMenu.data));
       let menuRes = accessMenu.data;

@@ -14,8 +14,8 @@ const Role = Loadable({
   loader: () => import('../views/pages/Role/component'),
   loading: ContentLoader,
 });
-const Home = Loadable({
-  loader: () => import('../views/common/Home'),
+const Welcome = Loadable({
+  loader: () => import('../views/common/Welcome'),
   loading: ContentLoader,
 });
 const RolePermission = Loadable({
@@ -55,11 +55,15 @@ const RequestLog = Loadable({
   loader: () => import('../views/common/RequsetLog'),
   loading: ContentLoader,
 });
+const Notdone = Loadable({
+  loader: () => import('../views/common/Not_done'),
+  loading: ContentLoader,
+});
 
 // key为与后端返回菜单的name相对应
 export default {
   menu: Menu,
-  home: Home,
+  welcome: Welcome,
   function: FunctionPage,
   role: Role,
   rolepermission: RolePermission,
@@ -73,4 +77,5 @@ export default {
   requestlog: RequestLog,
   error_404: Page404,
   error_403: Page403,
+  notdone: Notdone,
 };

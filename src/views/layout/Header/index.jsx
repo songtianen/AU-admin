@@ -25,12 +25,13 @@ class MyHeader extends React.PureComponent {
     let moduleList = accesseMenu.filter((item) => {
       return item.leftMenu && item.name === e.key;
     });
-    console.log('Header组件Menu-onClick', moduleList);
     if (location.pathname !== moduleList[0].path) {
       dispatch(
         updateModuleAction({
           siderModuleMenu: moduleList[0].children,
           headerCurrentModuleName: moduleList[0].name,
+          siderOpenKeys: [],
+          siderSelectedKey: [],
         }),
       );
       history.push(moduleList[0].path);

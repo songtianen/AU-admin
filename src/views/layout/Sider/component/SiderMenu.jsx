@@ -55,6 +55,7 @@ class SubMenuList extends React.PureComponent {
       menuOpenchange,
       siderOpenKeys,
       selectedKey,
+      menuOnClick,
     } = this.props;
     return (
       <Sider
@@ -104,6 +105,7 @@ class SubMenuList extends React.PureComponent {
         </div>
         <Menu
           mode='inline'
+          onClick={menuOnClick}
           onOpenChange={menuOpenchange}
           selectedKeys={selectedKey}
           openKeys={siderOpenKeys}
@@ -126,6 +128,7 @@ SubMenuList.propTypes = {
   collapsed: PropTypes.bool.isRequired,
   siderModuleMenu: PropTypes.array.isRequired,
   menuOpenchange: PropTypes.func.isRequired,
+  menuOnClick: PropTypes.func.isRequired,
   selectedKey: PropTypes.array.isRequired,
   siderOpenKeys: PropTypes.array.isRequired,
 };
