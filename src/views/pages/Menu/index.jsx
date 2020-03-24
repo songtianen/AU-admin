@@ -14,10 +14,8 @@ class Menu extends React.PureComponent {
       title: '',
       functionCode: '',
     },
-    // eslint-disable-next-line react/no-unused-state
-    searchFormExpand: true,
-    tableSelectedRowKeys: [], // table 选择的数据
-    pagedList: [], // table 展示的数据
+    tableSelectedRowKeys: [],
+    pagedList: [],
     allList: [],
     // table 分页器
     pagination: {
@@ -351,7 +349,7 @@ class Menu extends React.PureComponent {
           pagination={this.state.pagination}
           loading={this.state.loading}
           onChange={this.handleTableChange}
-          scroll={{ x: 1000 }}
+          scroll={{ x: 'max-content' }}
           size='small'
           bordered
         />

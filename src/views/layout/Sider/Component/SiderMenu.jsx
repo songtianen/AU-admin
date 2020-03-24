@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Menu, Icon, Layout } from 'antd';
 import { Link } from 'react-router-dom';
 import logo from '../../../../resource/assets/logo.jpg';
-// import { MenuToRouter } from '../../../../conf';
 
 const { SubMenu } = Menu;
 const { Item } = Menu;
@@ -12,7 +11,6 @@ const { Sider } = Layout;
 class SubMenuList extends React.PureComponent {
   renderMenuItem = ({ path, name, title, icon }) => {
     // 路由跳转到 配置文件中的 value
-    // let link = MenuToRouter[name];
     return (
       <Item key={name}>
         {
@@ -65,22 +63,21 @@ class SubMenuList extends React.PureComponent {
         collapsible
         collapsed={this.props.collapsed}
         width={180}
-        // style={{
-        //   // backgroundColor: 'red',
-        //   borderRight: '1px solid #e8e8e8',
-        // }}
+        theme={this.props.theme}
       >
         <div
           className='logo'
           style={{
-            height: '50px',
+            height: 49,
+            width: '100%',
             overflow: 'hidden',
             borderBottom: 'solid 1px #e8e8e8',
-            boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'center',
+            justifyContent: 'start',
             alignItems: 'center',
+            position: 'fixed',
+            zIndex: 100,
           }}
         >
           <img
@@ -89,6 +86,7 @@ class SubMenuList extends React.PureComponent {
             style={{
               height: 34,
               width: 34,
+              marginLeft: 22,
             }}
           />
           <div
@@ -105,11 +103,17 @@ class SubMenuList extends React.PureComponent {
         </div>
         <Menu
           mode='inline'
+          theme={this.props.theme}
           onClick={menuOnClick}
           onOpenChange={menuOpenchange}
           selectedKeys={selectedKey}
           openKeys={siderOpenKeys}
-          style={{ border: 'none' }}
+          style={{
+            height: '100%',
+            overflow: 'auto',
+            paddingTop: 49,
+            border: 'none',
+          }}
         >
           {siderModuleMenu &&
             siderModuleMenu.map((item) =>
@@ -131,5 +135,6 @@ SubMenuList.propTypes = {
   menuOnClick: PropTypes.func.isRequired,
   selectedKey: PropTypes.array.isRequired,
   siderOpenKeys: PropTypes.array.isRequired,
+  theme: PropTypes.string.isRequired,
 };
 export default SubMenuList;

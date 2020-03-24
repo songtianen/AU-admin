@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -20,15 +21,21 @@ class MyLayout extends React.PureComponent {
     collapsed: false,
     responsive: false,
     navTabShow: true,
-    navTabTop: 50,
+    // navTabTop: 50,
     headerItemDisplay: true,
+    layOutHeight: '',
+    layOutWidth: '',
   };
+
+  componentWillMount() {
+    console.log('Layout-componentWillMount----');
+    this.getClientWidth();
+  }
 
   componentDidMount() {
     console.log('Layout-componentDidMount----');
 
     this.initAppData(); // 数据初始化完后再触发一次render
-    this.getClientWidth(); // 判断屏幕尺寸再触发一次render(不需要可去掉)
     window.onresize = () => {
       this.getClientWidth();
     };
@@ -84,27 +91,31 @@ class MyLayout extends React.PureComponent {
   // 获取当前浏览器宽度并设置responsive管理响应式
   getClientWidth = () => {
     const clientWidth = document.body.clientWidth;
+    const clientHeight = document.body.clientHeight;
+
     this.setState({
-      responsive: clientWidth <= 992,
-      collapsed: clientWidth <= 992,
+      responsive: clientWidth <= 991,
+      collapsed: clientWidth <= 991,
+      layOutHeight: clientHeight,
+      layOutWidth: clientWidth,
     });
     if (clientWidth < 577) {
       this.setState({
-        navTabTop: 50,
+        // navTabTop: 50,
         headerItemDisplay: false,
       });
       return;
     }
     if (clientWidth < 768) {
       this.setState({
-        navTabTop: 96,
-        headerItemDisplay: true,
+        // navTabTop: 96,
+        headerItemDisplay: false,
       });
       return;
     }
     if (clientWidth >= 768) {
       this.setState({
-        navTabTop: 50,
+        // navTabTop: 50,
         headerItemDisplay: true,
       });
     }
@@ -138,22 +149,14 @@ class MyLayout extends React.PureComponent {
     const { siderModuleMenu } = this.props;
     console.log('Layout render');
     return (
-      <Layout
-        style={{
-          borderTop: '1px solid #e8e8e8',
-        }}
-      >
+      <Layout style={{ height: this.state.layOutHeight }}>
         <MySider
           // onRefSider={this.onRefSider}
           responsive={this.state.responsive}
           collapsed={this.state.collapsed}
           siderModuleMenu={siderModuleMenu}
         />
-        <Layout
-          style={{
-            borderLeft: '1px solid #e8e8e8',
-          }}
-        >
+        <Layout style={{ borderLeft: 'solid 1px #e8e8e8' }}>
           <MyHeader
             collapsed={this.state.collapsed}
             toggle={this.toggle}
@@ -163,14 +166,16 @@ class MyLayout extends React.PureComponent {
           />
           <Content
             style={{
+              height: '100%',
               overflow: 'auto',
-              background: '#efefef',
+              // background: '#efefef',
             }}
           >
             <MyNavTabs
               style={{
-                marginTop: this.state.navTabTop,
+                marginTop: 49,
                 width: '100%',
+                height: '100%',
                 display: this.state.navTabShow ? 'block' : 'none',
               }}
               show={this.state.navTabShow}

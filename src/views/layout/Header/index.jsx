@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Menu, Icon, Layout, Row, Col, Avatar, Badge } from 'antd';
+import { Menu, Icon, Layout, Row, Col, Avatar, Badge, Radio, Tag } from 'antd';
 import { connect } from 'react-redux';
 import ModuleMenu from './Component/ModuleMenu';
 import { logout } from '../../../api';
@@ -11,7 +11,7 @@ import FullScreen from './Component/FullScreen';
 import SearchInput from './Component/SearchInput';
 import { actionTypes } from '../../pages/Login/redux/actions';
 import { updateModuleAction } from '../redux/actions/actions';
-import './index.less';
+// import './index.less';
 
 const { Header } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -64,81 +64,81 @@ class MyHeader extends React.PureComponent {
     }
   };
 
+  radioOnChange = (e) => {
+    const { dispatch } = this.props;
+    localStorage.setItem('theme', e.target.value);
+    dispatch(
+      updateModuleAction({
+        theme: e.target.value,
+      }),
+    );
+  };
+
   render() {
     console.log('MyHeader render'); // withRouter的缘故，每次点击同一个菜单，都会re-render
     let isDisplay = this.props.itemDisplay;
+    const { theme } = this.props;
     return (
       <Header
         style={{
-          height: '50px',
           width: '100%',
+          height: 49,
           backgroundColor: '#fff',
           borderBottom: 'solid 1px #e8e8e8',
-          boxSizing: 'border-box',
           padding: 0,
           position: 'fixed',
           zIndex: 100,
         }}
       >
         <Row type='flex' justify='start'>
-          <Col xs={6} sm={4} md={2} lg={2} xl={2}>
-            <Menu style={{ border: 'none' }} selectable={false}>
-              <Menu.Item key={'style'}>
-                {/* 修改样式 */}
-                {/* <ul className="top-nav" style={{ lineHeight: '38px', marginLeft: 10 }}>
-                <li> */}
-                <div
-                  style={{ textAlign: 'center' }}
-                  onClick={this.props.toggle}
-                >
-                  <Icon
-                    type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
-                    style={{ fontSize: '20px', color: '#08c' }}
-                  />
-                </div>
-                {/* </li>
-              </ul> */}
-              </Menu.Item>
+          <Col xs={4} sm={4} md={2} lg={1} xl={1}>
+            <Menu theme={theme} style={{ border: 'none' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  height: 48,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onClick={this.props.toggle}
+              >
+                <Icon
+                  type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
+                  style={{ fontSize: '20px', color: '#08c' }}
+                />
+              </div>
             </Menu>
           </Col>
-          {/* ModuleMenu */}
-          <Col xs={14} sm={18} md={8} lg={7} xl={7}>
+          <Col xs={14} sm={16} md={10} lg={10} xl={10}>
             <ModuleMenu
-              style={{ border: 'none' }}
               moduleList={this.props.moduleList}
               onMenuClick={this.onMenuClick}
               headerCurrentModuleName={this.props.headerCurrentModuleName}
+              theme={theme}
             />
           </Col>
-          {/* SearchInput */}
           <Col
             sm={12}
             md={7}
             lg={6}
             xl={6}
-            style={{ display: isDisplay ? 'block' : 'none' }}
+            style={{
+              display: isDisplay ? 'block' : 'none',
+              // backgroundColor: 'green',
+            }}
           >
-            <Menu style={{ border: 'none' }} selectable={false}>
-              <Menu.Item key={'searchInput'}>
-                <SearchInput
-                  style={{ width: '100%', height: 50, padding: '0px 20px' }}
-                />
-              </Menu.Item>
-            </Menu>
-          </Col>
-          {/* githubIcon */}
-          <Col
-            sm={4}
-            md={1}
-            lg={1}
-            xl={2}
-            style={{ display: isDisplay ? 'block' : 'none' }}
-          >
-            <Menu style={{ border: 'none' }} selectable={false}>
-              <Menu.Item
-                // style={{padding: '4 0 0 0'}}
-                key={'github'}
+            <Menu theme={theme} style={{ border: 'none' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  height: 48,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-around',
+                }}
               >
+                <SearchInput />
+
                 <a
                   target={'_blank'}
                   href='https://github.com/songtianen/AU-admin'
@@ -148,32 +148,17 @@ class MyHeader extends React.PureComponent {
                     type='github'
                   />
                 </a>
-              </Menu.Item>
-            </Menu>
-          </Col>
-          {/* FullScreen */}
-          <Col
-            xs={0}
-            sm={4}
-            md={2}
-            lg={2}
-            xl={2}
-            style={{ display: isDisplay ? 'block' : 'none' }}
-          >
-            <Menu style={{ border: 'none' }} selectable={false}>
-              <Menu.Item key={'fullScreen'}>
+
                 <FullScreen />
-              </Menu.Item>
+              </div>
             </Menu>
           </Col>
-          {/* SubMenu */}
-          {/* src={this.props.avatar} */}
-          {/* <Col xs={12} sm={8} md={7} lg={6} xl={7}> */}
-          <Col xs={4} sm={4} md={3} lg={2} xl={2}>
+          <Col xs={6} sm={4} md={5} lg={4} xl={4} xxl={4}>
             <Menu
               mode='horizontal'
-              style={{ lineHeight: '48px', border: 'none' }}
+              style={{ height: 48, border: 'none', textAlign: 'center' }}
               onClick={this.userMenuClick}
+              theme={theme}
             >
               <SubMenu
                 title={
@@ -185,6 +170,16 @@ class MyHeader extends React.PureComponent {
                 <MenuItemGroup title='用户中心'>
                   <Menu.Item key='navTab'>
                     你好 - 关闭tabs {this.props.name}
+                  </Menu.Item>
+                  <Menu.Item key='theme'>
+                    <Radio.Group onChange={this.radioOnChange} value={theme}>
+                      <Radio value={'light'}>
+                        <Tag>light</Tag>
+                      </Radio>
+                      <Radio value={'dark'}>
+                        <Tag color='#001529'>dark</Tag>
+                      </Radio>
+                    </Radio.Group>
                   </Menu.Item>
                   <Menu.Item key='setting:1'>
                     <Icon type='user' />
@@ -209,6 +204,7 @@ class MyHeader extends React.PureComponent {
 const mapStateToProps = (state) => {
   return {
     name: state.app.name,
+    theme: state.app.theme,
     avatar: state.app.avatar,
     headerCurrentModuleName: state.app.headerCurrentModuleName,
     moduleList: state.app.moduleList,
@@ -226,6 +222,7 @@ MyHeader.propTypes = {
   location: PropTypes.object.isRequired,
   toggleNavTab: PropTypes.func.isRequired,
   itemDisplay: PropTypes.bool.isRequired,
+  theme: PropTypes.string.isRequired,
   // location: PropTypes.object.isRequired,
 };
 export default withRouter(connect(mapStateToProps)(MyHeader));

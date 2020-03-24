@@ -7,6 +7,7 @@ export default function app(state, action) {
       avatar: '',
       isAdmin: '',
       token: '',
+      theme: '',
       permission: [],
       spinLoading: false,
       toPath: '/',
@@ -14,7 +15,6 @@ export default function app(state, action) {
       siderOpenKeys: [],
       headerCurrentModuleName: '', // Header title
       accessMenu: [], // 后端返回的menu与前端固定的menu总和,
-      openAccessMenu: [], // 展开的可访问的菜单(子级包含父级name)
       moduleList: [], // 模块列表
       siderModuleMenu: [], // 模块菜单
     };

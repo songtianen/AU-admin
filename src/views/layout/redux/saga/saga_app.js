@@ -8,6 +8,7 @@ import util from '../../../../util/util';
 
 function* initAppData(action) {
   const pathName = action.payload;
+  let theme = localStorage.getItem('theme') || 'light';
 
   try {
     // const userInfo = yield call(getUserInfo, '');
@@ -20,26 +21,25 @@ function* initAppData(action) {
       localStorage.setItem('accessMenu', JSON.stringify(accessMenu.data));
       let menuRes = accessMenu.data;
       // menuRes.push(...constantMenu); // 添加不需要后端返回的菜单列表
-      // let moduleList = menuRes.filter((item) => {
-      //   // 是左侧菜单(leftMenu字段控制是否显示此菜单)
-      //   return item.leftMenu;
-      // });
-      let menus = JSON.parse(JSON.stringify(menuRes));
+      let moduleList = menuRes.filter((item) => {
+        // 是左侧菜单(leftMenu字段控制是否显示此菜单)
+        return item.leftMenu;
+      });
+      let menus = JSON.parse(JSON.stringify(moduleList));
       let findModule = util.findCurrentMenuNameAndModule(menus, pathName);
       let siderModuleMenu = JSON.parse(JSON.stringify(findModule.children));
       let siderData = util.findSiderComponentSelectedNameAndOpenKeys(
         siderModuleMenu,
         pathName,
       ); // 查找的Sider组件需要的key和openKeys
-      let openAccessMenu = util.openAccesseMenu(menuRes); // 添加parentName属性,传入后端返回的菜单数据
       let accessMenuData = {
         headerCurrentModuleName: findModule.name, // header组件数据,当前选中的菜单
         accessMenu: menuRes, // 所有菜单
-        openAccessMenu, // 打散数组，找出每个menu（添加parentName）以及数组内children内的menu
         siderModuleMenu: findModule.children, // sider左侧菜单数据，(由header组件的menu改变)
-        moduleList: menuRes, // 1-leftMenu等于true的菜单
+        moduleList, // 1-leftMenu等于true的菜单
         siderSelectedKey: siderData.siderKey,
         siderOpenKeys: siderData.siderOpenKeys,
+        theme,
       };
       // userInfo---
       let isAdmin = userInfo.data.isAdmin;

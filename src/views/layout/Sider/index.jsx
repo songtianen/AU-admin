@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MySiderPre from './Component/SiderMenu';
 import appActions from '../redux/redux_app';
-// import { MenuToRouter } from '../../../conf';
-// import util from '../../../util/util';
 
 const { updateModuleAction } = appActions.actions;
 
@@ -32,6 +30,7 @@ class MySider extends React.PureComponent {
         selectedKey={this.props.siderSelectedKey}
         siderOpenKeys={this.props.siderOpenKeys}
         menuOnClick={this.menuOnClick}
+        theme={this.props.theme}
       />
     );
   }
@@ -39,10 +38,9 @@ class MySider extends React.PureComponent {
 
 const mapStateToProps = (state) => {
   return {
-    openAccessMenu: state.app.openAccessMenu,
-    accessMenu: state.app.accessMenu,
     siderSelectedKey: state.app.siderSelectedKey,
     siderOpenKeys: state.app.siderOpenKeys,
+    theme: state.app.theme,
   };
 };
 
@@ -53,6 +51,7 @@ MySider.propTypes = {
   siderSelectedKey: PropTypes.array.isRequired,
   siderOpenKeys: PropTypes.array.isRequired,
   dispatch: PropTypes.func.isRequired,
+  theme: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps)(MySider);

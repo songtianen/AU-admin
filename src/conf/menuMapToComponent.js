@@ -56,7 +56,7 @@ const RequestLog = Loadable({
   loading: ContentLoader,
 });
 const Notdone = Loadable({
-  loader: () => import('../views/common/Not_done'),
+  loader: () => import('../views/echarts/bar/index'),
   loading: ContentLoader,
 });
 
@@ -71,7 +71,7 @@ export default {
   userrole: UserRole,
   position: Position,
   department: Department,
-  users: Users,
+  usersEdit: Users,
   page404: Page404,
   page403: Page403,
   requestlog: RequestLog,

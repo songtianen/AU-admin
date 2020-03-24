@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import { Input, Icon } from 'antd';
 
@@ -24,27 +24,26 @@ class SearchInput extends React.PureComponent {
   render() {
     const { value } = this.state;
     return (
-      <div style={this.props.style}>
-        <Input
-          placeholder='Search'
-          prefix={
-            <Icon
-              type={this.state.focus ? 'arrow-left' : 'search'}
-              style={{
-                color: !this.state.focus ? 'rgba(0,0,0,.25)' : '#1890ff',
-              }}
-            />
-          }
-          value={value}
-          onChange={this.onChangeValue}
-          onFocus={this.onFocus}
-          onBlur={this.onBlur}
-        />
-      </div>
+      <Input
+        placeholder='Search'
+        disabled
+        style={{ border: 'none', width: 150 }}
+        size='small'
+        prefix={
+          <Icon
+            type={this.state.focus ? 'arrow-left' : 'search'}
+            style={{
+              color: !this.state.focus ? 'rgba(0,0,0,.25)' : '#1890ff',
+            }}
+          />
+        }
+        value={value}
+        onChange={this.onChangeValue}
+        onFocus={this.onFocus}
+        onBlur={this.onBlur}
+      />
     );
   }
 }
-SearchInput.propTypes = {
-  style: PropTypes.object.isRequired,
-};
+// SearchInput.propTypes = {};
 export default SearchInput;

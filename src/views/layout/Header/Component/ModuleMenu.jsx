@@ -20,11 +20,11 @@ class ModuleMenu extends React.PureComponent {
     const list = this.renderList();
     return (
       <Menu
+        theme={this.props.theme}
         onClick={this.props.onMenuClick}
         selectedKeys={[this.props.headerCurrentModuleName]}
         mode='horizontal'
-        // eslint-disable-next-line react/jsx-boolean-value
-        style={this.props.style}
+        style={{ height: 48, border: 'none' }}
       >
         {list}
       </Menu>
@@ -35,6 +35,6 @@ ModuleMenu.propTypes = {
   moduleList: PropTypes.array.isRequired,
   headerCurrentModuleName: PropTypes.string.isRequired,
   onMenuClick: PropTypes.func.isRequired,
-  style: PropTypes.object.isRequired,
+  theme: PropTypes.string.isRequired,
 };
 export default ModuleMenu;

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Tree } from 'antd';
+import { Modal, Tree, Tag } from 'antd';
 import { getAllMenuWithFunction } from '../../../../api';
 
 const { TreeNode } = Tree;
@@ -59,12 +59,11 @@ class EditModal extends React.PureComponent {
     return changeList(menuList);
   };
 
-  // eslint-disable-next-line no-unused-vars
-  onCheck = (checkedKeys, info) => {
-    console.log('checkedKeys', checkedKeys);
+  onCheck(checkedKeys) {
+    // console.log('checkedKeys', checkedKeys);
 
     this.checkedKeys = checkedKeys.filter((s) => s.indexOf('menu') < 0);
-  };
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.visible) {
@@ -86,7 +85,7 @@ class EditModal extends React.PureComponent {
     });
   }
 
-  renderTreeNode = (menuFunctionList) => {
+  renderTreeNode(menuFunctionList) {
     let list = [];
     for (let item of menuFunctionList) {
       if (item.children && item.children.length > 0) {
@@ -136,9 +135,9 @@ class EditModal extends React.PureComponent {
       }
     }
     return list;
-  };
+  }
 
-  renderTree = () => {
+  renderTree() {
     return (
       <Tree
         checkable
@@ -152,7 +151,7 @@ class EditModal extends React.PureComponent {
         {this.renderTreeNode(this.state.menuFunctionList)}
       </Tree>
     );
-  };
+  }
 
   render() {
     return (
@@ -161,7 +160,12 @@ class EditModal extends React.PureComponent {
         visible={this.props.visible}
         cancelText='关闭'
         okText='提交'
-        title={this.props.title}
+        title={
+          <span>
+            编辑角色&nbsp;&nbsp;
+            <Tag color='#2db7f5'>{this.props.formData.name}</Tag>&nbsp;权限
+          </span>
+        }
         onCancel={this.onCancel}
         onOk={this.onOk}
         destroyOnClose
@@ -174,7 +178,6 @@ class EditModal extends React.PureComponent {
 
 EditModal.propTypes = {
   visible: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
   formData: PropTypes.object.isRequired,
   onCancel: PropTypes.func.isRequired,
   handFromSubmit: PropTypes.func.isRequired,

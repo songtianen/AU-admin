@@ -1,10 +1,6 @@
 // 角色权限管理
-
-/* eslint-disable react/no-unused-state */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-script-url */
 import React from 'react';
-import { Table, Divider, notification, Tag } from 'antd';
+import { Table, Divider, notification } from 'antd';
 import { getRolePagedList, savePermission } from '../../../../api';
 import schema from '../../../../schema/RolePermission';
 import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
@@ -17,8 +13,8 @@ class RolePermission extends React.PureComponent {
       code: '',
       departmentId: '',
     },
-    searchFormExpand: true,
-    tableSelectedRowKeys: [],
+    // searchFormExpand: true,
+    // tableSelectedRowKeys: [],
     tablePageList: [],
     tablePagination: {
       current: 1,
@@ -54,13 +50,7 @@ class RolePermission extends React.PureComponent {
       render: (text, record) => {
         return (
           <div>
-            <a
-              onClick={() => {
-                this.editRolePermission(record);
-              }}
-            >
-              编辑角色权限
-            </a>
+            <a onClick={() => this.editRolePermission(record)}>编辑角色权限</a>
           </div>
         );
       },
@@ -91,7 +81,6 @@ class RolePermission extends React.PureComponent {
       filter: this.state.tableFilter,
     };
     this.fetch(query);
-    console.log('刷新啊');
   };
 
   componentDidMount() {
@@ -132,7 +121,7 @@ class RolePermission extends React.PureComponent {
    * @description 编辑角色权限
    */
   editRolePermission = (record) => {
-    console.log('record', record);
+    // console.log('record', record);
     this.editFormData = { ...record };
     this.setState({
       editModalVisible: true,
@@ -217,12 +206,6 @@ class RolePermission extends React.PureComponent {
         />
         <EditRolePermissionModal
           visible={this.state.editModalVisible}
-          title={
-            <span>
-              编辑角色&nbsp;&nbsp;
-              <Tag color='#2db7f5'>{this.editFormData.name}</Tag>&nbsp;权限
-            </span>
-          }
           onCancel={this.editModalOnCancel}
           formData={this.editFormData}
           handFromSubmit={this.saveRolePermission}

@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { MenuMapToComponent } from '../../../conf';
 import { updateModuleAction } from '../redux/actions/actions';
 import util from '../../../util/util';
+import './index.less';
 
 const TabPane = Tabs.TabPane;
 
@@ -172,21 +173,19 @@ class MyNavTabs extends React.PureComponent {
       <div style={this.props.style}>
         <Tabs
           hideAdd
-          activeKey={this.state.currentPage}
-          tabBarStyle={{
-            position: 'fixed',
-            overflow: 'hidden',
-            zIndex: 99,
-            backgroundColor: '#fff',
-            width: '100%',
-            paddingLeft: '8px',
-            borderBottom: '1px solid #e8e8e8',
-          }}
-          onEdit={this.onEdit}
           type='editable-card'
-          // onTabClick={this.onTabClick}
+          activeKey={this.state.currentPage}
+          onEdit={this.onEdit}
           onChange={this.tabsOnChange}
-          // size="small"
+          tabBarStyle={{
+            background: '#fff',
+            width: '100%',
+            overflow: 'hidden',
+            border: 'none',
+            padding: '0 50px',
+            borderBottom: 'solid 1px #e8e8e8',
+            margin: 0,
+          }}
         >
           {/* 根据state.openPages渲染页面 */}
           {this.state.openPages.map((item) => {
@@ -195,7 +194,6 @@ class MyNavTabs extends React.PureComponent {
               : MenuMapToComponent['notdone']; // 如果前端本地没有这个页面，返回page404
             return (
               <TabPane
-                forceRender
                 tab={item.title}
                 closable={item.closable} // 是否是可关闭
                 key={item.name}
