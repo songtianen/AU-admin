@@ -74,10 +74,37 @@ class MyHeader extends React.PureComponent {
     );
   };
 
+  renderLoadble = (num) => {
+    let arr = new Array(num).fill('0');
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        {arr.map((item, index) => (
+          <div
+            key={index}
+            style={{
+              width: 50,
+              height: 30,
+              marginRight: 10,
+              backgroundColor: '#F0F2F5',
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
   render() {
     console.log('MyHeader render'); // withRouter的缘故，每次点击同一个菜单，都会re-render
     let isDisplay = this.props.itemDisplay;
-    const { theme } = this.props;
+    const { theme, moduleList } = this.props;
     return (
       <Header
         style={{
@@ -110,12 +137,16 @@ class MyHeader extends React.PureComponent {
             </Menu>
           </Col>
           <Col xs={14} sm={16} md={10} lg={10} xl={10}>
-            <ModuleMenu
-              moduleList={this.props.moduleList}
-              onMenuClick={this.onMenuClick}
-              headerCurrentModuleName={this.props.headerCurrentModuleName}
-              theme={theme}
-            />
+            {moduleList.length ? (
+              <ModuleMenu
+                moduleList={this.props.moduleList}
+                onMenuClick={this.onMenuClick}
+                headerCurrentModuleName={this.props.headerCurrentModuleName}
+                theme={theme}
+              />
+            ) : (
+              this.renderLoadble(5)
+            )}
           </Col>
           <Col
             sm={12}
@@ -169,7 +200,7 @@ class MyHeader extends React.PureComponent {
               >
                 <MenuItemGroup title='用户中心'>
                   <Menu.Item key='navTab'>
-                    你好 - 关闭tabs {this.props.name}
+                    {`你好:${this.props.name}-隐藏tabs`}
                   </Menu.Item>
                   <Menu.Item key='theme'>
                     <Radio.Group onChange={this.radioOnChange} value={theme}>

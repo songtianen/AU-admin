@@ -6,7 +6,7 @@ export function loginByUsername(data) {
     url: '/user/login',
     method: 'post',
     data,
-    // loading: 'spin',
+    // loding:'spin',
   });
 }
 
@@ -15,7 +15,6 @@ export function loginRegister(params) {
     url: '/user/register',
     method: 'post',
     data: qs.stringify(params),
-    // loading: 'spin',
   });
 }
 
@@ -24,7 +23,6 @@ export function logout(query) {
     url: '/user/logout',
     method: 'get',
     params: query,
-    loading: 'spin',
   });
 }
 
@@ -32,7 +30,6 @@ export function getUserInfo() {
   return request({
     url: '/user/info',
     method: 'get',
-    loading: 'spin',
   });
 }
 
@@ -97,7 +94,6 @@ export function getAccessMenu() {
   return request({
     url: '/menu/getaccessmenu',
     method: 'get',
-    // loading: 'spin',
   });
 }
 // 获取非树结构菜单
@@ -106,7 +102,6 @@ export function getAllMenu(query) {
     url: '/menu',
     method: 'get',
     params: query,
-    // loading: 'spin',
   });
 }
 export function getAllMenuWithFunction(query) {
@@ -114,7 +109,6 @@ export function getAllMenuWithFunction(query) {
     url: '/menu/getAllMenuWithFunction',
     method: 'get',
     params: query,
-    // loading: 'spin',
   });
 }
 export function editMenu(menu) {
@@ -148,7 +142,6 @@ export function getIcons() {
   return request({
     url: '/icons',
     method: 'get',
-    loading: 'spin',
   });
 }
 
@@ -343,7 +336,6 @@ export function getAllDepartmentAndRole() {
   return request({
     url: '/department/departmentandrole',
     method: 'get',
-    // loading: 'spin',
   });
 }
 
@@ -352,7 +344,6 @@ export function getAllDepartment(query) {
     url: '/department',
     method: 'get',
     params: query,
-    // loading: 'spin',
   });
 }
 
@@ -361,7 +352,6 @@ export function getAllDepartmentTree(query) {
     url: '/department/getAllDepartmentTree',
     method: 'get',
     params: query,
-    // loading: 'spin',
   });
 }
 

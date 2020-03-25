@@ -47,6 +47,33 @@ class SubMenuList extends React.PureComponent {
     );
   };
 
+  renderLoadble = (num) => {
+    let arr = new Array(num).fill('0');
+    return (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        {arr.map((item, index) => (
+          <div
+            key={index}
+            style={{
+              width: 150,
+              height: 30,
+              marginTop: 20,
+              backgroundColor: '#F0F2F5',
+            }}
+          />
+        ))}
+      </div>
+    );
+  };
+
   render() {
     const {
       siderModuleMenu,
@@ -55,6 +82,7 @@ class SubMenuList extends React.PureComponent {
       selectedKey,
       menuOnClick,
     } = this.props;
+    console.log('SiderMenuRender', siderModuleMenu);
     return (
       <Sider
         breakpoint='lg'
@@ -66,7 +94,7 @@ class SubMenuList extends React.PureComponent {
         theme={this.props.theme}
       >
         <div
-          className='logo'
+          // className='logo'
           style={{
             height: 49,
             width: '100%',
@@ -115,12 +143,19 @@ class SubMenuList extends React.PureComponent {
             border: 'none',
           }}
         >
-          {siderModuleMenu &&
+          {/* {siderModuleMenu &&
             siderModuleMenu.map((item) =>
               item.children && item.children.length
                 ? this.renderSubMenu(item)
                 : this.renderMenuItem(item),
-            )}
+            )} */}
+          {siderModuleMenu.length
+            ? siderModuleMenu.map((item) =>
+                item.children && item.children.length
+                  ? this.renderSubMenu(item)
+                  : this.renderMenuItem(item),
+              )
+            : this.renderLoadble(7)}
         </Menu>
       </Sider>
     );

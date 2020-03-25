@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Menu } from 'antd';
 
 class ModuleMenu extends React.PureComponent {
-  renderList = () => {
+  renderList = (moduleList) => {
     let list = [];
-    const { moduleList } = this.props;
     for (let i = 0; i < moduleList.length; i++) {
       list.push(
         <Menu.Item key={moduleList[i].name}>
@@ -17,7 +16,8 @@ class ModuleMenu extends React.PureComponent {
   };
 
   render() {
-    const list = this.renderList();
+    const { moduleList } = this.props;
+    console.log('HeaderModuleRender', moduleList);
     return (
       <Menu
         theme={this.props.theme}
@@ -26,7 +26,7 @@ class ModuleMenu extends React.PureComponent {
         mode='horizontal'
         style={{ height: 48, border: 'none' }}
       >
-        {list}
+        {this.renderList(moduleList)}
       </Menu>
     );
   }
