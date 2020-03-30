@@ -5,6 +5,9 @@ const { Encrypt } = require('../util/md5');
 const dbSchema = require('../db/dbSchema');
 const _ = require('lodash');
 const { unique } = require('../util/util');
+const cp = require('child_process');
+// let fs = require('fs');
+// const path = require('path');
 
 const findFunctionListItemInfo = (functionList) => {
   let menuId = [];
@@ -121,7 +124,7 @@ const postRegister = async ({ email, password, phone, username }) => {
     const info = await UserModel.create({
       ...dbSchema.User,
       email: email,
-      isAdmin: phone,
+      isAdmin: '',
       userName: username,
       pwd: Encrypt(password),
       phone: phone,
@@ -186,40 +189,44 @@ const editUser = async (userInfo) => {
         msg: `${userInfo.userName}已存在`,
       };
     }
+    const preUser = await UserModel.findOne({ id: userInfo.id });
+    console.log('Edit-preUser', preUser.id);
     // 要更新的user中的userRole
-    let userLength = userInfo.userRole.length;
+    let nextRoleLength = userInfo.userRole.length;
     // 以前的user中的userRole
-    let roleLength = user.userRole.length;
+    let preRoleLength = preUser.userRole.length;
     // 找出两个数组不同的元素
-    const arr = userInfo.userRole.concat(user.userRole).filter((v, i, arr) => {
-      return arr.indexOf(v) === arr.lastIndexOf(v);
-    });
-    if (userLength - roleLength > 0) {
+    const roleIds = userInfo.userRole
+      .concat(preUser.userRole)
+      .filter((v, i, arr) => {
+        return arr.indexOf(v) === arr.lastIndexOf(v);
+      });
+    if (nextRoleLength - preRoleLength > 0) {
       await RoleModel.updateMany(
-        { id: arr },
+        { id: roleIds },
         {
           $addToSet: {
-            userId: user.id,
+            userId: preUser.id,
           },
         },
       );
     }
-    if (userLength - roleLength < 0) {
+    if (nextRoleLength - preRoleLength < 0) {
       await RoleModel.updateMany(
-        { id: arr },
+        { id: roleIds },
         {
           $pullAll: {
-            userId: [user.id],
+            userId: [preUser.id],
           },
         },
       );
     }
-    if (userLength - roleLength === 0) {
+    if (nextRoleLength - preRoleLength === 0) {
       await RoleModel.updateMany(
         { id: userInfo.userRole },
         {
           $addToSet: {
-            userId: user.id,
+            userId: preUser.id,
           },
         },
       );
@@ -285,7 +292,35 @@ const findUserPermission = async (userRole) => {
 
       return findFunctionListItemInfo(functionList);
     }
+    if (permission.length === 0) {
+      return {
+        menuId: [],
+        functionCode: [],
+      };
+    }
   }
+};
+
+const resetDb = async (pwd) => {
+  if (pwd === 'songtianen') {
+    // 备份数据库
+    // cp.exec(
+    //   'mongodump -h 127.0.0.1:27017 -d myapp -o /Users/song/mine/my-product/AU-admin/server/db',
+    // );
+    // 还原数据库
+    cp.exec(
+      'mongorestore -h 127.0.0.1 -d song-tian-en /Users/song/mine/my-product/AU-admin/server/db/myapp',
+    );
+
+    return {
+      success: true,
+      msg: '数据库重置成功',
+    };
+  }
+  return {
+    success: false,
+    msg: '密码错误',
+  };
 };
 
 module.exports = {
@@ -298,4 +333,5 @@ module.exports = {
   editUser,
   loginUser,
   findUserPermission,
+  resetDb,
 };

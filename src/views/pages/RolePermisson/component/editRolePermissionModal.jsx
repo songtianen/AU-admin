@@ -10,34 +10,32 @@ class EditModal extends React.PureComponent {
     // eslint-disable-next-line react/no-unused-state
     id: '',
     menuFunctionList: [],
+    checkedKeys: [],
+    defaultCheckKeys: [],
   };
-
-  defaultCheckKes = [];
-
-  checkedKeys = [];
 
   onCancel = () => {
     this.props.onCancel();
     this.setState({
       menuFunctionList: [],
+      checkedKeys: [],
+      defaultCheckKeys: [],
     });
-    this.defaultCheckKes = [];
-    this.checkedKeys = [];
   };
 
   onOk = async () => {
     let data = {
       roleId: this.props.formData.id,
-      permissions: this.checkedKeys,
-      moduleId: 0,
+      permissions: this.state.checkedKeys,
+      moduleId: '0',
     };
     // console.log('角色权限管理，组件提交角色权限', this.props.handFromSubmit);
     await this.props.handFromSubmit(data);
     this.setState({
       menuFunctionList: [],
+      defaultCheckKeys: [],
+      checkedKeys: [],
     });
-    this.defaultCheckKes = [];
-    this.checkedKeys = [];
   };
 
   buildMenuListAndFunctions = (menuList) => {
@@ -59,11 +57,17 @@ class EditModal extends React.PureComponent {
     return changeList(menuList);
   };
 
-  onCheck(checkedKeys) {
-    // console.log('checkedKeys', checkedKeys);
+  onCheck = (checkedKeys) => {
+    console.log('checkedKeys', checkedKeys);
+    console.log('this-checkedKeys', this.state.checkedKeys);
+    console.log(
+      'filter-checkedKeys',
+      checkedKeys.filter((s) => s.indexOf('menu') < 0),
+    );
 
-    this.checkedKeys = checkedKeys.filter((s) => s.indexOf('menu') < 0);
-  }
+    this.state.checkedKeys = checkedKeys.filter((s) => s.indexOf('menu') < 0);
+    // console.log('this-checkedKeys', this.checkedKeys);
+  };
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.visible) {
@@ -77,15 +81,16 @@ class EditModal extends React.PureComponent {
         moduleFunctionsRes.data.menuList,
       );
       let rolePermissions = moduleFunctionsRes.data.roleFunctions.permission;
-      this.defaultCheckKeys = rolePermissions;
-      this.checkedKeys = rolePermissions;
+
       this.setState({
         menuFunctionList,
+        defaultCheckKeys: rolePermissions,
+        checkedKeys: rolePermissions,
       });
     });
   }
 
-  renderTreeNode(menuFunctionList) {
+  renderTreeNode = (menuFunctionList) => {
     let list = [];
     for (let item of menuFunctionList) {
       if (item.children && item.children.length > 0) {
@@ -135,15 +140,15 @@ class EditModal extends React.PureComponent {
       }
     }
     return list;
-  }
+  };
 
-  renderTree() {
+  renderTree = () => {
     return (
       <Tree
         checkable
         multiple
         defaultExpandAll
-        defaultCheckedKeys={this.defaultCheckKeys}
+        defaultCheckedKeys={this.state.defaultCheckKeys}
         onCheck={this.onCheck}
         selectable={false}
         showLine
@@ -151,7 +156,7 @@ class EditModal extends React.PureComponent {
         {this.renderTreeNode(this.state.menuFunctionList)}
       </Tree>
     );
-  }
+  };
 
   render() {
     return (

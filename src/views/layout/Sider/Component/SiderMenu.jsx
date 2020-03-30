@@ -39,7 +39,7 @@ class SubMenuList extends React.PureComponent {
       >
         {children &&
           children.map((item) =>
-            item.children && item.children.filter((s) => s.leftMenu).length > 0
+            item.children && item.children.length
               ? this.renderSubMenu(item)
               : this.renderMenuItem(item),
           )}
@@ -52,8 +52,8 @@ class SubMenuList extends React.PureComponent {
     return (
       <div
         style={{
-          width: '100%',
-          height: '100%',
+          // width: '100%',
+          // height: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -82,7 +82,6 @@ class SubMenuList extends React.PureComponent {
       selectedKey,
       menuOnClick,
     } = this.props;
-    console.log('SiderMenuRender', siderModuleMenu);
     return (
       <Sider
         breakpoint='lg'

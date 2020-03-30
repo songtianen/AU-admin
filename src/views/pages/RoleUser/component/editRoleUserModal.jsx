@@ -14,6 +14,7 @@ import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../../schema/RoleUser/User';
 import AddUserForRole from './addUserForRole';
+import PermissionContainer from '../../../../util/permissionContainer';
 
 class EditRoleUserModalContent extends React.PureComponent {
   state = {
@@ -47,11 +48,6 @@ class EditRoleUserModalContent extends React.PureComponent {
   };
 
   columns = [
-    {
-      title: '账号名称',
-      dataIndex: 'userName',
-      sorter: true,
-    },
     {
       title: '用户名称',
       dataIndex: 'userName',
@@ -87,12 +83,14 @@ class EditRoleUserModalContent extends React.PureComponent {
       width: 120,
       render: (text, record) => {
         return (
-          <Popconfirm
-            title='确定删除?'
-            onConfirm={() => this.deleteUserForRole(record)}
-          >
-            <a>删除</a>
-          </Popconfirm>
+          <PermissionContainer permission={['role_user_del']}>
+            <Popconfirm
+              title='确定删除?'
+              onConfirm={() => this.deleteUserForRole(record)}
+            >
+              <a>删除</a>
+            </Popconfirm>
+          </PermissionContainer>
         );
       },
     },
@@ -286,6 +284,8 @@ class EditRoleUserModalContent extends React.PureComponent {
           hasSelected={hasSelected}
           addTitle={'新增用户'}
           removeTitle={'删除用户'}
+          addPermission={['role_user_add']}
+          delPermission={['role_user_del']}
         />
         <Table
           rowSelection={rowSelection}

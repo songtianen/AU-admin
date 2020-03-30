@@ -14,6 +14,7 @@ import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import CommonModal from '../../Common/CommonModal';
 import { Decrypt } from '../../../../util/encrypt';
 import util from '../../../../util/util';
+import PermissionContainer from '../../../../util/permissionContainer';
 
 class UserRole extends React.PureComponent {
   state = {
@@ -108,15 +109,17 @@ class UserRole extends React.PureComponent {
       width: 140,
       render: (text, record) => {
         return (
-          <div style={{ textAlign: 'center' }}>
-            <a
-              onClick={() => {
-                this.editUser(record);
-              }}
-            >
-              编辑
-            </a>
-          </div>
+          <PermissionContainer permission={['users_edit']}>
+            <div style={{ textAlign: 'center' }}>
+              <a
+                onClick={() => {
+                  this.editUser(record);
+                }}
+              >
+                编辑
+              </a>
+            </div>
+          </PermissionContainer>
         );
       },
     },
@@ -376,6 +379,8 @@ class UserRole extends React.PureComponent {
           hasSelected={hasSelected}
           addTitle={'新增用户'}
           removeTitle={'删除用户'}
+          addPermission={['users_add']}
+          delPermission={['users_del']}
         />
         <Table
           rowSelection={rowSelection}

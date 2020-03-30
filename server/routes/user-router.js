@@ -10,10 +10,15 @@ const {
   editUser,
   loginUser,
   postRegister,
+  resetDb,
 } = require('../controllers/user');
 
 // const User = UserModel;
 const router = express.Router();
+
+router.post('/resetdb', (req, res) => {
+  resetDb({ req, res });
+});
 
 router.post('/login', (req, res) => {
   loginUser({ req, res });
@@ -35,7 +40,7 @@ router.get('/info', (req, res) => {
 router.get(
   '/getalluser',
   PermissionCheck({
-    permission: ['user_view'],
+    permission: ['users_view'],
   }),
   (req, res) => {
     getAllUser({ req, res });
@@ -44,7 +49,7 @@ router.get(
 router.post(
   '/adduser',
   PermissionCheck({
-    permission: ['role_user_edit', 'user_role_edit'],
+    permission: ['users_add'],
   }),
   (req, res) => {
     addUser({ req, res });
@@ -53,7 +58,7 @@ router.post(
 router.post(
   '/edituser',
   PermissionCheck({
-    permission: ['role_user_edit', 'user_role_edit'],
+    permission: ['users_edit'],
   }),
   (req, res) => {
     editUser({ req, res });
@@ -62,7 +67,7 @@ router.post(
 router.post(
   '/del',
   PermissionCheck({
-    permission: ['role_user_edit', 'user_role_edit'],
+    permission: ['users_del'],
   }),
   (req, res) => {
     postDelUser({ req, res });

@@ -1,0 +1,7 @@
+{
+  "options": {},
+  "indexes": [
+    { "v": 2, "key": { "_id": 1 }, "name": "_id_", "ns": "myapp.accessmemus" }
+  ],
+  "uuid": "542b9bce0ff4425892a7dc98efdda2b8"
+}

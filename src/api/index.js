@@ -1,6 +1,15 @@
 import qs from 'qs';
 import request from '../util/request';
 
+export function resetdb(data) {
+  return request({
+    url: '/user/resetdb',
+    method: 'post',
+    data,
+    // loding:'spin',
+  });
+}
+
 export function loginByUsername(data) {
   return request({
     url: '/user/login',
@@ -154,20 +163,11 @@ export function getFunctionPagedList(query) {
   });
 }
 
-export function delFunction(id) {
+export function delFunctions(data) {
   return request({
     url: '/function/del',
-    method: 'get',
-    params: id,
-    loading: 'message',
-  });
-}
-
-export function delFunctions(ids) {
-  return request({
-    url: '/function/batchdel',
-    method: 'get',
-    params: ids,
+    method: 'post',
+    data,
     loading: 'message',
   });
 }
@@ -277,15 +277,6 @@ export function savePermission(data) {
   });
 }
 
-// resetDb
-export function resetDb() {
-  return request({
-    url: '/resetdb',
-    method: 'post',
-    loading: 'message',
-  });
-}
-
 // requestlog
 export function getRequestLogPagedList(query) {
   return request({
@@ -344,6 +335,7 @@ export function getAllDepartment(query) {
     url: '/department',
     method: 'get',
     params: query,
+    permission: ['department_view'],
   });
 }
 

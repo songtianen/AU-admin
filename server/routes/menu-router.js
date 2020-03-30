@@ -11,14 +11,15 @@ const {
 
 const router = express.Router();
 
-// 获取相应权限的菜单
+// （项目初始化）获取相应权限的菜单
 router.get('/getaccessmenu', (req, res) => {
   getAccessMenu({ req, res });
 });
+// function页面请求
 router.get('/getAllMenuWithFunction', (req, res) => {
   getAllMenuWithFunction({ req, res });
 });
-// 获取非树结构菜单
+// (菜单页面)获取非树结构菜单
 router.get('/', PermissionCheck({ permission: ['menu_view'] }), (req, res) => {
   getAllMenu({ req, res });
 });

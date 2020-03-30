@@ -17,7 +17,7 @@ class ModuleMenu extends React.PureComponent {
 
   render() {
     const { moduleList } = this.props;
-    console.log('HeaderModuleRender', moduleList);
+
     return (
       <Menu
         theme={this.props.theme}

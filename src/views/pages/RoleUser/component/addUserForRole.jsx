@@ -38,11 +38,6 @@ class AddUserForRole extends React.PureComponent {
 
   columns = [
     {
-      title: '账号名称',
-      dataIndex: 'userName',
-      sorter: true,
-    },
-    {
       title: '用户名称',
       dataIndex: 'userName',
       sorter: true,
@@ -216,6 +211,8 @@ class AddUserForRole extends React.PureComponent {
           hasSelected={hasSelected}
           addTitle={'新增用户'}
           removeTitle={'删除用户'}
+          addPermission={['role_user_add']}
+          delPermission={['role_user_del']}
         />
         <Table
           rowSelection={rowSelection}

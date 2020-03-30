@@ -11,6 +11,7 @@ import SearchForm from '../../../schema/Common/SearchForm/SearchForm';
 import CommonModal from '../Common/CommonModal';
 import AddRemoveComponent from '../Common/AddRemoveConponent';
 import schema from '../../../schema/Function';
+import PermissionContainer from '../../../util/permissionContainer';
 
 class Function extends React.PureComponent {
   // style = { display: 'none' };
@@ -70,9 +71,11 @@ class Function extends React.PureComponent {
          * @return里面可以设置表格行/列合并
          */
         return (
-          <div style={{ textAlign: 'center' }}>
-            <a onClick={() => this.editFunction(record)}>编辑</a>
-          </div>
+          <PermissionContainer permission={['function_edit']}>
+            <div style={{ textAlign: 'center' }}>
+              <a onClick={() => this.editFunction(record)}>编辑</a>
+            </div>
+          </PermissionContainer>
         );
       },
     },
@@ -335,6 +338,8 @@ class Function extends React.PureComponent {
             hasSelected={hasSelected}
             addTitle={'新增'}
             removeTitle={'删除'}
+            addPermission={['function_add']}
+            delPermission={['function_del']}
           />
         </div>
         <Table

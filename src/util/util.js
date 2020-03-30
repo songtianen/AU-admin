@@ -234,7 +234,7 @@ const findCurrentMenuNameAndModule = (menuList, pathName) => {
       return upperItem;
     };
     const topItem = findTop(menuList, pathNameItem.parentId);
-    console.log('找到HeaderMenu菜单-顶层id', topItem);
+    // console.log('找到HeaderMenu菜单-顶层id', topItem);
 
     return topItem;
   }

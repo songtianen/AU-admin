@@ -6,22 +6,9 @@ const dbSchema = require('../db/dbSchema');
 const { findUserPermission } = require('./userService');
 const { unique } = require('../util/util');
 
-// const buildMenu = (parentMenu, menuList) => {
-//   parentMenu.children = []; // 根菜单children属性
-//   let children = menuList.filter((item) => {
-//     // 在所有菜单中找出-菜单中父id 与 根菜单中相等的id
-//     return item.parentId === parentMenu.id;
-//   });
-//   // 如果
-//   for (let menu of children) {
-//     // 递归调用
-//     buildMenu(menu, menuList);
-//   }
-//   parentMenu.children.push(...children);
-// };
 const buildMenu = (menus) => {
   let rootMenu = menus.filter((v) => {
-    return v.parentId === '0' && !v.isLock;
+    return v.parentId === '0';
   });
   const build = (listItem, allList) => {
     for (let i = 0; i < listItem.length; i++) {
@@ -55,6 +42,9 @@ const buildMenu = (menus) => {
 // };
 const buildAccessMenu = (menus, userPermissionIds) => {
   // console.log('uniqueMenu---', userPermissionIds);
+  if (userPermissionIds.length === 0) {
+    return [];
+  }
   // 找到所有具有权限显示的菜单
   let permissionMenus = [];
   for (let i of menus) {
@@ -84,7 +74,7 @@ const buildAccessMenu = (menus, userPermissionIds) => {
   // 构建出菜单树
   if (newPermissionMenus && newPermissionMenus.length) {
     let rootMenu = newPermissionMenus.filter((v) => {
-      return v.parentId === '0' && !v.isLock;
+      return v.parentId === '0';
     });
     const build = (listItem, allList) => {
       for (let i = 0; i < listItem.length; i++) {
@@ -122,23 +112,6 @@ const checkAccssMenu = (accessMenuList, menuList) => {
       })
     );
   });
-};
-const getAllMenuList = (selector = {}) => {
-  return AccessMemuModel.find(selector).exec();
-};
-const copyMenu = (menuList) => {
-  // return JSON.parse(JSON.stringify(menuList))
-  let c = [];
-  for (let i = 0; i < menuList.length; i++) {
-    let doc = menuList[i]['_doc'];
-    let v = Object.assign({}, doc);
-    c.push(v);
-  }
-  // for (let a of menuList) {
-  //   let v = Object.assign({}, a['_doc'])
-  //   c.push(v)
-  // }
-  return c;
 };
 const buildWithFunc = (menuLists, funcList) => {
   for (let i = 0; i < menuLists.length; i++) {
@@ -181,7 +154,9 @@ const buildMenuTreeWithFunction = (menu, funcList) => {
 
 let menuService = {
   // 获取所有的未经处理菜单
-  getAllMenuList,
+  getAllMenuList: (selector = {}) => {
+    return AccessMemuModel.find(selector).exec();
+  },
   // 获取前端页面菜单
   getAllMenu: async (pageIndex, pageSize, sortBy, descending, filter) => {
     let menuLists = await AccessMemuModel.find();
@@ -226,9 +201,7 @@ let menuService = {
     let menuList = await AccessMemuModel.find();
 
     menuList = JSON.parse(JSON.stringify(menuList));
-    // 总的菜单列表
-    menuList = _.sortBy(menuList, ['sort']); // 所有菜单
-    // 用户的角色是否是管理员
+
     let isAdmin = userInfo.isAdmin;
     // console.log('userInfo中的isAdmin', isAdmin);
     // 获取用户的用户角色，角色里有权限
@@ -237,52 +210,17 @@ let menuService = {
     if (isAdmin) {
       return {
         success: true,
-        menuTree: buildMenu(menuList),
+        menuTree: _.sortBy(buildMenu(menuList), ['sort']),
       };
     }
     const funtionList = await findUserPermission(userRole);
+    let list = buildAccessMenu(menuList, funtionList.menuId);
     return {
       success: true,
-      menuTree: buildAccessMenu(menuList, funtionList.menuId),
+      menuTree: _.sortBy(list, ['sort']),
     };
 
     // checkAccssMenu(parentMenuList, menuList); // 根菜单，与总菜单
-  },
-  MenuList: (doc) => {
-    let menuList = doc;
-    menuList = copyMenu(menuList);
-    // 总的菜单列表
-    menuList = _.sortBy(menuList, ['sort']); // 所有菜单
-    let parentMenuList = menuList.filter((item) => {
-      return item.parentId === '0'; // isLock? 没有锁定的menu
-    });
-    return buildMenu(parentMenuList);
-  },
-  getMenuWithChildren: async (menuId) => {
-    // console.log(typeof menuId);
-    let menuList = await getAllMenuList();
-    let menuWithChildren = [];
-    let menu = menuList.filter((s) => {
-      return (s.parentId === '0' && menuId === '0') || s.id === menuId;
-    });
-    let forFn = (parentId) => {
-      let children = menuList.filter((s) => {
-        return s.parentId === parentId;
-      });
-      if (children.length > 0) {
-        menuWithChildren.push(...children);
-        for (let child of children) {
-          forFn(child.id);
-        }
-      }
-    };
-    if (menu.length > 0) {
-      menuWithChildren.push(...menu);
-      for (let m of menu) {
-        forFn(m.id);
-      }
-    }
-    return menuWithChildren;
   },
   editMenu: async (data) => {
     if (data) {

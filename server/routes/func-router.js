@@ -2,7 +2,6 @@ const express = require('express');
 const {
   getFunctionPagedList,
   addFunction,
-  delFuntion,
   delFuntions,
   editFunction,
 } = require('../controllers/func');
@@ -19,7 +18,7 @@ router.get(
 );
 router.post(
   '/add',
-  PermissionCheck({ permission: ['function_edit'] }),
+  PermissionCheck({ permission: ['function_add'] }),
   (req, res) => {
     addFunction({ req, res });
   },
@@ -31,16 +30,9 @@ router.post(
     editFunction({ req, res });
   },
 );
-router.get(
+router.post(
   '/del',
-  PermissionCheck({ permission: ['function_edit'] }),
-  (req, res) => {
-    delFuntion({ req, res });
-  },
-);
-router.get(
-  '/batchdel',
-  PermissionCheck({ permission: ['function_edit'] }),
+  PermissionCheck({ permission: ['function_del'] }),
   (req, res) => {
     delFuntions({ req, res });
   },

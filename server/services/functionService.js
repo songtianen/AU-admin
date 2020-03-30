@@ -1,4 +1,4 @@
-const { FunctionModel } = require('../model/model');
+const { FunctionModel, RoleModel } = require('../model/model');
 const uuidv4 = require('uuid/v4');
 const dbSchema = require('../db/dbSchema');
 
@@ -56,11 +56,6 @@ module.exports = {
       rows: resultList,
     };
   },
-  serviceDelFuntion: async (id) => {
-    // 删除一条
-    const de = await FunctionModel.deleteOne({ id: id });
-    return de;
-  },
   addFunction: async (data) => {
     if (data) {
       if (data.name) {
@@ -100,6 +95,15 @@ module.exports = {
   delFuntions: async (ids) => {
     if (ids) {
       await FunctionModel.deleteMany({ id: ids });
+      await RoleModel.updateMany(
+        { permission: { $in: ids } },
+        {
+          // 删除数组内多条
+          $pullAll: {
+            permission: ids,
+          },
+        },
+      );
       return {
         success: true,
         msg: '删除成功！',

@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   id: String,
   email: String,
   userPermission: [String],
-  moduleId: Number,
+  moduleId: String,
   userRole: [String],
   userName: { type: String },
   nickName: { type: String },

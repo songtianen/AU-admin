@@ -7,7 +7,7 @@ import { actionTypes } from './actions';
 function* GetRolePagedList(action) {
   try {
     const data = yield call(getRolePagedList, action.payload);
-    console.log('请求角色列表======', data);
+    // console.log('请求角色列表======', data);
     if (data.statusCode === 200) {
       yield put({ type: actionTypes.ROLE_PAGELIST, payload: data.data });
     }

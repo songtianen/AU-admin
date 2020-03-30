@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import { Button, Divider, Popconfirm } from 'antd';
+import PermissionContainer from '../../../util/permissionContainer';
 
 class AddRemoveComponent extends React.PureComponent {
   onConfirm = () => {
@@ -21,17 +21,21 @@ class AddRemoveComponent extends React.PureComponent {
     } = this.props;
     return (
       <div style={{ marginBottom: 16 }}>
-        <Button type='primary' icon='plus-square-o' onClick={addFunc}>
-          {addTitle}
-        </Button>
+        <PermissionContainer permission={this.props.addPermission}>
+          <Button type='primary' icon='plus-square-o' onClick={addFunc}>
+            {addTitle}
+          </Button>
+        </PermissionContainer>
         <Divider type='vertical' />
 
         {onConfirm ? (
-          <Popconfirm title='确定删除?' onConfirm={onConfirm}>
-            <Button type='danger' disabled={!hasSelected} icon='delete'>
-              {removeTitle}
-            </Button>
-          </Popconfirm>
+          <PermissionContainer permission={this.props.delPermission}>
+            <Popconfirm title='确定删除?' onConfirm={onConfirm}>
+              <Button type='danger' disabled={!hasSelected} icon='delete'>
+                {removeTitle}
+              </Button>
+            </Popconfirm>
+          </PermissionContainer>
         ) : (
           ''
         )}
@@ -45,5 +49,7 @@ AddRemoveComponent.propTypes = {
   hasSelected: PropTypes.bool.isRequired,
   addTitle: PropTypes.string.isRequired,
   removeTitle: PropTypes.string.isRequired,
+  addPermission: PropTypes.array.isRequired,
+  delPermission: PropTypes.array.isRequired,
 };
 export default AddRemoveComponent;

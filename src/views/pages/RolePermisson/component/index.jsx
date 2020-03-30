@@ -5,6 +5,7 @@ import { getRolePagedList, savePermission } from '../../../../api';
 import schema from '../../../../schema/RolePermission';
 import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import EditRolePermissionModal from './editRolePermissionModal';
+import PermissionContainer from '../../../../util/permissionContainer';
 
 class RolePermission extends React.PureComponent {
   state = {
@@ -49,9 +50,13 @@ class RolePermission extends React.PureComponent {
       width: 120,
       render: (text, record) => {
         return (
-          <div>
-            <a onClick={() => this.editRolePermission(record)}>编辑角色权限</a>
-          </div>
+          <PermissionContainer permission={['role_permission_edit']}>
+            <div>
+              <a onClick={() => this.editRolePermission(record)}>
+                编辑角色权限
+              </a>
+            </div>
+          </PermissionContainer>
         );
       },
     },

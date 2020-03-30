@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -11,6 +10,7 @@ import FullScreen from './Component/FullScreen';
 import SearchInput from './Component/SearchInput';
 import { actionTypes } from '../../pages/Login/redux/actions';
 import { updateModuleAction } from '../redux/actions/actions';
+import ResetDB from './Component/resetDB';
 // import './index.less';
 
 const { Header } = Layout;
@@ -105,6 +105,7 @@ class MyHeader extends React.PureComponent {
     console.log('MyHeader render'); // withRouter的缘故，每次点击同一个菜单，都会re-render
     let isDisplay = this.props.itemDisplay;
     const { theme, moduleList } = this.props;
+    const HeaderModuleList = moduleList.filter((item) => item.leftMenu);
     return (
       <Header
         style={{
@@ -139,7 +140,7 @@ class MyHeader extends React.PureComponent {
           <Col xs={14} sm={16} md={10} lg={10} xl={10}>
             {moduleList.length ? (
               <ModuleMenu
-                moduleList={this.props.moduleList}
+                moduleList={HeaderModuleList}
                 onMenuClick={this.onMenuClick}
                 headerCurrentModuleName={this.props.headerCurrentModuleName}
                 theme={theme}
@@ -169,7 +170,6 @@ class MyHeader extends React.PureComponent {
                 }}
               >
                 <SearchInput />
-
                 <a
                   target={'_blank'}
                   href='https://github.com/songtianen/AU-admin'
@@ -179,8 +179,8 @@ class MyHeader extends React.PureComponent {
                     type='github'
                   />
                 </a>
-
                 <FullScreen />
+                <ResetDB />
               </div>
             </Menu>
           </Col>
@@ -233,6 +233,9 @@ class MyHeader extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => {
+  // let moduleList = state.app.moduleList.menuRes.filter((item) => {
+  //   return item.leftMenu;
+  // });
   return {
     name: state.app.name,
     theme: state.app.theme,

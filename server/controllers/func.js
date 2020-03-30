@@ -18,33 +18,19 @@ const getFunctionPagedList = ({ req, res }) => {
       return businessError({ res, msg: '查询功能列表失败' });
     });
 };
-// 删除一条
-const delFuntion = ({ req, res }) => {
-  const id = req.query.id;
-  functionService
-    .serviceDelFuntion(id)
-    .then((result) => {
-      if (result && result.ok) {
-        return success({ res, msg: '删除成功' });
-      }
-    })
-    .catch(() => {
-      return businessError({ res, msg: '删除function失败' });
-    });
-};
 // 删除多条
 const delFuntions = ({ req, res }) => {
-  const { ids } = req.query;
+  const { ids } = req.body;
   // let ids = JSON.parse(req.query.ids);
   functionService
     .delFuntions(ids)
-    .then((res) => {
-      if (res.success) {
+    .then((doc) => {
+      if (doc.success) {
         return success({ res, msg: '删除功能成功' });
       }
     })
     .catch((e) => {
-      return businessError({ res, msg: '删除失败！' });
+      return businessError({ res, msg: e.message });
     });
 };
 
@@ -89,7 +75,6 @@ const editFunction = ({ req, res }) => {
 
 module.exports = {
   getFunctionPagedList,
-  delFuntion,
   delFuntions,
   addFunction,
   editFunction,

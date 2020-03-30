@@ -22,10 +22,9 @@ function* fetchUser(action) {
       });
 
       yield put({ type: actionTypes.LOGIN_SUCCESS, payload: userInfo });
-      setTokens.then((doc) => {
+      setTokens.then(() => {
         // history.push('/');
-
-        console.log('setToken', doc);
+        // console.log('setToken', doc);
       });
     }
     if (userInfo.statusCode === 500) {

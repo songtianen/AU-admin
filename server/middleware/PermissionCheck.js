@@ -18,7 +18,7 @@ const PermissionCheck = ({ permission = [], role = [] }) => {
       const functionCodeAndModuleId = await findUserPermission(userRole);
 
       let userPermission = functionCodeAndModuleId.functionCode;
-      console.log('PermissionCheck-----userPermission', userPermission);
+      // console.log('PermissionCheck-----userPermission', userPermission);
 
       let p = userPermission.filter((s) => {
         return permission.indexOf(s) > -1;

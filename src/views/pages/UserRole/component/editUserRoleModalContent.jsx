@@ -11,6 +11,7 @@ import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../../schema/UserRole/AddRoleForUser';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
 import CommonModal from '../../Common/CommonModal';
+import PermissionContainer from '../../../../util/permissionContainer';
 
 class EditUserRoleModalContent extends React.PureComponent {
   state = {
@@ -72,12 +73,14 @@ class EditUserRoleModalContent extends React.PureComponent {
       width: 120,
       render: (text, record) => {
         return (
-          <Popconfirm
-            title='确定删除?'
-            onConfirm={() => this.modifyRoleUser(record)}
-          >
-            <a>删除</a>
-          </Popconfirm>
+          <PermissionContainer permission={['user_role_del']}>
+            <Popconfirm
+              title='确定删除?'
+              onConfirm={() => this.modifyRoleUser(record)}
+            >
+              <a>删除</a>
+            </Popconfirm>
+          </PermissionContainer>
         );
       },
     },
@@ -241,9 +244,10 @@ class EditUserRoleModalContent extends React.PureComponent {
     });
   };
 
+  // eslint-disable-next-line no-unused-vars
   editCommonModalSaveRoleForUSer = async (data, selectedOptions) => {
     // 请求 添加用户接口
-    console.log('U____>>>>>>', data, selectedOptions);
+    // console.log('U____>>>>>>', data, selectedOptions);
     try {
       // eslint-disable-next-line no-undef
       await addRoleForUser({
@@ -288,6 +292,8 @@ class EditUserRoleModalContent extends React.PureComponent {
           hasSelected={hasSelected}
           addTitle={'添加角色'}
           removeTitle={'删除角色'}
+          addPermission={['user_role_add']}
+          delPermission={['user_role_del']}
         />
         <Table
           rowSelection={rowSelection}

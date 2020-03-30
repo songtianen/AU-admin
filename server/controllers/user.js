@@ -119,6 +119,7 @@ let postDelUser = async ({ req, res }) => {
 };
 let editUser = async ({ req, res }) => {
   const userInfo = req.body;
+  console.log('编辑用户信息', userInfo);
   await userSservice
     .editUser(userInfo)
     .then((doc) => {
@@ -166,6 +167,23 @@ let loginUser = async ({ req, res }) => {
     });
 };
 
+let resetDb = async ({ req, res }) => {
+  const { password } = req.body;
+  await userSservice
+    .resetDb(password)
+    .then((doc) => {
+      if (!doc.success) {
+        return businessError({ res, msg: doc.msg });
+      }
+      if (doc.success) {
+        return success({ res, msg: doc.msg });
+      }
+    })
+    .catch((e) => {
+      return businessError({ res, msg: e.message });
+    });
+};
+
 module.exports = {
   getUserInfo,
   getAllUser,
@@ -174,4 +192,5 @@ module.exports = {
   postDelUser,
   editUser,
   loginUser,
+  resetDb,
 };

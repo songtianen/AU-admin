@@ -18,6 +18,7 @@ import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../../schema/Role';
 import CommonModal from '../../Common/CommonModal';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
+import PermissionContainer from '../../../../util/permissionContainer';
 
 class Role extends React.PureComponent {
   state = {
@@ -78,15 +79,17 @@ class Role extends React.PureComponent {
       width: 120,
       render: (text, record) => {
         return (
-          <div style={{ textAlign: 'center' }}>
-            <a
-              onClick={() => {
-                this.editRole(record);
-              }}
-            >
-              编辑
-            </a>
-          </div>
+          <PermissionContainer permission={['role_edit']}>
+            <div style={{ textAlign: 'center' }}>
+              <a
+                onClick={() => {
+                  this.editRole(record);
+                }}
+              >
+                编辑
+              </a>
+            </div>
+          </PermissionContainer>
         );
       },
     },
@@ -324,6 +327,8 @@ class Role extends React.PureComponent {
           hasSelected={hasSelected}
           addTitle={'新增'}
           removeTitle={'删除'}
+          addPermission={['role_add']}
+          delPermission={['role_del']}
         />
         <Table
           rowSelection={rowSelection}

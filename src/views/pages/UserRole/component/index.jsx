@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Modal, Tag, Button } from 'antd';
+import { Table, Modal, Tag, Button, Divider } from 'antd';
 import { getAllUser, getRolePagedList } from '../../../../api';
 import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../../schema/UserRole';
@@ -225,6 +225,8 @@ class UserRole extends React.PureComponent {
           handleSubmit={this.handleSearch}
           handleReset={this.handleReset}
         />
+        <Divider />
+
         <Table
           rowSelection={rowSelection}
           columns={this.columns}

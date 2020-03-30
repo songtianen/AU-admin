@@ -3,7 +3,7 @@ module.exports = {
     isAdmin: '',
     email: '',
     userPermission: [],
-    moduleId: 0,
+    moduleId: '0',
     userRole: [],
     userName: '',
     nickName: '',

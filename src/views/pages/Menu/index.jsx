@@ -7,6 +7,7 @@ import SearchForm from '../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../schema/Menu';
 import CommonModal from '../Common/CommonModal';
 import AddRemoveComponent from '../Common/AddRemoveConponent';
+import PermissionContainer from '../../../util/permissionContainer';
 
 class Menu extends React.PureComponent {
   state = {
@@ -110,15 +111,17 @@ class Menu extends React.PureComponent {
       width: 120,
       render: (text, record) => {
         return (
-          <div style={{ textAlign: 'center' }}>
-            <a
-              onClick={() => {
-                this.editRole(record);
-              }}
-            >
-              编辑
-            </a>
-          </div>
+          <PermissionContainer permission={['menu_edit']}>
+            <div style={{ textAlign: 'center' }}>
+              <a
+                onClick={() => {
+                  this.editRole(record);
+                }}
+              >
+                编辑
+              </a>
+            </div>
+          </PermissionContainer>
         );
       },
     },
@@ -340,6 +343,8 @@ class Menu extends React.PureComponent {
           hasSelected={hasSelected}
           addTitle={'新增'}
           removeTitle={'删除'}
+          addPermission={['menu_add']}
+          delPermission={['menu_del']}
         />
         <Table
           rowSelection={rowSelection}

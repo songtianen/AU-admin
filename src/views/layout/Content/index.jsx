@@ -33,8 +33,6 @@ class MyNavTabs extends React.PureComponent {
     );
 
     if (pageModule && pageModule.length) {
-      // console.log('Content组件中componentWillReceiveProps-有'); // 第一次接收的moduleList是空
-
       const currentPage = pageModule[0];
       const isInOpenPages = this.state.openPages.some(
         (s) => s.name === currentPage.name,
@@ -53,7 +51,6 @@ class MyNavTabs extends React.PureComponent {
         });
       }
       if (isInOpenPages) {
-        // 1.4 如果当前的tab页面（currentPage），不是这页面，那么切换到这个页面
         if (this.state.currentPage !== currentPage.name) {
           this.setState({
             currentPage: currentPage.name,
@@ -63,15 +60,35 @@ class MyNavTabs extends React.PureComponent {
     }
     // 后端返回的数据没有这个路由,返回404页面
     if (pageModule.length === 0) {
-      console.log('Content组件中componentWillReceiveProps-无'); // 第一次接收的moduleList是空
+      if (location.pathname === '/') {
+        let openPages = this.state.openPages;
+        let isWelcome = openPages.some((s) => s.name === 'welcome');
+        if (isWelcome) {
+          this.setState({
+            currentPage: 'welcome',
+          });
+        }
+        if (!isWelcome) {
+          openPages.push({
+            name: 'welcome',
+            title: '欢迎',
+            path: '/',
+            closable: true,
+          });
+
+          this.setState({
+            openPages,
+            currentPage: 'welcome',
+          });
+        }
+        return;
+      }
 
       // openPages 内是否有404的页面？
       let openPages = this.state.openPages;
       const isPage404 = openPages.some((s) => s.name === 'page404');
       const currentPage404 = this.state.currentPage === 'page404';
       if (!isPage404) {
-        console.log('Content组件中componentWillReceiveProps-openPages-没有404'); // 第一次接收的moduleList是空
-
         openPages.push({
           name: 'page404',
           title: '页面不存在',

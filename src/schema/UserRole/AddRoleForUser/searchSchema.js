@@ -14,4 +14,7 @@ export default {
       title: '部门编码',
     },
   },
+  formLayout: {
+    layout: 'inline',
+  },
 };

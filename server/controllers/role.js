@@ -98,7 +98,7 @@ module.exports = {
         return responseTemplate.success({ res, msg: '多条删除成功' });
       })
       .catch((e) => {
-        return responseTemplate.businessError({ res, msg: '错误！' });
+        return responseTemplate.businessError({ res, msg: e.message });
       });
   },
   savePermission: async ({ req, res }) => {

@@ -8,6 +8,7 @@ import util from '../../../../util/util';
 
 function* initAppData(action) {
   const pathName = action.payload;
+  // console.log('init_APP_data_pathName', pathName);
   let theme = localStorage.getItem('theme') || 'light';
 
   try {
@@ -21,11 +22,11 @@ function* initAppData(action) {
       localStorage.setItem('accessMenu', JSON.stringify(accessMenu.data));
       let menuRes = accessMenu.data;
       // menuRes.push(...constantMenu); // 添加不需要后端返回的菜单列表
-      let moduleList = menuRes.filter((item) => {
-        // 是左侧菜单(leftMenu字段控制是否显示此菜单)
-        return item.leftMenu;
-      });
-      let menus = JSON.parse(JSON.stringify(moduleList));
+      // let moduleList = menuRes.filter((item) => {
+      //   // 是左侧菜单(leftMenu字段控制是否显示此菜单)
+      //   return item.leftMenu;
+      // });
+      let menus = JSON.parse(JSON.stringify(menuRes));
       let findModule = util.findCurrentMenuNameAndModule(menus, pathName);
       let siderModuleMenu = JSON.parse(JSON.stringify(findModule.children));
       let siderData = util.findSiderComponentSelectedNameAndOpenKeys(
@@ -34,9 +35,9 @@ function* initAppData(action) {
       ); // 查找的Sider组件需要的key和openKeys
       let accessMenuData = {
         headerCurrentModuleName: findModule.name, // header组件数据,当前选中的菜单
-        accessMenu: menuRes, // 所有菜单
+        // accessMenu: menuRes, // 所有菜单
         siderModuleMenu: findModule.children, // sider左侧菜单数据，(由header组件的menu改变)
-        moduleList, // 1-leftMenu等于true的菜单
+        moduleList: menuRes, // 1-leftMenu等于true的菜单
         siderSelectedKey: siderData.siderKey,
         siderOpenKeys: siderData.siderOpenKeys,
         theme,
@@ -74,7 +75,7 @@ function* initAppData(action) {
 }
 
 function* updateModule(action) {
-  console.log('请求菜单-updateModule', action);
+  // console.log('请求菜单-updateModule', action);
 
   yield put({
     type: actionTypes.UPDATE_ACCESSMENU_SUCCESS,

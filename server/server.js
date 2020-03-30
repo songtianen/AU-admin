@@ -6,7 +6,6 @@ const router = require('./routes/index.js');
 // const expressStaticGzip = require('express-static-gzip');
 const compression = require('compression');
 
-// -------
 const isEnv = process.env.NODE_ENV;
 const PORT = isEnv === 'production' ? 8888 : 6666;
 let app = express();
@@ -17,7 +16,6 @@ app.use(favicon(path.join(__dirname, '../favicon.ico'))); // 浏览器标签页�
 app.use(compression()); // 注册资源压缩的中间件
 
 if (isEnv === 'production') {
-  console.log('isEnv === production');
   // ----------------------
   // 托管静态资源目录
   app.use(

@@ -115,19 +115,18 @@ module.exports = {
       rows: roleLists,
     };
   },
-  delRole: async (id) => {
-    const isRemoveRole = await RoleModel.findOneAndDelete({ id: id });
-    // console.log('isRemoveRole', isRemoveRole);
+  // delRole: async (id) => {
+  //   const isRemoveRole = await RoleModel.findOneAndDelete({ id: id });
+  //   // console.log('isRemoveRole', isRemoveRole);
 
-    return isRemoveRole;
-  },
+  //   return isRemoveRole;
+  // },
   delRoles: async ({ ids, departmentIds }) => {
     const update = await Promise.all([
       RoleModel.deleteMany({ id: ids }),
       DepartmentModel.updateMany(
         { id: departmentIds },
         {
-          // addToSet 更新添加数组中的元素(可以是单条，也可以是数组)
           $pullAll: {
             roleId: ids,
           },
@@ -237,11 +236,12 @@ module.exports = {
   },
   savePermission: async (moduleId, roleId, permissions) => {
     // 查询并更新数据
-    let db = await RoleModel.findOneAndUpdate(
+    await RoleModel.updateOne(
       { id: roleId },
       { $set: { moduleId: moduleId, permission: permissions } },
     );
-    return db;
+    const role = await RoleModel.find({ id: roleId });
+    return role;
   },
   addRoleForUser: async (roleId, userId) => {
     if (roleId && userId) {

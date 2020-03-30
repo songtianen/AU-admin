@@ -4,7 +4,11 @@ import util from '../../util/util';
 const treeData = util.treeData;
 const iconTreeData = util.iconTreeData;
 // console.log('图标树', iconTreeData(icon));
-const arr = JSON.parse(localStorage.getItem('accessMenu'));
+let menus = JSON.parse(localStorage.getItem('accessMenu'));
+menus.push({
+  title: '根菜单',
+  id: '0',
+});
 
 export default {
   title: {
@@ -171,7 +175,7 @@ export default {
     'ui:widget': 'treeSelect', // 级联
     'ui:options': {
       // fieldNames: { title: 'name', value: 'id', key: 'id' },
-      treeData: treeData(arr),
+      treeData: treeData(menus),
     },
     'ui:rules': [{ required: true, message: '请选择模块!' }], // 校验规则
     'ui:title': '所属菜单', // 未设置取schema 中定义的title

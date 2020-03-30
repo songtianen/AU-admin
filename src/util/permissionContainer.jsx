@@ -4,11 +4,11 @@ import React from 'react';
 class PermissionContainer extends React.PureComponent {
   render() {
     // eslint-disable-next-line react/prop-types
-    const { display, permission, children } = this.props;
+    const { permission, children } = this.props;
 
     const needPermission = permission || [];
-    const isAdmin = localStorage.getItem('isAdmin');
     const userPermission = JSON.parse(localStorage.getItem('permission'));
+    const isAdmin = localStorage.getItem('isAdmin');
     let hasPermission = isAdmin === 'admin';
     // 不是管理员（没有权限），并且neddPermission明确需要某种权限
     if (!hasPermission && needPermission.length > 0) {
@@ -21,11 +21,7 @@ class PermissionContainer extends React.PureComponent {
         }
       }
     }
-    return display === 'block' ? (
-      <div>{hasPermission ? children : null}</div>
-    ) : (
-      <span>{hasPermission ? children : null}</span>
-    );
+    return hasPermission ? children : null;
   }
 }
 export default PermissionContainer;

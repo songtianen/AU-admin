@@ -40,7 +40,7 @@ class Login extends React.Component {
         const { username, password } = values;
         this.startLogin();
         dispatch(login({ username, password }));
-        console.log('Received values of form: ', values);
+        // console.log('Received values of form: ', values);
       }
       if (err) {
         this.endLogin();

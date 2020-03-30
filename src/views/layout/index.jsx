@@ -39,8 +39,9 @@ class MyLayout extends React.PureComponent {
     window.onresize = () => {
       this.getClientWidth();
     };
-    let loading = document.getElementById('StartLoading');
-    document.body.removeChild(loading);
+    if (document.getElementById('StartLoading')) {
+      document.body.removeChild(document.getElementById('StartLoading'));
+    }
   }
 
   /*

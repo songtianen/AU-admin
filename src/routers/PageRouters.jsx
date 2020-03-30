@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect,
+  // Redirect,
 } from 'react-router-dom';
 import Login from '../views/pages/Login';
 import Register from '../views/pages/Login/register';
@@ -15,7 +15,7 @@ const Routers = () => (
     <Switch>
       <Route exact path='/login' component={Login} />
       <Route exact path='/register' component={Register} />
-      <Route exact path='/' render={() => <Redirect to='/system' push />} />
+      {/* <Route exact path='/' render={() => <Redirect to='/system' push />} /> */}
       <Route path='/' component={Layout} />
       {/* <Route exact component={Page404} /> */}
     </Switch>

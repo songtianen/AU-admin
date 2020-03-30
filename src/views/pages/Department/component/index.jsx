@@ -10,6 +10,7 @@ import SearchForm from '../../../../schema/Common/SearchForm/SearchForm';
 import schema from '../../../../schema/Dpartment';
 import CommonModal from '../../Common/CommonModal';
 import AddRemoveComponent from '../../Common/AddRemoveConponent';
+import PermissionContainer from '../../../../util/permissionContainer';
 
 class Department extends React.PureComponent {
   state = {
@@ -64,15 +65,17 @@ class Department extends React.PureComponent {
       width: 120,
       render: (text, record) => {
         return (
-          <div style={{ textAlign: 'center' }}>
-            <a
-              onClick={() => {
-                this.editRole(record);
-              }}
-            >
-              编辑
-            </a>
-          </div>
+          <PermissionContainer permission={['department_edit']}>
+            <div style={{ textAlign: 'center' }}>
+              <a
+                onClick={() => {
+                  this.editRole(record);
+                }}
+              >
+                编辑
+              </a>
+            </div>
+          </PermissionContainer>
         );
       },
     },
@@ -96,7 +99,7 @@ class Department extends React.PureComponent {
     this.setState({ tableLoading: true });
     let ResData = await getAllDepartment(query);
     let data = ResData.data;
-    console.log('所有部门', data);
+    // console.log('所有部门', data);
     const pagination = { ...this.state.tablePagination };
     pagination.total = data.totalCount;
     this.setState({
@@ -164,7 +167,6 @@ class Department extends React.PureComponent {
   // button Popconfirm 删除
   batchDelRole = async () => {
     const departmentIds = this.state.tableSelectedRowKeys;
-    console.log('ids????????', departmentIds);
     try {
       await delDepartment({
         departmentIds,
@@ -302,6 +304,8 @@ class Department extends React.PureComponent {
           hasSelected={hasSelected}
           addTitle={'新增'}
           removeTitle={'删除'}
+          addPermission={['department_add']}
+          delPermission={['department_del']}
         />
         <Table
           rowSelection={rowSelection}
