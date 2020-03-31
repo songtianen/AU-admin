@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Icon, Modal, Button } from 'antd';
+import { Form, Input, Icon, Modal, Button, notification } from 'antd';
 import { resetdb } from '../../../../api';
 
 const FormItem = Form.Item;
@@ -16,7 +16,19 @@ class ResetDB extends React.PureComponent {
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
         const { password } = values;
-        const info = await resetdb({ password });
+        try {
+          const data = await resetdb({ password });
+
+          if (data.statusCode === 200) {
+            notification.success({
+              message: data.msg,
+            });
+          }
+        } catch (error) {
+          notification.error({
+            message: e.msg,
+          });
+        }
         // console.log('Received values of form: ', info);
       }
       if (err) {
@@ -60,7 +72,7 @@ class ResetDB extends React.PureComponent {
                 rules: [
                   { required: true, message: '请输入密码!' },
                   { whitespace: true, message: '不能输入空格!' },
-                  { max: 10, message: '不能超过10位!' },
+                  { max: 20, message: '不能超过10位!' },
                 ],
               })(
                 <Input.Password

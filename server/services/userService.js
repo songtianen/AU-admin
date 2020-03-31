@@ -1,5 +1,5 @@
 // const _ = require('lodash')
-const { UserModel, RoleModel, FunctionModel } = require('../model/model');
+const { UserModel, RoleModel, FunctionModel, dbm } = require('../model/model');
 const uuidv4 = require('uuid/v4');
 const { Encrypt } = require('../util/md5');
 const dbSchema = require('../db/dbSchema');
@@ -7,7 +7,7 @@ const _ = require('lodash');
 const { unique } = require('../util/util');
 const cp = require('child_process');
 // let fs = require('fs');
-// const path = require('path');
+const path = require('path');
 
 const findFunctionListItemInfo = (functionList) => {
   let menuId = [];
@@ -302,19 +302,35 @@ const findUserPermission = async (userRole) => {
 };
 
 const resetDb = async (pwd) => {
-  if (pwd === 'songtianen') {
-    // 备份数据库
-    // cp.exec(
-    //   'mongodump -h 127.0.0.1:27017 -d myapp -o /Users/song/mine/my-product/AU-admin/server/db',
-    // );
+  if (pwd === 'songtianenhuanyuan') {
     // 还原数据库
-    cp.exec(
-      'mongorestore -h 127.0.0.1 -d song-tian-en /Users/song/mine/my-product/AU-admin/server/db/myapp',
-    );
-
+    const backupPath = `mongorestore -h 127.0.0.1 -d myapp  ${path.resolve(
+      __dirname,
+      '../db/myapp',
+    )}`;
+    cp.exec(backupPath);
     return {
       success: true,
-      msg: '数据库重置成功',
+      msg: '数据库还原成功',
+    };
+  }
+  if (pwd === 'songtianenbeifen') {
+    const backupPath = `mongodump -h 127.0.0.1:27017 -d myapp -o ${path.resolve(
+      __dirname,
+      '../db',
+    )}`;
+    console.log('dbPath', backupPath);
+    cp.exec(backupPath);
+    return {
+      success: true,
+      msg: '数据库备份成功',
+    };
+  }
+  if (pwd === 'songtianenshanchu') {
+    await dbm.db.dropDatabase();
+    return {
+      success: true,
+      msg: '数据库删除成功',
     };
   }
   return {

@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.get(
   '/pagedlist',
-  PermissionCheck({ permission: ['function_edit'] }),
+  PermissionCheck({ permission: ['function_view'] }),
   (req, res) => {
     getFunctionPagedList({ req, res });
   },

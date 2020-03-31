@@ -21,6 +21,9 @@ class MyHeader extends React.PureComponent {
   // 更新左侧的菜单
   onMenuClick = (e) => {
     const { history, dispatch, location } = this.props;
+    // if (collapsed) {
+    //   toggle();
+    // }
     let accesseMenu = this.props.moduleList;
     let moduleList = accesseMenu.filter((item) => {
       return item.leftMenu && item.name === e.key;

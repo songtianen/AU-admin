@@ -21,71 +21,32 @@ class MyLayout extends React.PureComponent {
     collapsed: false,
     responsive: false,
     navTabShow: true,
-    // navTabTop: 50,
     headerItemDisplay: true,
     layOutHeight: '',
     layOutWidth: '',
   };
 
   componentWillMount() {
-    console.log('Layout-componentWillMount----');
     this.getClientWidth();
   }
 
   componentDidMount() {
-    console.log('Layout-componentDidMount----');
-
-    this.initAppData(); // 数据初始化完后再触发一次render
+    this.initAppData();
+    // if (this.props.location.pathname === '/') {
+    //   this.setState({
+    //     responsive: true,
+    //     collapsed: true,
+    //   });
+    // }
     window.onresize = () => {
       this.getClientWidth();
     };
+
     if (document.getElementById('StartLoading')) {
       document.body.removeChild(document.getElementById('StartLoading'));
     }
   }
 
-  /*
-  优化掉
-  componentWillUpdate(nextProps) {
-    const thisPathname = this.props.location.pathname;
-    const nextPathname = nextProps.location.pathname;
-    console.log('宋大明白----', this.props.headerCurrentModuleName);
-
-    if (thisPathname !== nextPathname) {
-      const { siderModuleMenu } = nextProps;
-      const { dispatch, moduleList } = this.props;
-      const isModelMenu = moduleList.some((item) => {
-        return item.path === nextPathname;
-      });
-      console.log('宋大明白----', isModelMenu);
-      if (isModelMenu) {
-        dispatch(
-          updateModuleAction({
-            siderOpenKeys: [],
-            siderSelectedKey: [],
-          }),
-        );
-        return;
-      }
-      if (!isModelMenu) {
-        // const module = util.findCurrentMenuNameAndModule(moduleList, pathname);
-        const siderSelectedKey = util.findSiderComponentSelectedNameAndOpenKeys(
-          JSON.parse(JSON.stringify(siderModuleMenu)),
-          nextPathname,
-        );
-        const { siderKey } = siderSelectedKey;
-        if (siderKey && siderKey.length) {
-          let data = {
-            // headerCurrentModuleName: module[0].name,
-            // siderModuleMenu: module[0].children,
-            siderSelectedKey: siderSelectedKey.siderKey,
-          };
-          dispatch(updateModuleAction(data));
-        }
-      }
-    }
-  }
-*/
   // 获取当前浏览器宽度并设置responsive管理响应式
   getClientWidth = () => {
     const clientWidth = document.body.clientWidth;

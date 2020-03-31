@@ -1,5 +1,6 @@
 let mongoose = require('mongoose');
 let DB_URL = 'mongodb://localhost:27017/myapp';
+// let DB_URL = 'mongodb://localhost:27017/song';
 // 1 . 连接数据库
 mongoose.connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 var dbm = mongoose.connection;
@@ -93,4 +94,5 @@ module.exports = {
   FunctionModel,
   RoleModel,
   DepartmentModel,
+  dbm,
 };

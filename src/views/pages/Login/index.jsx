@@ -87,9 +87,11 @@ class Login extends React.Component {
                     alt='logo'
                     src={logo}
                   />
+                  <span>用户名：admin/admin2/HR/CTO/CFO/CMO</span>
                   <Form className='login-form' onSubmit={this.handleSubmit}>
                     <FormItem>
                       {getFieldDecorator('username', {
+                        initialValue: 'admin',
                         rules: [
                           {
                             required: true,
@@ -111,7 +113,7 @@ class Login extends React.Component {
                     </FormItem>
                     <FormItem>
                       {getFieldDecorator('password', {
-                        initialValue: '',
+                        initialValue: '123456',
                         rules: [
                           { required: true, message: '请输入密码!' },
                           { whitespace: true, message: '不能输入空格!' },

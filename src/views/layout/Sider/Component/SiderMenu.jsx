@@ -81,11 +81,12 @@ class SubMenuList extends React.PureComponent {
       siderOpenKeys,
       selectedKey,
       menuOnClick,
+      responsive,
     } = this.props;
     return (
       <Sider
         breakpoint='lg'
-        collapsedWidth={this.props.responsive ? 0 : undefined}
+        collapsedWidth={responsive ? 0 : undefined}
         trigger={null}
         collapsible
         collapsed={this.props.collapsed}
