@@ -2,10 +2,9 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 // eslint-disable-next-line no-unused-vars
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+//   .BundleAnalyzerPlugin;
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const baseWebpackConfig = require('./webpack.base.config');
 const antdTheme = require('../theme');
 const ROOT_PATH = path.resolve(__dirname);
