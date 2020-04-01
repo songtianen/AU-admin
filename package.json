@@ -16,7 +16,7 @@
     "precommit": "pretty-quick --staged",
     "clear": "rimraf dist",
     "dev-client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
-    "build-client": "node --max_old_space_size=8012 && npm run clear && cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
+    "build-client": "node --max_old_space_size=8012 npm run clear && cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
     "dev-server": "cross-env NODE_ENV=development nodemon server/server.js",
     "build-server": "cross-env NODE_ENV=production node server/server.js",
     "start": "npm run dev-server & npm run dev-client"
