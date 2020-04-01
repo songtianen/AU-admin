@@ -1,9 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-// eslint-disable-next-line no-unused-vars
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-//   .BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const baseWebpackConfig = require('./webpack.base.config');
 const antdTheme = require('../theme');
@@ -143,7 +142,7 @@ const webpackDevConfig = merge(baseWebpackConfig, {
       failOnError: true,
     }),
     new webpack.HotModuleReplacementPlugin(),
-    // new BundleAnalyzerPlugin() // 包分析器
+    new BundleAnalyzerPlugin(), // 包分析器
     //    new CompressionPlugin({ //gzip
     //   test: /\.js$|\.css$/,
     //   cache: true,
