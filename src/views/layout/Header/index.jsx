@@ -63,7 +63,7 @@ class MyHeader extends React.PureComponent {
           error: '',
         },
       });
-      this.props.history.replace('/login');
+      this.props.history.push('/login');
     }
   };
 

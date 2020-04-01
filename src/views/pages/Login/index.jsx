@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { Row, Col, Form, Icon, Input, Button, Card, Checkbox } from 'antd';
 import { connect } from 'react-redux';
@@ -50,7 +50,7 @@ class Login extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isLogin) {
-      this.props.history.replace('/');
+      this.props.history.push('/');
     }
     const { error } = nextProps;
     if (error) {
@@ -206,4 +206,4 @@ Login.propTypes = {
   // data: PropTypes.object.isRequired,
 };
 
-export default connect(mapStateToProps)(Form.create({})(Login));
+export default withRouter(connect(mapStateToProps)(Form.create({})(Login)));

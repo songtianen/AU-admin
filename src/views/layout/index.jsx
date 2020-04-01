@@ -1,13 +1,14 @@
-/* eslint-disable react/no-unused-state */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Layout } from 'antd';
 import MyHeader from './Header';
 import Footer from './Footer';
 import MySider from './Sider';
 import MyNavTabs from './Content/index';
 import { getToken } from '../../util/token';
+
 // import util from '../../util/util';
 import reduxApp from './redux/redux_app';
 
@@ -23,7 +24,7 @@ class MyLayout extends React.PureComponent {
     navTabShow: true,
     headerItemDisplay: true,
     layOutHeight: '',
-    layOutWidth: '',
+    // layOutWidth: '',
   };
 
   componentWillMount() {
@@ -56,7 +57,7 @@ class MyLayout extends React.PureComponent {
       responsive: clientWidth <= 991,
       collapsed: clientWidth <= 991,
       layOutHeight: clientHeight,
-      layOutWidth: clientWidth,
+      // layOutWidth: clientWidth,
     });
     if (clientWidth < 577) {
       this.setState({
@@ -180,4 +181,4 @@ MyLayout.propTypes = {
   // headerCurrentModuleName: PropTypes.string.isRequired,
 };
 
-export default connect(mapStateToPorps)(MyLayout);
+export default withRouter(connect(mapStateToPorps)(MyLayout));

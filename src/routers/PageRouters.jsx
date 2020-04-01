@@ -16,8 +16,8 @@ const Routers = () => (
       <Route exact path='/login' component={Login} />
       <Route exact path='/register' component={Register} />
       {/* <Route exact path='/' render={() => <Redirect to='/system' push />} /> */}
-      <Route path='/' component={Layout} />
       {/* <Route exact component={Page404} /> */}
+      <Route path='/' component={Layout} />
     </Switch>
   </Router>
 );
