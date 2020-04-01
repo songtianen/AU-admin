@@ -15,8 +15,9 @@
     "prettier": "prettier --write src/**/*.js src/**/*.jsx",
     "precommit": "pretty-quick --staged",
     "clear": "rimraf dist",
+    "fix-memory-limit": "cross-env LIMIT=8096 increase-memory-limit",
     "dev-client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
-    "build-client": "set NODE_OPTIONS=--max_old_space_size=8192 && cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
+    "build-client": "cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
     "dev-server": "cross-env NODE_ENV=development nodemon server/server.js",
     "build-server": "cross-env NODE_ENV=production node server/server.js",
     "start": "npm run dev-server & npm run dev-client"
@@ -68,6 +69,7 @@
     "husky": "^1.3.1",
     "imagemin": "^5.0.0",
     "img-loader": "^3.0.1",
+    "increase-memory-limit": "^1.0.7",
     "jest": "^24.7.1",
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
