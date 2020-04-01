@@ -173,10 +173,7 @@ class MyHeader extends React.PureComponent {
                 }}
               >
                 <SearchInput />
-                <a
-                  target={'_blank'}
-                  href='https://github.com/songtianen/AU-admin'
-                >
+                <a href='https://github.com/songtianen/AU-admin'>
                   <Icon
                     style={{ fontSize: '20px', color: '#08c' }}
                     type='github'
