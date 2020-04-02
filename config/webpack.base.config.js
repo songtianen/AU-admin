@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+// const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
@@ -81,7 +81,7 @@ const baseWebpackConfig = {
   },
   plugins: [
     // 由于mac不区分大小写，linux区分大小写，可能导致mac上正常，在部署时出错，所以强制区分大小写
-    new CaseSensitivePathsPlugin(),
+    // new CaseSensitivePathsPlugin(),
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: path.join(ROOTPATH, '../src/index.html'),
