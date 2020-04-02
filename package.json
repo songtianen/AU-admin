@@ -15,7 +15,7 @@
     "prettier": "prettier --write src/**/*.js src/**/*.jsx",
     "precommit": "pretty-quick --staged",
     "clear": "rimraf dist",
-    "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
+    "fix-memory-limit": "cross-env LIMIT=8192 increase-memory-limit",
     "dev-client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
     "build-client": "npm run fix-memory-limit & cross-env NODE_ENV=production webpack --config config/webpack.prod.config.js",
     "dev-server": "cross-env NODE_ENV=development nodemon server/server.js",
