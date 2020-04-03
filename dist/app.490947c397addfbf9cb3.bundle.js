@@ -1760,10 +1760,11 @@
                           case 0:
                             return (
                               (t = i.props.dispatch),
-                              (e.next = 3),
+                              Object(Ce.b)(),
+                              i.props.history.push('/login'),
+                              (e.next = 5),
                               Object(Pe.logout)('').then(function(e) {
                                 e.data.isLogout &&
-                                  (Object(Ce.b)(),
                                   t({
                                     type: K.LOGOUT_SUCCESS,
                                     payload: {
@@ -1771,11 +1772,10 @@
                                       isLogout: !0,
                                       error: '',
                                     },
-                                  }),
-                                  i.props.history.push('/login'));
+                                  });
                               })
                             );
-                          case 3:
+                          case 5:
                           case 'end':
                             return e.stop();
                         }

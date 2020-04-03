@@ -52,10 +52,11 @@ class MyHeader extends React.PureComponent {
 
   logout = async () => {
     const { dispatch } = this.props;
+    removeToken();
+    this.props.history.push('/login');
+
     await logout('').then((res) => {
       if (res.data.isLogout) {
-        removeToken();
-
         dispatch({
           type: actionTypes.LOGOUT_SUCCESS,
           payload: {
@@ -64,7 +65,6 @@ class MyHeader extends React.PureComponent {
             error: '',
           },
         });
-        this.props.history.push('/login');
       }
     });
   };
