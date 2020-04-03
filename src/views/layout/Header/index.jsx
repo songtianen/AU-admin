@@ -219,7 +219,14 @@ class MyHeader extends React.PureComponent {
                     个人信息
                   </Menu.Item>
                   <Menu.Item key='logout'>
-                    <span onClick={this.logout}>
+                    <span
+                      onClick={this.logout}
+                      style={{
+                        display: 'inline-block',
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    >
                       <Icon type='logout' />
                       退出登录
                     </span>

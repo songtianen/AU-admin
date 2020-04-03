@@ -1992,7 +1992,14 @@
                                 { key: 'logout' },
                                 c.a.createElement(
                                   'span',
-                                  { onClick: this.logout },
+                                  {
+                                    onClick: this.logout,
+                                    style: {
+                                      display: 'inline-block',
+                                      width: '100%',
+                                      height: '100%',
+                                    },
+                                  },
                                   c.a.createElement(B.a, { type: 'logout' }),
                                   '退出登录',
                                 ),
