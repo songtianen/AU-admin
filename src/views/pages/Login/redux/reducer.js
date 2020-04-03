@@ -5,9 +5,9 @@ import { actionTypes } from './actions';
 export default function(state, action) {
   if (!state) {
     state = {
-      // isLogin: false,
-      // error: '',
-      // isLogout: false,
+      isLogin: false,
+      error: '',
+      isLogout: false,
     };
   }
   switch (action.type) {

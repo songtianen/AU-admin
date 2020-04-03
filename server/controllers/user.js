@@ -57,6 +57,7 @@ let getUserInfo = async ({ req, res }) => {
         userPermission: userPermission,
         isAdmin: userInfo.isAdmin,
         avatarUrl: userInfo.avatar,
+        userId: userInfo.id,
         menuId,
       },
     });

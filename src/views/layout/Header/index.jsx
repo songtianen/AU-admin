@@ -52,19 +52,21 @@ class MyHeader extends React.PureComponent {
 
   logout = async () => {
     const { dispatch } = this.props;
-    const out = await logout();
-    removeToken();
-    if (out.data.isLogout) {
-      dispatch({
-        type: actionTypes.LOGOUT_SUCCESS,
-        payload: {
-          isLogin: false,
-          isLogout: true,
-          error: '',
-        },
-      });
-      this.props.history.push('/login');
-    }
+    await logout('').then((res) => {
+      if (res.data.isLogout) {
+        removeToken();
+
+        dispatch({
+          type: actionTypes.LOGOUT_SUCCESS,
+          payload: {
+            isLogin: false,
+            isLogout: true,
+            error: '',
+          },
+        });
+        this.props.history.push('/login');
+      }
+    });
   };
 
   radioOnChange = (e) => {

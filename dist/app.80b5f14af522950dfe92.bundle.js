@@ -14,10 +14,10 @@
           return b;
         }),
         n.d(t, 'logout', function() {
-          return A;
+          return v;
         }),
         n.d(t, 'getUserInfo', function() {
-          return v;
+          return A;
         }),
         n.d(t, 'getUserFromRole', function() {
           return E;
@@ -215,10 +215,10 @@
           data: a.a.stringify(e),
         });
       }
-      function A(e) {
+      function v(e) {
         return h({ url: '/user/logout', method: 'get', params: e });
       }
-      function v() {
+      function A() {
         return h({ url: '/user/info', method: 'get' });
       }
       function E(e) {
@@ -536,9 +536,9 @@
         ),
         y = n.n(g),
         b = n('./node_modules/@babel/runtime/helpers/getPrototypeOf.js'),
-        A = n.n(b),
-        v = n('./node_modules/@babel/runtime/helpers/inherits.js'),
-        E = n.n(v),
+        v = n.n(b),
+        A = n('./node_modules/@babel/runtime/helpers/inherits.js'),
+        E = n.n(A),
         O = n('./node_modules/react-redux/es/index.js'),
         S = n('./node_modules/react-router-dom/es/BrowserRouter.js'),
         R = n('./node_modules/react-router-dom/es/Switch.js'),
@@ -597,7 +597,7 @@
       function Z(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -615,7 +615,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -668,7 +668,7 @@
               {
                 key: 'componentWillReceiveProps',
                 value: function(e) {
-                  e.isLogin && this.props.history.push('/');
+                  e.isLogin && this.props.history.replace('/');
                   var t = e.error;
                   t && this.endLogin();
                 },
@@ -677,6 +677,15 @@
                 key: 'componentWillUnmount',
                 value: function() {
                   this.endLogin();
+                },
+              },
+              {
+                key: 'componentDidMount',
+                value: function() {
+                  document.getElementById('StartLoading') &&
+                    document.body.removeChild(
+                      document.getElementById('StartLoading'),
+                    );
                 },
               },
               {
@@ -848,7 +857,7 @@
       function oe(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -866,7 +875,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -1188,8 +1197,8 @@
           (n('./node_modules/antd/lib/avatar/style/index.js'),
           n('./node_modules/antd/lib/avatar/index.js')),
         be = n.n(ye),
-        Ae = n('./node_modules/@babel/runtime/regenerator/index.js'),
-        ve = n.n(Ae),
+        ve = n('./node_modules/@babel/runtime/regenerator/index.js'),
+        Ae = n.n(ve),
         Ee = n('./node_modules/@babel/runtime/helpers/asyncToGenerator.js'),
         Oe = n.n(Ee),
         Se =
@@ -1199,7 +1208,7 @@
       function je(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -1217,7 +1226,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -1282,7 +1291,7 @@
       function De(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -1300,7 +1309,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -1386,7 +1395,7 @@
       function ke(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -1404,7 +1413,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -1510,7 +1519,7 @@
       function Je(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -1528,7 +1537,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -1551,9 +1560,9 @@
                   e.props.form.validateFields(
                     (function() {
                       var n = Oe()(
-                        ve.a.mark(function e(t, n) {
+                        Ae.a.mark(function e(t, n) {
                           var r, a;
-                          return ve.a.wrap(
+                          return Ae.a.wrap(
                             function(e) {
                               for (;;)
                                 switch ((e.prev = e.next)) {
@@ -1678,7 +1687,7 @@
       function Ze(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -1696,7 +1705,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -1743,31 +1752,30 @@
                 _()(i),
                 'logout',
                 Oe()(
-                  ve.a.mark(function e() {
-                    var t, n;
-                    return ve.a.wrap(function(e) {
+                  Ae.a.mark(function e() {
+                    var t;
+                    return Ae.a.wrap(function(e) {
                       for (;;)
                         switch ((e.prev = e.next)) {
                           case 0:
                             return (
                               (t = i.props.dispatch),
                               (e.next = 3),
-                              Object(Pe.logout)()
+                              Object(Pe.logout)('').then(function(e) {
+                                e.data.isLogout &&
+                                  (Object(Ce.b)(),
+                                  t({
+                                    type: K.LOGOUT_SUCCESS,
+                                    payload: {
+                                      isLogin: !1,
+                                      isLogout: !0,
+                                      error: '',
+                                    },
+                                  }),
+                                  i.props.history.push('/login'));
+                              })
                             );
                           case 3:
-                            (n = e.sent),
-                              Object(Ce.b)(),
-                              n.data.isLogout &&
-                                (t({
-                                  type: K.LOGOUT_SUCCESS,
-                                  payload: {
-                                    isLogin: !1,
-                                    isLogout: !0,
-                                    error: '',
-                                  },
-                                }),
-                                i.props.history.push('/login'));
-                          case 6:
                           case 'end':
                             return e.stop();
                         }
@@ -2028,7 +2036,7 @@
       function at(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -2046,7 +2054,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -2158,7 +2166,7 @@
       function lt(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -2176,7 +2184,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -2444,10 +2452,10 @@
           }
         },
       };
-      function At(r) {
+      function vt(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -2465,16 +2473,16 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
         };
       }
-      var vt = bt.actions.updateModuleAction,
+      var At = bt.actions.updateModuleAction,
         Et = (function(e) {
           E()(o, e);
-          var a = At(o);
+          var a = vt(o);
           function o() {
             var t;
             m()(this, o);
@@ -2483,10 +2491,10 @@
             return (
               (t = a.call.apply(a, [this].concat(n))),
               q()(_()(t), 'menuOpenchange', function(e) {
-                (0, t.props.dispatch)(vt({ siderOpenKeys: e }));
+                (0, t.props.dispatch)(At({ siderOpenKeys: e }));
               }),
               q()(_()(t), 'menuOnClick', function(e) {
-                (0, t.props.dispatch)(vt({ siderSelectedKey: [e.key] }));
+                (0, t.props.dispatch)(At({ siderSelectedKey: [e.key] }));
               }),
               t
             );
@@ -2715,7 +2723,7 @@
       function Ft(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -2733,7 +2741,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -2946,7 +2954,7 @@
       function Xt(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -2964,7 +2972,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -3134,7 +3142,7 @@
       function on(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -3152,7 +3160,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);
@@ -3271,7 +3279,9 @@
       }
       var fn = { NAME: 'login' },
         hn = function(e, t) {
-          switch (((e = e || {}), t.type)) {
+          switch (
+            ((e = e || { isLogin: !1, error: '', isLogout: !1 }), t.type)
+          ) {
             case K.BEFORE_LOGIN:
               return mn({}, e, { isLogin: !1, error: '' });
             case K.LOGIN_SUCCESS:
@@ -3309,7 +3319,7 @@
         return n;
       }
       var bn = { NAME: 'role' },
-        An = function(e, t) {
+        vn = function(e, t) {
           switch (
             ((e = e || {
               rolePagedList: '',
@@ -3346,13 +3356,13 @@
               return e;
           }
         },
-        vn = 'header/INIT_MENU';
+        An = 'header/INIT_MENU';
       var En,
         On = { NAME: 'header' },
         Sn = Object(en.c)(
           ((En = {}),
           q()(En, fn.NAME, hn),
-          q()(En, bn.NAME, An),
+          q()(En, bn.NAME, vn),
           q()(En, bt.constants.NAME, bt.reducer),
           q()(En, dn.constants.NAME, dn.reducer),
           q()(En, On.NAME, dn.reducer),
@@ -3373,10 +3383,10 @@
         ),
         In = n('./node_modules/@babel/runtime/helpers/slicedToArray.js'),
         kn = n.n(In),
-        Mn = ve.a.mark(_n),
-        Ln = ve.a.mark(Qn),
-        Tn = ve.a.mark(qn),
-        Nn = ve.a.mark(Gn);
+        Mn = Ae.a.mark(_n),
+        Ln = Ae.a.mark(Qn),
+        Tn = Ae.a.mark(qn),
+        Nn = Ae.a.mark(Gn);
       function Bn(t, e) {
         var n = Object.keys(t);
         if (Object.getOwnPropertySymbols) {
@@ -3410,7 +3420,7 @@
       }
       function _n(t) {
         var n, r, a, o, i, s, c, l, u, d, p, m, f, h, g;
-        return ve.a.wrap(
+        return Ae.a.wrap(
           function(e) {
             for (;;)
               switch ((e.prev = e.next)) {
@@ -3460,6 +3470,7 @@
                         isAdmin: f,
                         userRole: s.data.userRole,
                         permission: s.data.userPermission,
+                        userId: s.data.userId,
                       }),
                       localStorage.setItem(
                         'permission',
@@ -3491,7 +3502,7 @@
         );
       }
       function Qn(t) {
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
@@ -3509,7 +3520,7 @@
         }, Ln);
       }
       function qn() {
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
@@ -3521,7 +3532,7 @@
         }, Tn);
       }
       function Gn() {
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
@@ -3533,13 +3544,13 @@
         }, Nn);
       }
       var Fn = [qn(), Gn()],
-        Hn = ve.a.mark(Jn),
-        Wn = ve.a.mark(zn),
-        Vn = ve.a.mark(Yn),
-        Xn = ve.a.mark(Kn);
+        Hn = Ae.a.mark(Jn),
+        Wn = Ae.a.mark(zn),
+        Vn = Ae.a.mark(Yn),
+        Xn = Ae.a.mark(Kn);
       function Jn(t) {
         var n, r;
-        return ve.a.wrap(
+        return Ae.a.wrap(
           function(e) {
             for (;;)
               switch ((e.prev = e.next)) {
@@ -3598,7 +3609,7 @@
       }
       function zn(t) {
         var n;
-        return ve.a.wrap(
+        return Ae.a.wrap(
           function(e) {
             for (;;)
               switch ((e.prev = e.next)) {
@@ -3650,7 +3661,7 @@
         );
       }
       function Yn() {
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
@@ -3662,7 +3673,7 @@
         }, Vn);
       }
       function Kn() {
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
@@ -3674,11 +3685,11 @@
         }, Xn);
       }
       var Zn = [Yn(), Kn()],
-        $n = ve.a.mark(tr),
-        er = ve.a.mark(nr);
+        $n = Ae.a.mark(tr),
+        er = Ae.a.mark(nr);
       function tr(t) {
         var n;
-        return ve.a.wrap(
+        return Ae.a.wrap(
           function(e) {
             for (;;)
               switch ((e.prev = e.next)) {
@@ -3716,7 +3727,7 @@
         );
       }
       function nr() {
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
@@ -3728,11 +3739,11 @@
         }, er);
       }
       var rr = [nr()],
-        ar = ve.a.mark(ir),
-        or = ve.a.mark(sr);
+        ar = Ae.a.mark(ir),
+        or = Ae.a.mark(sr);
       function ir(t) {
         var n;
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
@@ -3744,11 +3755,11 @@
         }, ar);
       }
       function sr() {
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
-                return (e.next = 2), Object(Dn.d)(vn, ir);
+                return (e.next = 2), Object(Dn.d)(An, ir);
               case 2:
               case 'end':
                 return e.stop();
@@ -3756,9 +3767,9 @@
         }, or);
       }
       var cr = [sr()],
-        lr = ve.a.mark(ur);
+        lr = Ae.a.mark(ur);
       function ur() {
-        return ve.a.wrap(function(e) {
+        return Ae.a.wrap(function(e) {
           for (;;)
             switch ((e.prev = e.next)) {
               case 0:
@@ -3777,7 +3788,7 @@
       function dr(r) {
         return function() {
           var e,
-            t = A()(r);
+            t = v()(r);
           if (
             (function() {
               if ('undefined' == typeof Reflect || !Reflect.construct) return;
@@ -3795,7 +3806,7 @@
               }
             })()
           ) {
-            var n = A()(this).constructor;
+            var n = v()(this).constructor;
             e = Reflect.construct(t, arguments, n);
           } else e = t.apply(this, arguments);
           return y()(this, e);

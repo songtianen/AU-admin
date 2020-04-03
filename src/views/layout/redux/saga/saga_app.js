@@ -51,6 +51,7 @@ function* initAppData(action) {
         isAdmin,
         userRole: userInfo.data.userRole,
         permission: userInfo.data.userPermission,
+        userId: userInfo.data.userId,
       };
       localStorage.setItem(
         'permission',
