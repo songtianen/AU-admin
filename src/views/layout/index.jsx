@@ -116,7 +116,7 @@ class MyLayout extends React.PureComponent {
           collapsed={this.state.collapsed}
           siderModuleMenu={siderModuleMenu}
         />
-        <Layout style={{ borderLeft: 'solid 1px #e8e8e8' }}>
+        <Layout>
           <MyHeader
             collapsed={this.state.collapsed}
             toggle={this.toggle}

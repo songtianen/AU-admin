@@ -92,13 +92,18 @@ class SubMenuList extends React.PureComponent {
         collapsed={this.props.collapsed}
         width={180}
         theme={this.props.theme}
+        style={{
+          borderRight: 'solid 1px #e8e8e8',
+        }}
       >
-        <div
+        <Menu
           // className='logo'
+          theme={this.props.theme}
           style={{
             height: 49,
-            width: '100%',
+            width: 180,
             overflow: 'hidden',
+            // border: 'none',
             borderBottom: 'solid 1px #e8e8e8',
             display: 'flex',
             flexDirection: 'row',
@@ -128,7 +133,7 @@ class SubMenuList extends React.PureComponent {
           >
             AU-andmin
           </div>
-        </div>
+        </Menu>
         <Menu
           mode='inline'
           theme={this.props.theme}
