@@ -2,13 +2,9 @@
 
 ## Description
 
----
-
 RBAC 基于角色权限控制管理系统 https://www.card12.com
 
 ## QuickStart
-
----
 
 #### Development
 
