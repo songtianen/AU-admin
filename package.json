@@ -4,6 +4,11 @@
   "repository": "git@github.com:songtianen/AU-admin.git",
   "author": "song <songten@icloud.com>",
   "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "scripts": {
     "test": "jest --notify --watchman=false --detectOpenHandles",
     "lint": "eslint --ext .jsx --ext .js ./",
@@ -120,7 +125,6 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
-      "prettier --write",
       "eslint --ext .jsx --ext .js",
       "git add"
     ]
