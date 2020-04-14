@@ -4,9 +4,7 @@
   "repository": "git@github.com:songtianen/AU-admin.git",
   "author": "song <songten@icloud.com>",
   "license": "MIT",
-  "husky": {
-    "hooks": {}
-  },
+  "husky": {},
   "scripts": {
     "test": "jest --notify --watchman=false --detectOpenHandles",
     "lint": "eslint --ext .jsx --ext .js ./",
