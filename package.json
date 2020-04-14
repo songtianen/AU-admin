@@ -86,7 +86,7 @@
     "react-test-renderer": "^16.8.6",
     "rimraf": "^2.6.3",
     "style-loader": "^0.23.1",
-    "uglifyjs-webpack-plugin": "^2.1.2",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^1.1.2",
     "uuid": "^3.3.2",
     "webpack": "^4.42.1",
