@@ -94,6 +94,12 @@ const baseWebpackConfig = {
     // 由于mac不区分大小写，linux区分大小写，可能导致mac上正常，在部署时出错，所以强制区分大小写
     new CaseSensitivePathsPlugin(),
     new HtmlWebpackPlugin({
+      minify: {
+        // 压缩HTML文件
+        removeComments: true, // 移除HTML中的注释
+        collapseWhitespace: true, // 删除空白符与换行符
+        minifyCSS: true, // 压缩内联css
+      },
       filename: 'index.html',
       template: path.join(ROOTPATH, '../src/index.html'),
     }),
