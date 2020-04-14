@@ -5,9 +5,7 @@
   "author": "song <songten@icloud.com>",
   "license": "MIT",
   "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+    "hooks": {}
   },
   "scripts": {
     "test": "jest --notify --watchman=false --detectOpenHandles",
