@@ -13,7 +13,6 @@
     "test": "jest --notify --watchman=false --detectOpenHandles",
     "lint": "eslint --ext .jsx --ext .js ./",
     "prettier": "prettier --write src/**/*.js src/**/*.jsx",
-    "precommit": "pretty-quick --staged",
     "clear": "rimraf dist",
     "fix-memory-limit": "cross-env LIMIT=8192 increase-memory-limit",
     "dev-client": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.config.js",
@@ -125,6 +124,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx}": [
+      "prettier --write",
       "eslint --ext .jsx --ext .js",
       "git add"
     ]
