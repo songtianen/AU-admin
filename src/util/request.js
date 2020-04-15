@@ -19,7 +19,7 @@ let history = createBrowserHistory({
 const service = axios.create({
   baseURL:
     // eslint-disable-next-line no-undef
-    WEBPACK_ENV === 'development' ? '/api' : 'http://localhost:8888/api', // api的base_url：生产环境http://47.108.85.34/api */,
+    WEBPACK_ENV === 'development' ? '/api' : '/api', // api的base_url：生产环境http://47.108.85.34/api */,
   // eslint-disable-next-line no-undef
   // WEBPACK_ENV === 'development' ? '/api' : 'http://localhost:8888/api', // 测试用,
   timeout: 20000,
