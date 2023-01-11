@@ -99,7 +99,7 @@
     "express-jwt": "^5.3.1",
     "express-session": "^1.15.6",
     "history": "^4.7.2",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.15",
     "mongoose": "^5.4.17",
     "prop-types": "^15.7.2",
